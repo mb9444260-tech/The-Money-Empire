@@ -297,6 +297,15 @@
         <h1>🏛️ إمبراطورية التجارة والاستثمار العالمية</h1>
     </header>
 
+    <!-- أضف هذا الجزء في مكان مناسب داخل ملف index.html (مثلاً بجوار أزرار الحفظ) -->
+<div class="card" style="padding: 8px; text-align: center;">
+    <div style="font-size: 0.75rem; color: var(--yellow); margin-bottom: 4px;">اسم مستخدم الإمبراطورية:</div>
+    <div style="display: flex; gap: 6px;">
+        <input type="text" id="usernameInput" placeholder="اكتب اسمك هنا..." class="gift-input" style="text-align: center;">
+        <button class="action-btn" style="background-color: var(--blue);" onclick="saveUsername()">حفظ الاسم 💾</button>
+    </div>
+</div>
+
     <div class="turn-panel">
         <div class="turn-info">
             <span class="turn-title" id="turnTitleDisplay">اليوم التكتيكي: 1</span>
@@ -962,6 +971,30 @@
                 stocks: stocks,
                 assets: assets,
                 lastUpdated: new Date()
+                // داخل دالة حفظ اللعبة saveGameOnline
+window.saveGameOnline = async function() {
+    const userId = getPlayerId();
+    const username = document.getElementById('usernameInput').value.trim() || "مستثمر مجهول";
+    try {
+        await setDoc(doc(db, "players", userId), {
+            username: username, // حفظ اسم المستخدم الجديد
+            money: money, loan: loan, bondsOwned: bondsOwned, day: day, globalMultiplier: globalMultiplier,
+            barns: barns, animals: animals, logistics: logistics, stocks: stocks, assets: assets, 
+            redeemedCodes: redeemedCodes, lastUpdated: new Date()
+        }, { merge: true });
+        alert(`تم الحفظ السحابي بنجاح باسم: ${username}! ☁️`);
+    } catch (e) { console.error(e); alert("خطأ في الحفظ السحابي."); }
+};
+
+window.saveUsername = function() {
+    const username = document.getElementById('usernameInput').value.trim();
+    if(username) {
+        localStorage.setItem("game_username", username);
+        alert("تم حفظ الاسم بنجاح! اضغط الآن على حفظ سحابي لتثبيته في النظام.");
+    } else {
+        alert("الرجاء كتابة اسم مستخدم صحيح.");
+    }
+};
             });
             alert(`تم حفظ إمبراطوريتك بنجاح! ☁️\nمعرّف حسابك: ${userId}`);
         } catch (e) {
