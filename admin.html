@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة مراقبة وإدارة الإمبراطورية</title>
+    <title>لوحة التحكم والرقابة - إمبراطورية المال</title>
     <style>
         :root {
             --bg-color: #060911;
@@ -15,58 +15,162 @@
             --red: #ef4444;
             --blue: #3b82f6;
             --yellow: #eab308;
+            --gem: #06b6d4;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); padding: 15px; display: flex; justify-content: center; }
-        .admin-container { width: 100%; max-width: 650px; display: flex; flex-direction: column; gap: 12px; }
-        .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-        h1 { font-size: 1.1rem; color: var(--yellow); text-align: center; }
-        label { font-size: 0.72rem; color: var(--text-muted); }
-        input, select { background: #060911; border: 1px solid var(--border-color); border-radius: 4px; padding: 8px; color: var(--text-main); font-size: 0.8rem; width: 100%; }
-        .btn-row { display: flex; gap: 6px; }
-        button { flex: 1; border: none; padding: 9px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
-        .btn-add { background-color: var(--green); color: #060911; }
-        .btn-sub { background-color: var(--red); color: white; }
-        .btn-refresh { background-color: var(--blue); color: white; margin-bottom: 6px; }
-        .stats-box { background: rgba(0,0,0,0.4); border-radius: 6px; padding: 8px; font-size: 0.75rem; color: #cbd5e1; display: flex; flex-direction: column; gap: 4px; font-family: monospace; }
-        .log-box { background: rgba(0,0,0,0.5); padding: 8px; border-radius: 4px; font-family: monospace; font-size: 0.7rem; color: #94a3b8; max-height: 120px; overflow-y: auto; }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        header {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        header h1 {
+            font-size: 1.3rem;
+            color: var(--yellow);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--yellow);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        select, input {
+            background: #162032;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            width: 100%;
+            outline: none;
+        }
+
+        select:focus, input:focus {
+            border-color: var(--yellow);
+        }
+
+        button {
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+
+        button:active { transform: scale(0.98); }
+
+        .btn-primary { background-color: var(--blue); color: white; width: 100%; }
+        .btn-success { background-color: var(--green); color: #060911; flex: 1; }
+        .btn-danger { background-color: var(--red); color: white; flex: 1; }
+        .btn-gem { background-color: var(--gem); color: #060911; flex: 1; }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-family: monospace;
+        }
+
+        .row { display: flex; gap: 8px; }
     </style>
 </head>
 <body>
 
-<div class="admin-container">
-    <h1>🛡️ لوحة مراقبة وإدارة الإمبراطورية</h1>
+<div class="container">
+    <header>
+        <h1>🛠️ لوحة تحكم الأدمن - إمبراطورية المال</h1>
+    </header>
 
+    <!-- قائمة اللاعبين -->
     <div class="card">
-        <button class="btn-refresh" onclick="fetchAllPlayers()">🔄 تحديث وتحميل قائمة اللاعبين</button>
-        <label>اختر اللاعب (بحسب اسم المستخدم):</label>
-        <select id="playerSelect" onchange="loadPlayerStats()">
-            <option value="">-- اضغط زر التحديث أعلاه لجلب اللاعبين --</option>
-        </select>
-    </div>
-
-    <div class="card" id="playerDetailsCard" style="display:none;">
-        <div style="font-size: 0.8rem; font-weight: bold; color: var(--yellow);">📊 سجل وبيانات اللاعب المراقب:</div>
-        <div class="stats-box" id="playerStatsDisplay"></div>
-
-        <label style="margin-top: 4px;">أدخل المبلغ لتعديل رصيد اللاعب (شحن / خصم):</label>
-        <input type="number" id="modifyAmount" placeholder="مثال: 15000">
-
-        <div class="btn-row">
-            <button class="btn-add" onclick="modifyPlayerMoney('add')">➕ إضافة رصيد (شحن)</button>
-            <button class="btn-sub" onclick="modifyPlayerMoney('sub')">➖ خصم رصيد (عقوبة)</button>
+        <div class="section-title">👥 قائمة اللاعبين المسجلين سحابياً</div>
+        <div class="row">
+            <select id="playerSelect" onchange="loadSelectedPlayerData()">
+                <option value="">-- اضغط لتحميل قائمة اللاعبين --</option>
+            </select>
+            <button class="btn-primary" style="width: 140px;" onclick="fetchPlayersList()">تحديث القائمة 🔄</button>
         </div>
     </div>
 
-    <div class="card">
-        <label>سجل العمليات الإدارية:</label>
-        <div class="log-box" id="adminLog">جاهز للاتصال بقاعدة البيانات...</div>
+    <!-- لوحة التحكم في اللاعب المختار -->
+    <div class="card" id="controlPanel" style="display: none;">
+        <div class="section-title" id="selectedPlayerTitle">📊 بيانات وموارد الإمبراطورية المحددة</div>
+        
+        <div class="info-grid">
+            <div>👤 اسم المستخدم: <span id="pName" style="color: var(--yellow);">--</span></div>
+            <div>💰 النقد السائل: <span id="pMoney" style="color: var(--green);">--</span></div>
+            <div>💎 الجواهر: <span id="pGems" style="color: var(--gem);">--</span></div>
+            <div>📅 اليوم التكتيكي: <span id="pDay">--</span></div>
+        </div>
+
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">أدخل القيمة المراد إضافتها (أو خصمها بالسالب مثل: -5000 أو -50):</div>
+        
+        <div class="row">
+            <input type="number" id="modifierValue" placeholder="أدخل الرقم هنا (مثال: 10000 أو 100)...">
+        </div>
+
+        <!-- أزرار التحكم في النقد والجواهر والأيام -->
+        <div class="row">
+            <button class="btn-success" onclick="modifyPlayerResource('money', 1)">إضافة نقد 💰</button>
+            <button class="btn-danger" onclick="modifyPlayerResource('money', -1)">خصم نقد 💸</button>
+        </div>
+
+        <div class="row">
+            <button class="btn-gem" onclick="modifyPlayerResource('gems', 1)">إضافة جواهر 💎</button>
+            <button class="btn-danger" onclick="modifyPlayerResource('gems', -1)">خصم جواهر 🔻</button>
+        </div>
+
+        <div class="row">
+            <button class="btn-primary" style="background-color: var(--purple);" onclick="modifyPlayerResource('day', 1)">تعديل الأيام 📅</button>
+        </div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDjmtuNuQf6zQwiHeRbbIWI19XdVJzyuU",
@@ -81,97 +185,119 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    let playersCache = {};
+    let playersDataCache = {};
+    let currentSelectedId = null;
 
-    window.fetchAllPlayers = async function() {
-        const selectBox = document.getElementById('playerSelect');
-        const logBox = document.getElementById('adminLog');
-        selectBox.innerHTML = '<option value="">جاري جلب اللاعبين...</option>';
-        
+    // جلب قائمة اللاعبين من فايربيس
+    window.fetchPlayersList = async function() {
+        const select = document.getElementById('playerSelect');
+        select.innerHTML = '<option value="">جاري تحميل القائمة...</option>';
+        playersDataCache = {};
+
         try {
             const querySnapshot = await getDocs(collection(db, "players"));
-            selectBox.innerHTML = '<option value="">-- اختر لاعباً من القائمة --</option>';
-            playersCache = {};
+            select.innerHTML = '<option value="">-- اختر لاعباً للتحكم به --</option>';
+            
+            if (querySnapshot.empty) {
+                select.innerHTML = '<option value="">لا يوجد لاعبون مسجلون بعد</option>';
+                return;
+            }
 
-            querySnapshot.forEach((docSnap) => {
-                const pId = docSnap.id;
-                const pData = docSnap.data();
-                playersCache[pId] = pData;
-
-                const username = pData.username || "بدون اسم";
-                const option = document.createElement('option');
-                option.value = pId;
-                option.text = `👤 ${username} | النقد: $${(pData.money || 0).toLocaleString()} | اليوم: ${pData.day || 1}`;
-                selectBox.appendChild(option);
+            querySnapshot.forEach((documentSnapshot) => {
+                const data = documentSnapshot.data();
+                const id = documentSnapshot.id;
+                playersDataCache[id] = data;
+                
+                const displayName = data.username ? `${data.username} (${id.slice(-4)})` : `مستثمر (${id})`;
+                const opt = document.createElement('option');
+                opt.value = id;
+                opt.innerText = displayName;
+                select.appendChild(opt);
             });
-
-            logBox.innerHTML += `<br>✅ تم تحديث وجلب بيانات جميع اللاعبين بنجاح.`;
+            alert("✅ تم تحديث قائمة اللاعبين بنجاح!");
         } catch (e) {
             console.error(e);
-            logBox.innerHTML += `<br>❌ خطأ أثناء جلب قائمة اللاعبين.`;
-            alert("حدث خطأ أثناء الاتصال بقاعدة البيانات.");
+            alert("❌ حدث خطأ أثناء جلب قائمة اللاعبين.");
         }
     };
 
-    window.loadPlayerStats = function() {
-        const selectBox = document.getElementById('playerSelect');
-        const card = document.getElementById('playerDetailsCard');
-        const statsBox = document.getElementById('playerStatsDisplay');
-        const pId = selectBox.value;
+    // عرض بيانات اللاعب المختار
+    window.loadSelectedPlayerData = function() {
+        const select = document.getElementById('playerSelect');
+        const id = select.value;
+        currentSelectedId = id;
+        const panel = document.getElementById('controlPanel');
 
-        if (!pId || !playersCache[pId]) {
-            card.style.display = 'none';
+        if (!id || !playersDataCache[id]) {
+            panel.style.display = 'none';
             return;
         }
 
-        const data = playersCache[pId];
-        card.style.display = 'flex';
+        const data = playersDataCache[id];
+        document.getElementById('pName').innerText = data.username || "مستثمر مجهول";
+        document.getElementById('pMoney').innerText = '$' + (data.money || 0).toLocaleString();
+        document.getElementById('pGems').innerText = (data.gems || 0).toLocaleString() + ' 💎';
+        document.getElementById('pDay').innerText = data.day || 1;
 
-        statsBox.innerHTML = `
-            <div>👤 اسم المستخدم: <span style="color:var(--yellow); font-weight:bold;">${data.username || "بدون اسم"}</span></div>
-            <div>🆔 معرّف النظام: ${pId}</div>
-            <div>💰 النقد السائل: $${(data.money || 0).toLocaleString()}</div>
-            <div>📅 اليوم الحالي: ${data.day || 1}</div>
-            <div>🏦 القرض المستحق: $${(data.loan || 0).toLocaleString()}</div>
-            <div>📜 السندات الحكومية: ${data.bondsOwned || 0} سندات</div>
-        `;
+        panel.style.display = 'flex';
     };
 
-    window.modifyPlayerMoney = async function(action) {
-        const selectBox = document.getElementById('playerSelect');
-        const pId = selectBox.value;
-        const amountInput = document.getElementById('modifyAmount');
-        const amount = parseInt(amountInput.value);
-        const logBox = document.getElementById('adminLog');
+    // تعديل موارد اللاعب (نقد، جواهر، أيام) زيادة أو نقصان
+    window.modifyPlayerResource = async function(resourceType, direction) {
+        if (!currentSelectedId) return;
 
-        if (!pId) { alert("الرجاء اختيار لاعب أولاً!"); return; }
-        if (isNaN(amount) || amount <= 0) { alert("الرجاء إدخال مبلغ صحيح."); return; }
+        const valInput = document.getElementById('modifierValue');
+        let amount = parseInt(valInput.value);
+
+        if (isNaN(amount) || amount <= 0) {
+            alert("❌ الرجاء إدخال رقم صحيح وموجب في خانة القيمة.");
+            return;
+        }
+
+        let finalDelta = amount * direction;
+        const playerRef = doc(db, "players", currentSelectedId);
 
         try {
-            const playerRef = doc(db, "players", pId);
-            const playerSnap = await getDoc(playerRef);
-
-            if (playerSnap.exists()) {
-                let currentMoney = playerSnap.data().money || 0;
-                let newMoney = action === 'add' ? currentMoney + amount : currentMoney - amount;
-                if (newMoney < 0) newMoney = 0;
-
-                await setDoc(playerRef, { money: newMoney }, { merge: true });
-
-                playersCache[pId].money = newMoney;
-                loadPlayerStats();
-                fetchAllPlayers();
-
-                let actionText = action === 'add' ? `إضافة $${amount.toLocaleString()}` : `خصم $${amount.toLocaleString()}`;
-                logBox.innerHTML += `<br>⚡ تم ${actionText} للاعب (${playersCache[pId].username}). الرصيد الجديد: $${newMoney.toLocaleString()}`;
-                alert(`تم تنفيذ العملية بنجاح!`);
-                amountInput.value = '';
+            const docSnap = await getDoc(playerRef);
+            if (!docSnap.exists()) {
+                alert("❌ اللاعب غير موجود في قاعدة البيانات.");
+                return;
             }
+
+            let currentData = docSnap.data();
+            let updatePayload = {};
+
+            if (resourceType === 'money') {
+                let currentMoney = currentData.money || 0;
+                let newMoney = Math.max(0, currentMoney + finalDelta);
+                updatePayload.money = newMoney;
+                playersDataCache[currentSelectedId].money = newMoney;
+            } else if (resourceType === 'gems') {
+                let currentGems = currentData.gems || 0;
+                let newGems = Math.max(0, currentGems + finalDelta);
+                updatePayload.gems = newGems;
+                playersDataCache[currentSelectedId].gems = newGems;
+            } else if (resourceType === 'day') {
+                let currentDay = currentData.day || 1;
+                let newDay = Math.max(1, currentDay + finalDelta);
+                updatePayload.day = newDay;
+                playersDataCache[currentSelectedId].day = newDay;
+            }
+
+            await updateDoc(playerRef, updatePayload);
+            loadSelectedPlayerData();
+            valInput.value = '';
+            alert("🚀 تم تحديث رصيد اللاعب بنجاح في قاعدة البيانات!");
         } catch (e) {
             console.error(e);
-            alert("حدث خطأ أثناء تعديل رصيد اللاعب.");
+            alert("❌ حدث خطأ أثناء تعديل بيانات اللاعب.");
         }
     };
+
+    // تحميل القائمة تلقائياً عند فتح الصفحة
+    window.addEventListener('DOMContentLoaded', () => {
+        fetchPlayersList();
+    });
 </script>
 
 </body>
