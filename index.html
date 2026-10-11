@@ -502,6 +502,64 @@
             } else { alert("لا توجد بيانات محفوظة."); }
         } catch (e) { console.error(e); alert("خطأ في الاسترجاع."); }
     };
+    // دالة حفظ الاسم محلياً أولاً
+window.saveUsername = function() {
+    const inputField = document.getElementById('usernameInput');
+    if (!inputField) {
+        alert("عذراً، خانة الاسم غير موجودة في الصفحة!");
+        return;
+    }
+    
+    const username = inputField.value.trim();
+    if (username) {
+        localStorage.setItem("game_username", username);
+        alert(`✅ تم حفظ الاسم (${username}) محلياً! اضغط الآن على "حفظ سحابي" لتثبيته في النظام.`);
+    } else {
+        alert("❌ الرجاء كتابة اسم مستخدم صحيح أولاً.");
+    }
+};
+
+// دالة الحفظ السحابي المتكاملة (ترسل الاسم والأموال وباقي بيانات اللعبة لفايربيس)
+window.saveGameOnline = async function() {
+    const userId = getPlayerId();
+    // جلب الاسم من خانة الإدخال أو من الذاكرة المحلية
+    const inputField = document.getElementById('usernameInput');
+    const username = (inputField && inputField.value.trim()) ? inputField.value.trim() : (localStorage.getItem("game_username") || "مستثمر مجهول");
+    
+    // تأكد من حفظه في الذاكرة لتجنب ضياعه
+    localStorage.setItem("game_username", username);
+
+    try {
+        await setDoc(doc(db, "players", userId), {
+            username: username,
+            money: money, 
+            loan: loan, 
+            bondsOwned: bondsOwned, 
+            day: day, 
+            globalMultiplier: globalMultiplier,
+            barns: barns, 
+            animals: animals, 
+            logistics: logistics, 
+            stocks: stocks, 
+            assets: assets, 
+            redeemedCodes: redeemedCodes, 
+            lastUpdated: new Date()
+        }, { merge: true });
+        
+        alert(`🚀 تم حفظ الإمبراطورية وسحابياً بنجاح باسم: (${username})!`);
+    } catch (e) { 
+        console.error("خطأ الحفظ السحابي:", e); 
+        alert("❌ حدث خطأ أثناء الاتصال بقاعدة البيانات للحفظ."); 
+    }
+};
+
+// استرجاع الاسم تلقائياً عند فتح اللعبة لكي يظهر في الخانة
+window.addEventListener('DOMContentLoaded', () => {
+    const savedName = localStorage.getItem("game_username");
+    if (savedName && document.getElementById('usernameInput')) {
+        document.getElementById('usernameInput').value = savedName;
+    }
+});
 </script>
 
 <script>
