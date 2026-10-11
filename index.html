@@ -247,9 +247,17 @@
             cursor: not-allowed;
         }
 
-        button.sell-btn { background-color: var(--red); }
-        button.farm-btn { background-color: var(--orange); }
-        button.logistics-btn { background-color: var(--purple); }
+        button.sell-btn {
+            background-color: var(--red);
+        }
+
+        button.farm-btn {
+            background-color: var(--orange);
+        }
+
+        button.logistics-btn {
+            background-color: var(--purple);
+        }
 
         .whatsapp-btn {
             background-color: var(--whatsapp) !important;
@@ -289,9 +297,9 @@
         <h1>🏛️ إمبراطورية التجارة والاستثمار العالمية</h1>
     </header>
 
-    <!-- قسم اسم المستخدم المرتبط بقاعدة البيانات -->
-    <div class="card" style="padding: 8px;">
-        <div style="font-size: 0.75rem; color: var(--yellow); margin-bottom: 4px;">اسم مستخدم الإمبراطورية (للأدمن):</div>
+    <!-- قسم اسم المستخدم -->
+    <div class="card" style="padding: 8px; text-align: center;">
+        <div style="font-size: 0.75rem; color: var(--yellow); margin-bottom: 4px;">اسم مستخدم الإمبراطورية:</div>
         <div style="display: flex; gap: 6px;">
             <input type="text" id="usernameInput" placeholder="اكتب اسمك هنا..." class="gift-input" style="text-align: center;">
             <button class="action-btn" style="background-color: var(--blue);" onclick="saveUsername()">تثبيت الاسم 💾</button>
@@ -437,102 +445,14 @@
     </div>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyDjmtuNuQf6zQwiHeRbbIWI19XdVJzyuU",
-        authDomain: "money-imperator.firebaseapp.com",
-        projectId: "money-imperator",
-        storageBucket: "money-imperator.firebasestorage.app",
-        messagingSenderId: "970812493430",
-        appId: "1:970812493430:web:ba86a9effdd7e92430d957",
-        measurementId: "G-HSJTS6DEJR"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    window.getPlayerId = function() {
-        let playerId = localStorage.getItem("game_player_id");
-        if (!playerId) {
-            playerId = "player_" + Math.random().toString(36).substring(2, 9);
-            localStorage.setItem("game_player_id", playerId);
-        }
-        return playerId;
-    };
-
-    window.saveUsername = function() {
-        const username = document.getElementById('usernameInput').value.trim();
-        if (username) {
-            localStorage.setItem("game_username", username);
-            alert(`✅ تم تثبيت الاسم (${username}) محلياً! اضغط الآن على "حفظ سحابي" ليرتبط بحسابك.`);
-        } else {
-            alert("❌ الرجاء كتابة اسم مستخدم صحيح.");
-        }
-    };
-
-    window.saveGameOnline = async function() {
-        const userId = getPlayerId();
-        const inputVal = document.getElementById('usernameInput').value.trim();
-        const finalUsername = inputVal || localStorage.getItem("game_username") || "مستثمر_" + userId.slice(-4);
-        localStorage.setItem("game_username", finalUsername);
-
-        try {
-            await setDoc(doc(db, "players", userId), {
-                username: finalUsername,
-                money: money, loan: loan, bondsOwned: bondsOwned, day: day, globalMultiplier: globalMultiplier,
-                barns: barns, animals: animals, logistics: logistics, stocks: stocks, assets: assets, 
-                redeemedCodes: redeemedCodes, lastUpdated: new Date()
-            }, { merge: true });
-            
-            alert(`تم الحفظ السحابي بنجاح باسم: [ ${finalUsername} ] ☁️`);
-        } catch (e) { console.error(e); alert("خطأ في الحفظ السحابي."); }
-    };
-
-    window.loadGameOnline = async function() {
-        const userId = getPlayerId();
-        try {
-            const docRef = doc(db, "players", userId);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                money = data.money; loan = data.loan; bondsOwned = data.bondsOwned; day = data.day; globalMultiplier = data.globalMultiplier;
-                if(data.redeemedCodes) redeemedCodes = data.redeemedCodes;
-                if(data.barns) barns.splice(0, barns.length, ...data.barns);
-                if(data.animals) animals.splice(0, animals.length, ...data.animals);
-                if(data.logistics) logistics.splice(0, logistics.length, ...data.logistics);
-                if(data.stocks) stocks.splice(0, stocks.length, ...data.stocks);
-                if(data.assets) assets.splice(0, assets.length, ...data.assets);
-                
-                if(data.username) {
-                    document.getElementById('usernameInput').value = data.username;
-                    localStorage.setItem("game_username", data.username);
-                }
-
-                renderAll(); updateUI();
-                alert("تم استرجاع إمبراطوريتك بنجاح! 🔄");
-            } else { alert("لا توجد بيانات محفوظة."); }
-        } catch (e) { console.error(e); alert("خطأ في الاسترجاع."); }
-    };
-
-    window.addEventListener('DOMContentLoaded', () => {
-        const savedName = localStorage.getItem("game_username");
-        if (savedName && document.getElementById('usernameInput')) {
-            document.getElementById('usernameInput').value = savedName;
-        }
-    });
-</script>
-
 <script>
     let money = 2000;
     let loan = 0;
     let bondsOwned = 0;
     let day = 1;
     let globalMultiplier = 1.0;
+    
     let redeemedCodes = [];
-
     const myWhatsAppNumber = "201070813027";
 
     const giftCodesDB = {
@@ -588,9 +508,8 @@
 
     function logMessage(msg) {
         const ledgerBox = document.getElementById('ledgerBox');
-        if (!ledgerBox) return;
         const entry = document.createElement('div');
-        entry.innerText = `[اليوم ${day}]${msg}`;
+        entry.innerText = `[اليوم ${day}] ${msg}`;
         ledgerBox.appendChild(entry);
         ledgerBox.scrollTop = ledgerBox.scrollHeight;
     }
@@ -598,9 +517,8 @@
     function switchTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        const targetTab = document.getElementById('tab-' + tabName);
-        if (targetTab) targetTab.classList.add('active');
-        if (event && event.currentTarget) event.currentTarget.classList.add('active');
+        document.getElementById('tab-' + tabName).classList.add('active');
+        event.currentTarget.classList.add('active');
     }
 
     function redeemGiftCode() {
@@ -618,16 +536,137 @@
             alert(`مبروك! تم تفعيل الكود بنجاح وحصلت على ${formatMoney(rewardAmount)} 🎉`);
             inputField.value = '';
             updateUI();
-        } else { alert("الكود الذي أدخلته غير صحيح أو منتهي الصلاحية!"); }
+        } else {
+            alert("الكود الذي أدخلته غير صحيح أو منتهي الصلاحية!");
+        }
     }
 
     function modifyBarn(id, action) {
         const barn = barns.find(b => b.id === id);
         if (action === 'buy' && money >= barn.cost) {
-            money -= barn.cost; barn.owned++;
+            money -= barn.cost;
+            barn.owned++;
             barn.cost = Math.floor(barn.cost * 1.2);
             logMessage(`بناء حظيرة جديدة: ${barn.name}`);
         } else if (action === 'sell' && barn.owned > 0) {
             let refund = Math.floor((barn.cost / 1.2) * 0.75);
-            money += refund; barn.owned--;
-            logMessage(`بيع حظيرة: ${barn.name} واسترداد ${
+            money += refund;
+            barn.owned--;
+            logMessage(`بيع حظيرة: ${barn.name} واسترداد ${formatMoney(refund)}`);
+        }
+        renderAll(); updateUI();
+    }
+
+    function modifyAnimal(id, action) {
+        const animal = animals.find(a => a.id === id);
+        const barn = barns.find(b => b.id === animal.barnId);
+        let currentAssigned = animals.filter(a => a.barnId === barn.id).reduce((sum, a) => sum + a.count, 0);
+        let maxCapacity = barn.owned * barn.capacity;
+
+        if (action === 'buy') {
+            if (barn.owned === 0) { alert("يجب بناء حظيرة مناسبة أولاً!"); return; }
+            if (currentAssigned >= maxCapacity) { alert("سعة الحظائر ممتلئة! ابنِ حظيرة جديدة."); return; }
+            if (money >= animal.cost) {
+                money -= animal.cost;
+                animal.count++;
+                animal.cost = Math.floor(animal.cost * 1.12);
+                logMessage(`إضافة حيوان/محصول: ${animal.name}`);
+            }
+        } else if (action === 'sell' && animal.count > 0) {
+            let refund = Math.floor((animal.cost / 1.12) * 0.8);
+            money += refund;
+            animal.count--;
+            logMessage(`بيع عنصر: ${animal.name} واسترداد ${formatMoney(refund)}`);
+        }
+        renderAll(); updateUI();
+    }
+
+    function modifyLogistics(id, action) {
+        const logItem = logistics.find(l => l.id === id);
+        if (action === 'buy' && money >= logItem.cost) {
+            money -= logItem.cost;
+            logItem.count++;
+            logItem.cost = Math.floor(logItem.cost * 1.15);
+            logMessage(`شراء أسطول شحن: ${logItem.name}`);
+        } else if (action === 'sell' && logItem.count > 0) {
+            let refund = Math.floor((logItem.cost / 1.15) * 0.8);
+            money += refund;
+            logItem.count--;
+            logMessage(`بيع وحدة شحن: ${logItem.name} واسترداد ${formatMoney(refund)}`);
+        }
+        renderLogistics(); updateUI();
+    }
+
+    function tradeStock(id, action) {
+        const stock = stocks.find(s => s.id === id);
+        if (action === 'buy' && money >= stock.price) {
+            money -= stock.price; stock.owned++;
+            logMessage(`شراء سهم ${stock.name}`);
+        } else if (action === 'sell' && stock.owned > 0) {
+            money += stock.price; stock.owned--;
+            logMessage(`بيع سهم ${stock.name}`);
+        } else if (action === 'sellAll' && stock.owned > 0) {
+            let val = stock.price * stock.owned;
+            money += val;
+            logMessage(`بيع كل أسهم ${stock.name} مقابل ${formatMoney(val)}`);
+            stock.owned = 0;
+        }
+        renderStocks(); updateUI();
+    }
+
+    function buyAsset(id) {
+        const asset = assets.find(a => a.id === id);
+        if (money >= asset.cost) {
+            money -= asset.cost; asset.count++;
+            asset.cost = Math.floor(asset.cost * 1.18);
+            logMessage(`شراء أصل تجاري: ${asset.name}`);
+            renderAll(); updateUI();
+        }
+    }
+
+    function hireManager(id) {
+        const mgr = managers.find(m => m.id === id);
+        if (!mgr.hired && money >= mgr.cost) {
+            money -= mgr.cost; mgr.hired = true;
+            globalMultiplier *= mgr.bonus;
+            logMessage(`تعيين الخبير الإداري: ${mgr.name}`);
+            renderManagers(); updateUI();
+        }
+    }
+
+    function takeLoan() { money += 50000; loan += 55000; logMessage("اقتراض بنكي بقيمة $50,000"); updateUI(); }
+    function repayLoan() { if (loan > 0 && money >= loan) { money -= loan; loan = 0; logMessage("سداد القرض بالكامل."); updateUI(); } }
+    function buyBonds() { if (money >= 20000) { money -= 20000; bondsOwned++; logMessage("شراء سندات حكومية آمنة."); updateUI(); } }
+
+    function renderStore() {
+        const container = document.getElementById('storeList');
+        container.innerHTML = '';
+        const playerId = window.getPlayerId ? window.getPlayerId() : "unknown_player";
+
+        storePackages.forEach(pkg => {
+            let message = encodeURIComponent(`مرحباً، أريد شراء "${pkg.name}" بسعر ${pkg.price} لتدعيم حسابي في لعبة إمبراطورية التجارة.\nمعرّف حسابي في اللعبة هو: ${playerId}`);
+            let whatsappLink = `https://wa.me/${myWhatsAppNumber}?text=${message}`;
+
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.innerHTML = `
+                <div class="item-info">
+                    <span class="item-title">${pkg.name}</span>
+                    <span class="item-desc">السعر: ${pkg.price}</span>
+                </div>
+                <a href="${whatsappLink}" target="_blank" class="action-btn whatsapp-btn">تواصل واتساب 💬</a>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function nextTurn() {
+        day++;
+        let totalProductionUnits = animals.reduce((sum, a) => sum + (a.count * 5), 0) + assets.reduce((sum, ast) => sum + (ast.count * 25), 0);
+        let totalLogisticsPower = logistics.reduce((sum, l) => sum + (l.power * l.count), 0);
+        let logisticsEfficiency = totalProductionUnits === 0 ? 100 : Math.min(100, Math.floor((totalLogisticsPower / totalProductionUnits) * 100));
+
+        let animalIncome = animals.reduce((sum, a) => sum + (Math.floor(a.income * globalMultiplier) * a.count), 0);
+        let logisticsIncome = logistics.reduce((sum, l) => sum + (Math.floor(l.income * globalMultiplier) * l.count), 0);
+        let assetIncome = assets.reduce((sum, ast) => sum + (Math.floor(ast.income * globalMultiplier) * ast.count), 0);
+        let bondsIncome
