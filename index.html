@@ -524,9 +524,9 @@
     ];
 
     window.animals = [
-        { id: 'anim_chick', barnId: 'barn_chick', name: 'دجاج بياض', cost: 60, productType: 'chickenEggs', prodAmount: 1, meatType: 'chickenMeat', meatYield: 2, maxAge: 10, count: 0, desc: 'تنتج 1 بيضة/يوم. العمر: 10 أيام.' },
-        { id: 'anim_duck', barnId: 'barn_chick', name: 'بط فاخر', cost: 140, productType: 'duckEggs', prodAmount: 1, meatType: 'duckMeat', meatYield: 3, maxAge: 14, count: 0, desc: 'تنتج 1 بيضة/يوم. العمر: 14 يوم.' },
-        { id: 'anim_cow', barnId: 'barn_cow', name: 'بقرة حلب', cost: 700, productType: 'milk', prodAmount: 1, meatType: 'beefMeat', meatYield: 15, maxAge: 30, count: 0, desc: 'تنتج 1 لتر حليب/يوم. العمر: 30 يوم.' }
+        { id: 'anim_chick', barnId: 'barn_chick', name: 'دجاج بياض', cost: 60, productType: 'chickenEggs', prodAmount: 1, meatType: 'chickenMeat', meatYield: 2, maxAge: 10, age: 0, count: 0, desc: 'تنتج 1 بيضة/يوم. العمر: 10 أيام.' },
+        { id: 'anim_duck', barnId: 'barn_chick', name: 'بط فاخر', cost: 140, productType: 'duckEggs', prodAmount: 1, meatType: 'duckMeat', meatYield: 3, maxAge: 14, age: 0, count: 0, desc: 'تنتج 1 بيضة/يوم. العمر: 14 يوم.' },
+        { id: 'anim_cow', barnId: 'barn_cow', name: 'بقرة حلب', cost: 700, productType: 'milk', prodAmount: 1, meatType: 'beefMeat', meatYield: 15, maxAge: 30, age: 0, count: 0, desc: 'تنتج 1 لتر حليب/يوم. العمر: 30 يوم.' }
     ];
 
     window.logistics = [
@@ -639,7 +639,7 @@
         renderAll(); updateUI();
     };
 
-    // دالة ذبح الحيوانات وتحديث المخزن بشكل مباشر
+    // دالة الذبح المؤكدة والمرتبطة بالنافذة العامة عالمياً
     window.slaughterAnimal = function(id) {
         const animal = window.animals.find(a => a.id === id);
         if (animal && animal.count > 0) {
@@ -649,7 +649,7 @@
             renderAll();
             updateUI();
         } else {
-            alert("لا توجد أعداد كافية للذبح!");
+            alert("❌ لا توجد أعداد كافية للذبح!");
         }
     };
 
@@ -944,10 +944,18 @@
                 <div class="btn-group">
                     <button class="action-btn" onclick="modifyAnimal('${animal.id}', 'buy')">شراء</button>
                     <button class="action-btn sell-btn" onclick="modifyAnimal('${animal.id}', 'sell')" ${animal.count === 0 ? 'disabled' : ''}>بيع</button>
-                    <button class="action-btn" style="background-color: #b91c1c;" onclick="slaughterAnimal('${animal.id}')" ${animal.count === 0 ? 'disabled' : ''}>ذبح 🔪</button>
+                    <button class="action-btn slaughter-btn" style="background-color: #b91c1c;" data-id="${animal.id}" ${animal.count === 0 ? 'disabled' : ''}>ذبح 🔪</button>
                 </div>
             `;
             container.appendChild(row);
+        });
+
+        // ربط أحداث أزرار الذبح بشكل برمجى مباشر لمنع مشاكل النطاق
+        container.querySelectorAll('.slaughter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const animId = e.currentTarget.getAttribute('data-id');
+                window.slaughterAnimal(animId);
+            });
         });
     }
 
