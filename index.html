@@ -438,12 +438,13 @@
 </div>
 
 <script>
-    let money = 2000;
-    let loan = 0;
-    let bondsOwned = 0;
-    let day = 1;
-    let globalMultiplier = 1.0;
-    let redeemedCodes = [];
+    // ربط المتغيرات عالمياً لضمان رؤيتها من جميع الدوال
+    window.money = 2000;
+    window.loan = 0;
+    window.bondsOwned = 0;
+    window.day = 1;
+    window.globalMultiplier = 1.0;
+    window.redeemedCodes = [];
 
     const myWhatsAppNumber = "201070813027";
 
@@ -459,26 +460,26 @@
         { name: '🏛️ صندوق الإمبراطورية الماسي ($350,000 نقد)', price: '$29.99', amount: 350000 }
     ];
 
-    const barns = [
+    window.barns = [
         { id: 'barn_chick', name: 'حظيرة دواجن وبياض', cost: 400, capacity: 25, owned: 0, desc: 'تربية وإنتاج الدواجن والبيض.' },
         { id: 'barn_cow', name: 'حظيرة أبقار الألبان', cost: 2200, capacity: 12, owned: 0, desc: 'تربية الأبقار الحلوب.' },
         { id: 'greenhouse', name: 'صوبة زراعية حديثة', cost: 10000, capacity: 20, owned: 0, desc: 'زراعة محاصيل عالية العائد.' }
     ];
 
-    const animals = [
+    window.animals = [
         { id: 'anim_chick', barnId: 'barn_chick', name: 'دجاج بيض ولحم', cost: 60, income: 12, count: 0, desc: 'إنتاج يومي ثابت.' },
         { id: 'anim_duck', barnId: 'barn_chick', name: 'بط فاخر', cost: 140, income: 28, count: 0, desc: 'عائد يومي مرتفع.' },
         { id: 'anim_cow', barnId: 'barn_cow', name: 'بقرة حلوب هولندية', cost: 700, income: 130, count: 0, desc: 'حليب ولحوم ممتازة.' },
         { id: 'crop_wheat', barnId: 'greenhouse', name: 'محصول قمح وغلال', cost: 1100, income: 320, count: 0, desc: 'محاصيل ضخمة للأسواق.' }
     ];
 
-    const logistics = [
+    window.logistics = [
         { id: 'log_van', name: 'شاحنة توزيع محلية', cost: 1200, income: 35, power: 15, count: 0, desc: 'توزيع محلي يدر عائداً.' },
         { id: 'log_truck', name: 'أسطول شاحنات ثقيلة', cost: 8500, income: 240, power: 80, count: 0, desc: 'نقل ثقيل وعائد ممتاز.' },
         { id: 'log_cargo', name: 'طائرة شحن تجارية', cost: 45000, income: 1350, power: 450, count: 0, desc: 'شحن دولي فائق الربحية.' }
     ];
 
-    const stocks = [
+    window.stocks = [
         { id: 's1', name: 'تيك فالي للتقنية (TECH)', price: 65, owned: 0, volatility: 0.14 },
         { id: 's2', name: 'طاقة البترول العالمية (OIL)', price: 140, owned: 0, volatility: 0.08 },
         { id: 's3', name: 'صندوق الذهب والمعادن (GLD)', price: 220, owned: 0, volatility: 0.05 },
@@ -486,12 +487,12 @@
         { id: 's5', name: 'الطاقة الخضراء (GREEN)', price: 95, owned: 0, volatility: 0.18 }
     ];
 
-    const assets = [
+    window.assets = [
         { id: 'r1', name: 'مبنى تجاري إداري', cost: 120000, income: 1400, count: 0, desc: 'إيجارات يومية ثابتة.' },
         { id: 't1', name: 'شركة برمجيات وسحابيات', cost: 2000000, income: 21000, count: 0, desc: 'بنية تقنية هائلة.' }
     ];
 
-    const managers = [
+    window.managers = [
         { id: 'm1', name: 'خبير لوجستيات ونقل', cost: 15000, bonus: 1.25, hired: false, desc: 'يرفع كفاءة أسطول الشحن 25%.' },
         { id: 'm2', name: 'مدير تنفيذي عام', cost: 120000, bonus: 1.3, hired: false, desc: 'يرفع إيرادات المشاريع 30%.' }
     ];
@@ -502,7 +503,7 @@
         const ledgerBox = document.getElementById('ledgerBox');
         if (!ledgerBox) return;
         const entry = document.createElement('div');
-        entry.innerText = `[اليوم ${day}] ${msg}`;
+        entry.innerText = `[اليوم ${window.day}] ${msg}`;
         ledgerBox.appendChild(entry);
         ledgerBox.scrollTop = ledgerBox.scrollHeight;
     }
@@ -521,12 +522,12 @@
         const code = inputField.value.trim().toUpperCase();
 
         if (!code) { alert("الرجاء إدخال كود هدية صالح!"); return; }
-        if (redeemedCodes.includes(code)) { alert("لقد قمت باستخدام هذا الكود من قبل بالفعل!"); return; }
+        if (window.redeemedCodes.includes(code)) { alert("لقد قمت باستخدام هذا الكود من قبل بالفعل!"); return; }
 
         if (giftCodesDB[code]) {
             const rewardAmount = giftCodesDB[code].reward;
-            money += rewardAmount;
-            redeemedCodes.push(code);
+            window.money += rewardAmount;
+            window.redeemedCodes.push(code);
             logMessage(`🎁 تم تفعيل كود الهدية (${code}) بنجاح! المكافأة: +${formatMoney(rewardAmount)}`);
             alert(`مبروك! تم تفعيل الكود بنجاح وحصلت على ${formatMoney(rewardAmount)} 🎉`);
             inputField.value = '';
@@ -536,102 +537,102 @@
         }
     }
 
-    function modifyBarn(id, action) {
-        const barn = barns.find(b => b.id === id);
-        if (action === 'buy' && money >= barn.cost) {
-            money -= barn.cost;
+    window.modifyBarn = function(id, action) {
+        const barn = window.barns.find(b => b.id === id);
+        if (action === 'buy' && window.money >= barn.cost) {
+            window.money -= barn.cost;
             barn.owned++;
             barn.cost = Math.floor(barn.cost * 1.2);
             logMessage(`بناء حظيرة جديدة: ${barn.name}`);
         } else if (action === 'sell' && barn.owned > 0) {
             let refund = Math.floor((barn.cost / 1.2) * 0.75);
-            money += refund;
+            window.money += refund;
             barn.owned--;
             logMessage(`بيع حظيرة: ${barn.name} واسترداد ${formatMoney(refund)}`);
         }
         renderAll(); updateUI();
-    }
+    };
 
-    function modifyAnimal(id, action) {
-        const animal = animals.find(a => a.id === id);
-        const barn = barns.find(b => b.id === animal.barnId);
-        let currentAssigned = animals.filter(a => a.barnId === barn.id).reduce((sum, a) => sum + a.count, 0);
+    window.modifyAnimal = function(id, action) {
+        const animal = window.animals.find(a => a.id === id);
+        const barn = window.barns.find(b => b.id === animal.barnId);
+        let currentAssigned = window.animals.filter(a => a.barnId === barn.id).reduce((sum, a) => sum + a.count, 0);
         let maxCapacity = barn.owned * barn.capacity;
 
         if (action === 'buy') {
             if (barn.owned === 0) { alert("يجب بناء حظيرة مناسبة أولاً!"); return; }
             if (currentAssigned >= maxCapacity) { alert("سعة الحظائر ممتلئة! ابنِ حظيرة جديدة."); return; }
-            if (money >= animal.cost) {
-                money -= animal.cost;
+            if (window.money >= animal.cost) {
+                window.money -= animal.cost;
                 animal.count++;
                 animal.cost = Math.floor(animal.cost * 1.12);
                 logMessage(`إضافة حيوان/محصول: ${animal.name}`);
             }
         } else if (action === 'sell' && animal.count > 0) {
             let refund = Math.floor((animal.cost / 1.12) * 0.8);
-            money += refund;
+            window.money += refund;
             animal.count--;
             logMessage(`بيع عنصر: ${animal.name} واسترداد ${formatMoney(refund)}`);
         }
         renderAll(); updateUI();
-    }
+    };
 
-    function modifyLogistics(id, action) {
-        const logItem = logistics.find(l => l.id === id);
-        if (action === 'buy' && money >= logItem.cost) {
-            money -= logItem.cost;
+    window.modifyLogistics = function(id, action) {
+        const logItem = window.logistics.find(l => l.id === id);
+        if (action === 'buy' && window.money >= logItem.cost) {
+            window.money -= logItem.cost;
             logItem.count++;
             logItem.cost = Math.floor(logItem.cost * 1.15);
             logMessage(`شراء أسطول شحن: ${logItem.name}`);
         } else if (action === 'sell' && logItem.count > 0) {
             let refund = Math.floor((logItem.cost / 1.15) * 0.8);
-            money += refund;
+            window.money += refund;
             logItem.count--;
             logMessage(`بيع وحدة شحن: ${logItem.name} واسترداد ${formatMoney(refund)}`);
         }
         renderLogistics(); updateUI();
-    }
+    };
 
-    function tradeStock(id, action) {
-        const stock = stocks.find(s => s.id === id);
-        if (action === 'buy' && money >= stock.price) {
-            money -= stock.price; stock.owned++;
+    window.tradeStock = function(id, action) {
+        const stock = window.stocks.find(s => s.id === id);
+        if (action === 'buy' && window.money >= stock.price) {
+            window.money -= stock.price; stock.owned++;
             logMessage(`شراء سهم ${stock.name}`);
         } else if (action === 'sell' && stock.owned > 0) {
-            money += stock.price; stock.owned--;
+            window.money += stock.price; stock.owned--;
             logMessage(`بيع سهم ${stock.name}`);
         } else if (action === 'sellAll' && stock.owned > 0) {
             let val = stock.price * stock.owned;
-            money += val;
+            window.money += val;
             logMessage(`بيع كل أسهم ${stock.name} مقابل ${formatMoney(val)}`);
             stock.owned = 0;
         }
         renderStocks(); updateUI();
-    }
+    };
 
-    function buyAsset(id) {
-        const asset = assets.find(a => a.id === id);
-        if (money >= asset.cost) {
-            money -= asset.cost; asset.count++;
+    window.buyAsset = function(id) {
+        const asset = window.assets.find(a => a.id === id);
+        if (window.money >= asset.cost) {
+            window.money -= asset.cost; asset.count++;
             asset.cost = Math.floor(asset.cost * 1.18);
             logMessage(`شراء أصل تجاري: ${asset.name}`);
             renderAll(); updateUI();
         }
-    }
+    };
 
-    function hireManager(id) {
-        const mgr = managers.find(m => m.id === id);
-        if (!mgr.hired && money >= mgr.cost) {
-            money -= mgr.cost; mgr.hired = true;
-            globalMultiplier *= mgr.bonus;
+    window.hireManager = function(id) {
+        const mgr = window.managers.find(m => m.id === id);
+        if (!mgr.hired && window.money >= mgr.cost) {
+            window.money -= mgr.cost; mgr.hired = true;
+            window.globalMultiplier *= mgr.bonus;
             logMessage(`تعيين الخبير الإداري: ${mgr.name}`);
             renderManagers(); updateUI();
         }
-    }
+    };
 
-    function takeLoan() { money += 50000; loan += 55000; logMessage("اقتراض بنكي بقيمة $50,000"); updateUI(); }
-    function repayLoan() { if (loan > 0 && money >= loan) { money -= loan; loan = 0; logMessage("سداد القرض بالكامل."); updateUI(); } }
-    function buyBonds() { if (money >= 20000) { money -= 20000; bondsOwned++; logMessage("شراء سندات حكومية آمنة."); updateUI(); } }
+    window.takeLoan = function() { window.money += 50000; window.loan += 55000; logMessage("اقتراض بنكي بقيمة $50,000"); updateUI(); };
+    window.repayLoan = function() { if (window.loan > 0 && window.money >= window.loan) { window.money -= window.loan; window.loan = 0; logMessage("سداد القرض بالكامل."); updateUI(); } };
+    window.buyBonds = function() { if (window.money >= 20000) { window.money -= 20000; window.bondsOwned++; logMessage("شراء سندات حكومية آمنة."); updateUI(); } };
 
     function renderStore() {
         const container = document.getElementById('storeList');
@@ -656,41 +657,41 @@
         });
     }
 
-    function nextTurn() {
-        day++;
-        let totalProductionUnits = animals.reduce((sum, a) => sum + (a.count * 5), 0) + assets.reduce((sum, ast) => sum + (ast.count * 25), 0);
-        let totalLogisticsPower = logistics.reduce((sum, l) => sum + (l.power * l.count), 0);
+    window.nextTurn = function() {
+        window.day++;
+        let totalProductionUnits = window.animals.reduce((sum, a) => sum + (a.count * 5), 0) + window.assets.reduce((sum, ast) => sum + (ast.count * 25), 0);
+        let totalLogisticsPower = window.logistics.reduce((sum, l) => sum + (l.power * l.count), 0);
         let logisticsEfficiency = totalProductionUnits === 0 ? 100 : Math.min(100, Math.floor((totalLogisticsPower / totalProductionUnits) * 100));
 
-        let animalIncome = animals.reduce((sum, a) => sum + (Math.floor(a.income * globalMultiplier) * a.count), 0);
-        let logisticsIncome = logistics.reduce((sum, l) => sum + (Math.floor(l.income * globalMultiplier) * l.count), 0);
-        let assetIncome = assets.reduce((sum, ast) => sum + (Math.floor(ast.income * globalMultiplier) * ast.count), 0);
-        let bondsIncome = bondsOwned * 350;
+        let animalIncome = window.animals.reduce((sum, a) => sum + (Math.floor(a.income * window.globalMultiplier) * a.count), 0);
+        let logisticsIncome = window.logistics.reduce((sum, l) => sum + (Math.floor(l.income * window.globalMultiplier) * l.count), 0);
+        let assetIncome = window.assets.reduce((sum, ast) => sum + (Math.floor(ast.income * window.globalMultiplier) * ast.count), 0);
+        let bondsIncome = window.bondsOwned * 350;
 
         let finalDailyProfit = Math.floor((animalIncome + assetIncome) * (logisticsEfficiency / 100)) + logisticsIncome + bondsIncome;
         
-        if (loan > 0) {
-            let dailyInterest = Math.floor(loan * 0.01);
-            money -= dailyInterest;
+        if (window.loan > 0) {
+            let dailyInterest = Math.floor(window.loan * 0.01);
+            window.money -= dailyInterest;
         }
 
-        money += finalDailyProfit;
+        window.money += finalDailyProfit;
 
-        stocks.forEach(stock => {
+        window.stocks.forEach(stock => {
             let change = (Math.random() * (stock.volatility * 2)) - stock.volatility;
             stock.price = Math.max(10, Math.floor(stock.price * (1 + change)));
         });
 
-        logMessage(`نتائج اليوم ${day}: صافي الأرباح المضافة = +${formatMoney(finalDailyProfit)} (كفاءة الشحن: ${logisticsEfficiency}%)`);
+        logMessage(`نتائج اليوم ${window.day}: صافي الأرباح المضافة = +${formatMoney(finalDailyProfit)} (كفاءة الشحن: ${logisticsEfficiency}%)`);
         renderAll(); updateUI();
-    }
+    };
 
     function renderBarns() {
         const container = document.getElementById('barnsList');
         if (!container) return;
         container.innerHTML = '';
-        barns.forEach(barn => {
-            let currentAssigned = animals.filter(a => a.barnId === barn.id).reduce((sum, a) => sum + a.count, 0);
+        window.barns.forEach(barn => {
+            let currentAssigned = window.animals.filter(a => a.barnId === barn.id).reduce((sum, a) => sum + a.count, 0);
             let totalCap = barn.owned * barn.capacity;
 
             const row = document.createElement('div');
@@ -714,14 +715,14 @@
         const container = document.getElementById('animalsList');
         if (!container) return;
         container.innerHTML = '';
-        animals.forEach(animal => {
+        window.animals.forEach(animal => {
             const row = document.createElement('div');
             row.className = 'item-row';
             row.innerHTML = `
                 <div class="item-info">
                     <span class="item-title">${animal.name} (العدد: ${animal.count})</span>
                     <span class="item-desc">${animal.desc}</span>
-                    <span class="item-meta">العائد اليومي: +${formatMoney(Math.floor(animal.income * globalMultiplier))} | السعر: ${formatMoney(animal.cost)}</span>
+                    <span class="item-meta">العائد اليومي: +${formatMoney(Math.floor(animal.income * window.globalMultiplier))} | السعر: ${formatMoney(animal.cost)}</span>
                 </div>
                 <div class="btn-group">
                     <button class="action-btn" onclick="modifyAnimal('${animal.id}', 'buy')">شراء</button>
@@ -736,14 +737,14 @@
         const container = document.getElementById('logisticsList');
         if (!container) return;
         container.innerHTML = '';
-        logistics.forEach(logItem => {
+        window.logistics.forEach(logItem => {
             const row = document.createElement('div');
             row.className = 'item-row';
             row.innerHTML = `
                 <div class="item-info">
                     <span class="item-title">${logItem.name} (الأسطول: ${logItem.count})</span>
                     <span class="item-desc">${logItem.desc}</span>
-                    <span class="item-meta">العائد: +${formatMoney(Math.floor(logItem.income * globalMultiplier))} | السعر: ${formatMoney(logItem.cost)}</span>
+                    <span class="item-meta">العائد: +${formatMoney(Math.floor(logItem.income * window.globalMultiplier))} | السعر: ${formatMoney(logItem.cost)}</span>
                 </div>
                 <div class="btn-group">
                     <button class="action-btn logistics-btn" onclick="modifyLogistics('${logItem.id}', 'buy')">شراء</button>
@@ -758,7 +759,7 @@
         const container = document.getElementById('stocksList');
         if (!container) return;
         container.innerHTML = '';
-        stocks.forEach(stock => {
+        window.stocks.forEach(stock => {
             const row = document.createElement('div');
             row.className = 'item-row';
             row.innerHTML = `
@@ -780,14 +781,14 @@
         const container = document.getElementById('assetsList');
         if (!container) return;
         container.innerHTML = '';
-        assets.forEach(asset => {
+        window.assets.forEach(asset => {
             const row = document.createElement('div');
             row.className = 'item-row';
             row.innerHTML = `
                 <div class="item-info">
                     <span class="item-title">${asset.name} (${asset.count})</span>
                     <span class="item-desc">${asset.desc}</span>
-                    <span class="item-meta">العائد اليومي: +${formatMoney(Math.floor(asset.income * globalMultiplier))} | السعر: ${formatMoney(asset.cost)}</span>
+                    <span class="item-meta">العائد اليومي: +${formatMoney(Math.floor(asset.income * window.globalMultiplier))} | السعر: ${formatMoney(asset.cost)}</span>
                 </div>
                 <button class="action-btn" onclick="buyAsset('${asset.id}')">شراء</button>
             `;
@@ -799,7 +800,7 @@
         const container = document.getElementById('managersList');
         if (!container) return;
         container.innerHTML = '';
-        managers.forEach(mgr => {
+        window.managers.forEach(mgr => {
             const row = document.createElement('div');
             row.className = 'item-row';
             row.innerHTML = `
@@ -826,29 +827,29 @@
 
     function updateUI() {
         const turnTitle = document.getElementById('turnTitleDisplay');
-        if (turnTitle) turnTitle.innerText = `اليوم التكتيكي: ${day}`;
+        if (turnTitle) turnTitle.innerText = `اليوم التكتيكي: ${window.day}`;
         
-        let totalProductionUnits = animals.reduce((sum, a) => sum + (a.count * 5), 0) + assets.reduce((sum, ast) => sum + (ast.count * 25), 0);
-        let totalLogisticsPower = logistics.reduce((sum, l) => sum + (l.power * l.count), 0);
+        let totalProductionUnits = window.animals.reduce((sum, a) => sum + (a.count * 5), 0) + window.assets.reduce((sum, ast) => sum + (ast.count * 25), 0);
+        let totalLogisticsPower = window.logistics.reduce((sum, l) => sum + (l.power * l.count), 0);
         let logisticsEfficiency = totalProductionUnits === 0 ? 100 : Math.min(100, Math.floor((totalLogisticsPower / totalProductionUnits) * 100));
 
-        let animalIncome = animals.reduce((sum, a) => sum + (Math.floor(a.income * globalMultiplier) * a.count), 0);
-        let logisticsIncome = logistics.reduce((sum, l) => sum + (Math.floor(l.income * globalMultiplier) * l.count), 0);
-        let assetIncome = assets.reduce((sum, ast) => sum + (Math.floor(ast.income * globalMultiplier) * ast.count), 0);
-        let bondsIncome = bondsOwned * 350;
+        let animalIncome = window.animals.reduce((sum, a) => sum + (Math.floor(a.income * window.globalMultiplier) * a.count), 0);
+        let logisticsIncome = window.logistics.reduce((sum, l) => sum + (Math.floor(l.income * window.globalMultiplier) * l.count), 0);
+        let assetIncome = window.assets.reduce((sum, ast) => sum + (Math.floor(ast.income * window.globalMultiplier) * ast.count), 0);
+        let bondsIncome = window.bondsOwned * 350;
         let expectedDailyProfit = Math.floor((animalIncome + assetIncome) * (logisticsEfficiency / 100)) + logisticsIncome + bondsIncome;
 
-        let animalsVal = animals.reduce((sum, a) => sum + (Math.floor(a.cost / 1.12) * a.count), 0);
-        let logisticsVal = logistics.reduce((sum, l) => sum + (Math.floor(l.cost / 1.15) * l.count), 0);
-        let assetsVal = assets.reduce((sum, ast) => sum + (Math.floor(ast.cost / 1.18) * ast.count), 0);
-        let stocksVal = stocks.reduce((sum, s) => sum + (s.price * s.owned), 0);
-        let netWorth = money + animalsVal + logisticsVal + assetsVal + stocksVal + (bondsOwned * 20000) - loan;
+        let animalsVal = window.animals.reduce((sum, a) => sum + (Math.floor(a.cost / 1.12) * a.count), 0);
+        let logisticsVal = window.logistics.reduce((sum, l) => sum + (Math.floor(l.cost / 1.15) * l.count), 0);
+        let assetsVal = window.assets.reduce((sum, ast) => sum + (Math.floor(ast.cost / 1.18) * ast.count), 0);
+        let stocksVal = window.stocks.reduce((sum, s) => sum + (s.price * s.owned), 0);
+        let netWorth = window.money + animalsVal + logisticsVal + assetsVal + stocksVal + (window.bondsOwned * 20000) - window.loan;
 
-        if (document.getElementById('moneyDisplay')) document.getElementById('moneyDisplay').innerText = formatMoney(money);
+        if (document.getElementById('moneyDisplay')) document.getElementById('moneyDisplay').innerText = formatMoney(window.money);
         if (document.getElementById('incomeDisplay')) document.getElementById('incomeDisplay').innerText = `+${formatMoney(expectedDailyProfit)}`;
         if (document.getElementById('netWorthDisplay')) document.getElementById('netWorthDisplay').innerText = formatMoney(netWorth);
         if (document.getElementById('logisticsScoreDisplay')) document.getElementById('logisticsScoreDisplay').innerText = logisticsEfficiency + '%';
-        if (document.getElementById('loanStatusDisplay')) document.getElementById('loanStatusDisplay').innerText = `الدين المستحق: ${formatMoney(loan)}`;
+        if (document.getElementById('loanStatusDisplay')) document.getElementById('loanStatusDisplay').innerText = `الدين المستحق: ${formatMoney(window.loan)}`;
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -888,7 +889,6 @@
         return playerId;
     };
 
-    // حفظ الاسم محلياً
     window.saveUsername = function() {
         const inputField = document.getElementById('usernameInput');
         const username = inputField ? inputField.value.trim() : "";
@@ -900,7 +900,6 @@
         }
     };
 
-    // حفظ اللعبة بالكامل سحابياً مع اسم المستخدم
     window.saveGameOnline = async function() {
         const userId = window.getPlayerId();
         const inputField = document.getElementById('usernameInput');
@@ -911,17 +910,17 @@
         try {
             await setDoc(doc(db, "players", userId), {
                 username: username,
-                money: money,
-                loan: loan,
-                bondsOwned: bondsOwned,
-                day: day,
-                globalMultiplier: globalMultiplier,
-                barns: barns,
-                animals: animals,
-                logistics: logistics,
-                stocks: stocks,
-                assets: assets,
-                redeemedCodes: redeemedCodes,
+                money: window.money,
+                loan: window.loan,
+                bondsOwned: window.bondsOwned,
+                day: window.day,
+                globalMultiplier: window.globalMultiplier,
+                barns: window.barns,
+                animals: window.animals,
+                logistics: window.logistics,
+                stocks: window.stocks,
+                assets: window.assets,
+                redeemedCodes: window.redeemedCodes,
                 lastUpdated: new Date()
             }, { merge: true });
             
@@ -932,18 +931,17 @@
         }
     };
 
-    // استرجاع اللعبة بالكامل من السحابة
     window.loadGameOnline = async function() {
         const userId = window.getPlayerId();
         try {
             const docSnap = await getDoc(doc(db, "players", userId));
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                money = data.money !== undefined ? data.money : money;
-                loan = data.loan !== undefined ? data.loan : loan;
-                bondsOwned = data.bondsOwned !== undefined ? data.bondsOwned : bondsOwned;
-                day = data.day !== undefined ? data.day : day;
-                globalMultiplier = data.globalMultiplier !== undefined ? data.globalMultiplier : globalMultiplier;
+                window.money = data.money !== undefined ? data.money : window.money;
+                window.loan = data.loan !== undefined ? data.loan : window.loan;
+                window.bondsOwned = data.bondsOwned !== undefined ? data.bondsOwned : window.bondsOwned;
+                window.day = data.day !== undefined ? data.day : window.day;
+                window.globalMultiplier = data.globalMultiplier !== undefined ? data.globalMultiplier : window.globalMultiplier;
                 
                 if (data.username) {
                     const inputField = document.getElementById('usernameInput');
@@ -951,12 +949,12 @@
                     localStorage.setItem("game_username", data.username);
                 }
                 
-                if (data.redeemedCodes) redeemedCodes = data.redeemedCodes;
-                if (data.barns) barns.splice(0, barns.length, ...data.barns);
-                if (data.animals) animals.splice(0, animals.length, ...data.animals);
-                if (data.logistics) logistics.splice(0, logistics.length, ...data.logistics);
-                if (data.stocks) stocks.splice(0, stocks.length, ...data.stocks);
-                if (data.assets) assets.splice(0, assets.length, ...data.assets);
+                if (data.redeemedCodes) window.redeemedCodes = data.redeemedCodes;
+                if (data.barns) window.barns.splice(0, window.barns.length, ...data.barns);
+                if (data.animals) window.animals.splice(0, window.animals.length, ...data.animals);
+                if (data.logistics) window.logistics.splice(0, window.logistics.length, ...data.logistics);
+                if (data.stocks) window.stocks.splice(0, window.stocks.length, ...data.stocks);
+                if (data.assets) window.assets.splice(0, window.assets.length, ...data.assets);
 
                 renderAll();
                 updateUI();
