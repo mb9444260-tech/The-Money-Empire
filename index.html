@@ -367,7 +367,7 @@
             <div class="item-list" id="barnsList"></div>
         </div>
         <div class="card">
-            <div class="section-title">🐄 تربية الحيوانات والطيور (مع أعمار افتراضية والذبح)</div>
+            <div class="section-title">🐄 تربية الحيوانات والطيور والإنتاج الدوري</div>
             <div class="item-list" id="animalsList"></div>
         </div>
     </div>
@@ -375,8 +375,8 @@
     <!-- تبويب المخزن لبيع المنتجات -->
     <div id="tab-inventory" class="tab-content">
         <div class="card">
-            <div class="section-title">📦 مخزون المنتجات الزراعية والحيوانية واللحوم</div>
-            <div class="item-desc" style="font-size: 0.68rem; color: var(--text-muted);">هنا يتم تخزين البيض، الحليب، اللحوم بأنواعها، والمحاصيل المحصودة:</div>
+            <div class="section-title">📦 مخزون المنتجات الزراعية والحيوانية</div>
+            <div class="item-desc" style="font-size: 0.68rem; color: var(--text-muted);">هنا يتم تخزين البيض والحليب والمحاصيل المحصودة:</div>
             <div class="item-list" id="inventoryList"></div>
         </div>
     </div>
@@ -440,7 +440,7 @@
         <div class="card">
             <div class="section-title">📋 سجل الحسابات والأحداث اليومية</div>
             <div class="ledger-box" id="ledgerBox">
-                <div>[اليوم 1] أهلاً بك. راقب أعمار الحيوانات واذبحها في الوقت المناسب!</div>
+                <div>[اليوم 1] أهلاً بك. راقب دورات إنتاج الحيوانات وأعمارها الأقصى!</div>
             </div>
         </div>
     </div>
@@ -480,13 +480,11 @@
     window.globalMultiplier = 1.0;
     window.redeemedCodes = [];
 
+    // مخزن المنتجات (الأسعار المحدثة: بيض فراخ 85، بيض بط 450، لتر الحليب 500)
     window.inventory = {
-        chickenEggs: { name: 'بيض دجاج طازج', count: 0, price: 10 },
-        duckEggs: { name: 'بيض بط طازج', count: 0, price: 15 },
-        milk: { name: 'حليب أبقار طازج (لتر)', count: 0, price: 25 },
-        chickenMeat: { name: 'لحم دجاج', count: 0, price: 40 },
-        duckMeat: { name: 'لحم بط فاخر', count: 0, price: 55 },
-        beefMeat: { name: 'لحم بقر بقري', count: 0, price: 150 },
+        chickenEggs: { name: 'بيض دجاج طازج', count: 0, price: 85 },
+        duckEggs: { name: 'بيض بط فاخر', count: 0, price: 450 },
+        milk: { name: 'حليب أبقار طازج (لتر)', count: 0, price: 500 },
         crops: { name: 'محاصيل زراعية ناضجة', count: 0, price: 120 }
     };
 
@@ -518,15 +516,52 @@
     ];
 
     window.barns = [
-        { id: 'barn_chick', name: 'حظيرة دواجن وبياض', cost: 400, capacity: 25, owned: 0, desc: 'تربية الدجاج والبط وإنتاج البيض.' },
-        { id: 'barn_cow', name: 'حظيرة أبقار الألبان', cost: 2200, capacity: 12, owned: 0, desc: 'تربية الأبقار لإنتاج الحليب واللحم.' },
+        { id: 'barn_chick', name: 'حظيرة دواجن وبياض', cost: 400, capacity: 25, owned: 0, desc: 'تربية الدجاج والبط وإنتاج البيض الدوري.' },
+        { id: 'barn_cow', name: 'حظيرة أبقار الألبان', cost: 2200, capacity: 12, owned: 0, desc: 'تربية الأبقار لإنتاج الحليب الدوري.' },
         { id: 'greenhouse', name: 'صوبة زراعية حديثة', cost: 10000, capacity: 20, owned: 0, desc: 'زراعة المحاصيل وحصادها يدويًا.' }
     ];
 
+    // الحيوانات مع الأعمار القصوى الجديدة وقواعد الإنتاج المطلوبة
     window.animals = [
-        { id: 'anim_chick', barnId: 'barn_chick', name: 'دجاج بياض', cost: 60, productType: 'chickenEggs', prodAmount: 1, meatType: 'chickenMeat', meatYield: 2, maxAge: 10, age: 0, count: 0, desc: 'تنتج 1 بيضة/يوم. العمر: 10 أيام.' },
-        { id: 'anim_duck', barnId: 'barn_chick', name: 'بط فاخر', cost: 140, productType: 'duckEggs', prodAmount: 1, meatType: 'duckMeat', meatYield: 3, maxAge: 14, age: 0, count: 0, desc: 'تنتج 1 بيضة/يوم. العمر: 14 يوم.' },
-        { id: 'anim_cow', barnId: 'barn_cow', name: 'بقرة حلب', cost: 700, productType: 'milk', prodAmount: 1, meatType: 'beefMeat', meatYield: 15, maxAge: 30, age: 0, count: 0, desc: 'تنتج 1 لتر حليب/يوم. العمر: 30 يوم.' }
+        { 
+            id: 'anim_chick', 
+            barnId: 'barn_chick', 
+            name: 'دجاج بياض', 
+            cost: 60, 
+            productType: 'chickenEggs', 
+            prodAmount: 30, 
+            prodInterval: 5, // كل 5 أيام
+            maxAge: 15, // حد اقصى 15 يوم
+            age: 0, 
+            count: 0, 
+            desc: 'تنتج 30 بيضة كل 5 أيام. الحد الأقصى للعمر: 15 يوم.' 
+        },
+        { 
+            id: 'anim_duck', 
+            barnId: 'barn_chick', 
+            name: 'بط فاخر', 
+            cost: 140, 
+            productType: 'duckEggs', 
+            prodAmount: 10, 
+            prodInterval: 2, // كل 2 يوم
+            maxAge: 18, // حد اقصى 18 يوم
+            age: 0, 
+            count: 0, 
+            desc: 'تنتج 10 بيضات كل يومين. الحد الأقصى للعمر: 18 يوم.' 
+        },
+        { 
+            id: 'anim_cow', 
+            barnId: 'barn_cow', 
+            name: 'بقرة حلب', 
+            cost: 700, 
+            productType: 'milk', 
+            prodAmount: 5, 
+            prodInterval: 3, // كل 3 أيام
+            maxAge: 25, // حد اقصى 25 يوم
+            age: 0, 
+            count: 0, 
+            desc: 'تنتج 5 لتر حليب كل 3 أيام. الحد الأقصى للعمر: 25 يوم.' 
+        }
     ];
 
     window.logistics = [
@@ -637,20 +672,6 @@
             logMessage(`بيع حيوان: ${animal.name}`);
         }
         renderAll(); updateUI();
-    };
-
-    // دالة الذبح المؤكدة والمرتبطة بالنافذة العامة عالمياً
-    window.slaughterAnimal = function(id) {
-        const animal = window.animals.find(a => a.id === id);
-        if (animal && animal.count > 0) {
-            animal.count--;
-            window.inventory[animal.meatType].count += animal.meatYield;
-            logMessage(`🥩 تم ذبح (${animal.name}) وإضافة ${animal.meatYield} وحدة من (${window.inventory[animal.meatType].name}) للمخزن.`);
-            renderAll();
-            updateUI();
-        } else {
-            alert("❌ لا توجد أعداد كافية للذبح!");
-        }
     };
 
     window.plantCrops = function() {
@@ -828,6 +849,7 @@
         }
     }
 
+    // إنهاء اليوم مع تطبيق جداول الإنتاج الدورية وأعمار الحيوانات بدقة
     window.nextTurn = function() {
         if (window.isLocked) return;
 
@@ -844,12 +866,21 @@
         window.animals.forEach(animal => {
             if (animal.count > 0) {
                 animal.age = (animal.age || 0) + 1;
+
+                // التحقق من دورة الإنتاج المحددة لكل نوع
                 if (animal.productType && window.inventory[animal.productType]) {
-                    window.inventory[animal.productType].count += animal.count * animal.prodAmount;
+                    if (window.day % animal.prodInterval === 0) {
+                        let totalProduced = animal.count * animal.prodAmount;
+                        window.inventory[animal.productType].count += totalProduced;
+                        logMessage(`🥚 إنتاج دوري: أنتجت (${animal.name}) عدد ${totalProduced} من (${window.inventory[animal.productType].name}).`);
+                    }
                 }
+
+                // الوفاة التلقائية عند بلوغ الحد الأقصى للعمر
                 if (animal.age >= animal.maxAge) {
                     animal.count = Math.max(0, animal.count - 1);
-                    logMessage(`⚠️ تنبيه: توفي حيوان من نوع (${animal.name}) بسبب انتهاء عمره الافتراضي.`);
+                    animal.age = 0;
+                    logMessage(`⚠️ تنبيه: توفي حيوان (${animal.name}) لبلوغه الحد الأقصى للعمر (${animal.maxAge} يوم).`);
                 }
             }
         });
@@ -880,7 +911,7 @@
             stock.price = Math.max(10, Math.floor(stock.price * (1 + change)));
         });
 
-        logMessage(`نتائج اليوم ${window.day}: تم تحديث الإنتاج والأعمار.`);
+        logMessage(`نتائج اليوم ${window.day}: تقدم الوقت وتحديث دورات الإنتاج والأعمار.`);
         renderAll(); updateUI();
     };
 
@@ -938,24 +969,15 @@
             row.innerHTML = `
                 <div class="item-info">
                     <span class="item-title">${animal.name} (العدد: ${animal.count})</span>
-                    <span class="item-desc">${animal.desc} | العمر: ${animal.maxAge} يوم</span>
-                    <span class="item-meta">سعر الشراء: ${formatMoney(animal.cost)} | عند الذبح تعطي: ${animal.meatYield} وحدة لحم</span>
+                    <span class="item-desc">${animal.desc}</span>
+                    <span class="item-meta">سعر الشراء: ${formatMoney(animal.cost)} | العمر الحالي: ${animal.age}/${animal.maxAge} يوم</span>
                 </div>
                 <div class="btn-group">
                     <button class="action-btn" onclick="modifyAnimal('${animal.id}', 'buy')">شراء</button>
                     <button class="action-btn sell-btn" onclick="modifyAnimal('${animal.id}', 'sell')" ${animal.count === 0 ? 'disabled' : ''}>بيع</button>
-                    <button class="action-btn slaughter-btn" style="background-color: #b91c1c;" data-id="${animal.id}" ${animal.count === 0 ? 'disabled' : ''}>ذبح 🔪</button>
                 </div>
             `;
             container.appendChild(row);
-        });
-
-        // ربط أحداث أزرار الذبح بشكل برمجى مباشر لمنع مشاكل النطاق
-        container.querySelectorAll('.slaughter-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const animId = e.currentTarget.getAttribute('data-id');
-                window.slaughterAnimal(animId);
-            });
         });
     }
 
@@ -971,7 +993,7 @@
             row.innerHTML = `
                 <div class="item-info">
                     <span class="item-title">${prod.name}</span>
-                    <span class="item-meta">الكمية: ${prod.count} وحدة | سعر الوحدة: ${formatMoney(prod.price)}</span>
+                    <span class="item-meta">الكمية بالمخزن: ${prod.count} وحدة | سعر الوحدة: ${formatMoney(prod.price)}</span>
                 </div>
                 <button class="action-btn" style="background-color: var(--green); color: #060911;" onclick="sellProduct('${key}')" ${prod.count === 0 ? 'disabled' : ''}>بيع الكل 💰</button>
             `;
@@ -1091,7 +1113,6 @@
 
         if (document.getElementById('moneyDisplay')) document.getElementById('moneyDisplay').innerText = formatMoney(window.money);
         if (document.getElementById('gemsDisplay')) document.getElementById('gemsDisplay').innerText = window.gems;
-        if (document.getElementById('incomeDisplay')) document.getElementById('incomeDisplay').innerText = `+${formatMoney(expectedDailyProfit)}`;
         if (document.getElementById('netWorthDisplay')) document.getElementById('netWorthDisplay').innerText = formatMoney(netWorth);
         if (document.getElementById('logisticsScoreDisplay')) document.getElementById('logisticsScoreDisplay').innerText = '100%';
         if (document.getElementById('loanStatusDisplay')) document.getElementById('loanStatusDisplay').innerText = `الدين المستحق: ${formatMoney(window.loan)}`;
