@@ -120,31 +120,37 @@
         }
     };
 
-    // الحفظ السحابي مع إرسال الاسم بشكل إجباري
-    window.saveGameOnline = async function() {
-        const userId = getPlayerId();
-        const inputVal = document.getElementById('usernameInput').value.trim();
-        const finalUsername = inputVal || localStorage.getItem("game_username") || "مستثمر مجهول";
+   window.saveGameOnline = async function() {
+    const userId = getPlayerId();
+    
+    // جلب الاسم مباشرة من خانة الإدخال أو من الذاكرة
+    const inputField = document.getElementById('usernameInput');
+    let usernameVal = inputField ? inputField.value.trim() : "";
+    
+    if (!usernameVal) {
+        usernameVal = localStorage.getItem("game_username") || "مستثمر_" + userId.slice(-4);
+    }
+    
+    // حفظ الاسم محلياً للتأكيد
+    localStorage.setItem("game_username", usernameVal);
 
-        // تخزين الاسم للاحتياط
-        localStorage.setItem("game_username", finalUsername);
-
-        try {
-            await setDoc(doc(db, "players", userId), {
-                username: finalUsername, // إرسال الاسم لفايربيس بضمان تام
-                money: window.money,
-                day: window.day,
-                loan: window.loan,
-                bondsOwned: window.bondsOwned,
-                lastUpdated: new Date()
-            }, { merge: true });
-            
-            alert(`🚀 تم الحفظ السحابي بنجاح باسم: (${finalUsername})!`);
-        } catch (e) { 
-            console.error(e); 
-            alert("❌ حدث خطأ أثناء الاتصال بقاعدة البيانات."); 
-        }
-    };
+    try {
+        // إرسال البيانات ومعها حقل الـ username بشكل صريح
+        await setDoc(doc(db, "players", userId), {
+            username: usernameVal,
+            money: window.money,
+            day: window.day,
+            loan: window.loan,
+            bondsOwned: window.bondsOwned,
+            lastUpdated: new Date()
+        }, { merge: true });
+        
+        alert(`🚀 تم الحفظ السحابي بنجاح! اسمك المسجل: [ ${usernameVal} ]`);
+    } catch (e) { 
+        console.error("خطأ في حفظ فايربيس:", e); 
+        alert("❌ حدث خطأ أثناء الاتصال بقاعدة البيانات."); 
+    }
+};
 
     window.loadGameOnline = async function() {
         const userId = getPlayerId();
