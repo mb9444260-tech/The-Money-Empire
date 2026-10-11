@@ -317,12 +317,11 @@
     <!-- لوحة التجديد في حال انتهاء الـ 25 يوم -->
     <div id="renewalPanel" class="card" style="display: none; background: rgba(6, 182, 212, 0.1); border-color: var(--gem); text-align: center; padding: 12px;">
         <div style="font-size: 0.85rem; font-weight: bold; color: var(--gem);">⚠️ انتهت محاولات الأيام الـ 25 المتاحة!</div>
-        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر انتظار الوقت المطلوب.</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر.</div>
         <div style="display: flex; gap: 8px; margin-top: 8px; justify-content: center;">
             <button class="action-btn gem-btn" onclick="renewWithGems()">تجديد بـ 100 جوهرة 💎</button>
             <button class="action-btn" style="background-color: var(--orange);" onclick="startWaitTimer()">انتظار 12 ساعة ⏳</button>
         </div>
-        <div id="timerDisplay" style="font-size: 0.75rem; color: var(--yellow); margin-top: 4px;"></div>
     </div>
 
     <!-- أزرار الحفظ والاسترجاع السحابي -->
@@ -377,7 +376,7 @@
     <div id="tab-inventory" class="tab-content">
         <div class="card">
             <div class="section-title">📦 مخزون المنتجات الزراعية والحيوانية واللحوم</div>
-            <div class="item-desc" style="font-size: 0.68rem; color: var(--text-muted);">هنا يتم تخزين البيض، الحليب، اللحوم بمختلف أنواعها، والمحاصيل المحصودة:</div>
+            <div class="item-desc" style="font-size: 0.68rem; color: var(--text-muted);">هنا يتم تخزين البيض، الحليب، اللحوم بأنواعها، والمحاصيل المحصودة:</div>
             <div class="item-list" id="inventoryList"></div>
         </div>
     </div>
@@ -441,7 +440,7 @@
         <div class="card">
             <div class="section-title">📋 سجل الحسابات والأحداث اليومية</div>
             <div class="ledger-box" id="ledgerBox">
-                <div>[اليوم 1] أهلاً بك. راقب أعمار الحيوانات واذبحها قبل انتهاء عمرها الافتراضي!</div>
+                <div>[اليوم 1] أهلاً بك. راقب أعمار الحيوانات واذبحها في الوقت المناسب!</div>
             </div>
         </div>
     </div>
@@ -450,7 +449,7 @@
     <div id="tab-store" class="tab-content">
         <div class="card">
             <div class="section-title" style="color: var(--yellow);">🎁 قسم أكواد الهدايا (Gift Codes)</div>
-            <div class="item-desc" style="font-size: 0.68rem; color: var(--text-muted);">ادخل كود الهدية للحصول على مكافآت نقدية أو جواهر:</div>
+            <div class="item-desc" style="font-size: 0.68rem; color: var(--text-muted);">ادخل كود الهدية للحصول على مكافآت:</div>
             
             <div style="display: flex; gap: 6px; margin-top: 4px;">
                 <input type="text" id="giftCodeInput" class="gift-input" placeholder="اكتب الكود هنا (مثال: VIP1000)">
@@ -460,7 +459,6 @@
 
         <div class="card">
             <div class="section-title" style="color: var(--gem);">💎 متجر شحن الجواهر (عبر واتساب)</div>
-            <div class="item-desc" style="font-size: 0.68rem; color: var(--text-muted);">اشحن جواهرك لتجديد الأيام ومضاعفة إمبراطوريتك:</div>
             <div class="item-list" id="gemStoreList"></div>
         </div>
 
@@ -477,12 +475,11 @@
     window.loan = 0;
     window.bondsOwned = 0;
     window.day = 1;
-    window.daysPlayedInCycle = 0; // عداد الـ 25 يوم
+    window.daysPlayedInCycle = 0;
     window.isLocked = false;
     window.globalMultiplier = 1.0;
     window.redeemedCodes = [];
 
-    // مخزن المنتجات واللحوم بأنواعها المختلفة
     window.inventory = {
         chickenEggs: { name: 'بيض دجاج طازج', count: 0, price: 10 },
         duckEggs: { name: 'بيض بط طازج', count: 0, price: 15 },
@@ -493,7 +490,6 @@
         crops: { name: 'محاصيل زراعية ناضجة', count: 0, price: 120 }
     };
 
-    // نظام المحاصيل الزراعية
     window.cropFields = {
         growthDaysNeeded: 3,
         currentDaysGrown: 0,
@@ -527,11 +523,10 @@
         { id: 'greenhouse', name: 'صوبة زراعية حديثة', cost: 10000, capacity: 20, owned: 0, desc: 'زراعة المحاصيل وحصادها يدويًا.' }
     ];
 
-    // الحيوانات مع العمر الافتراضي بالأيام وكمية اللحوم عند الذبح
     window.animals = [
-        { id: 'anim_chick', barnId: 'barn_chick', name: 'دجاج بياض', cost: 60, productType: 'chickenEggs', prodAmount: 1, meatType: 'chickenMeat', meatYield: 2, maxAge: 10, age: 0, count: 0, desc: 'تنتج 1 بيضة/يوم. العمر: 10 أيام.' },
-        { id: 'anim_duck', barnId: 'barn_chick', name: 'بط فاخر', cost: 140, productType: 'duckEggs', prodAmount: 1, meatType: 'duckMeat', meatYield: 3, maxAge: 14, age: 0, count: 0, desc: 'تنتج 1 بيضة/يوم. العمر: 14 يوم.' },
-        { id: 'anim_cow', barnId: 'barn_cow', name: 'بقرة حلب', cost: 700, productType: 'milk', prodAmount: 1, meatType: 'beefMeat', meatYield: 15, maxAge: 30, age: 0, count: 0, desc: 'تنتج 1 لتر حليب/يوم. العمر: 30 يوم.' }
+        { id: 'anim_chick', barnId: 'barn_chick', name: 'دجاج بياض', cost: 60, productType: 'chickenEggs', prodAmount: 1, meatType: 'chickenMeat', meatYield: 2, maxAge: 10, count: 0, desc: 'تنتج 1 بيضة/يوم. العمر: 10 أيام.' },
+        { id: 'anim_duck', barnId: 'barn_chick', name: 'بط فاخر', cost: 140, productType: 'duckEggs', prodAmount: 1, meatType: 'duckMeat', meatYield: 3, maxAge: 14, count: 0, desc: 'تنتج 1 بيضة/يوم. العمر: 14 يوم.' },
+        { id: 'anim_cow', barnId: 'barn_cow', name: 'بقرة حلب', cost: 700, productType: 'milk', prodAmount: 1, meatType: 'beefMeat', meatYield: 15, maxAge: 30, count: 0, desc: 'تنتج 1 لتر حليب/يوم. العمر: 30 يوم.' }
     ];
 
     window.logistics = [
@@ -577,7 +572,7 @@
         if (event && event.currentTarget) event.currentTarget.classList.add('active');
     }
 
-    function redeemGiftCode() {
+    window.redeemGiftCode = function() {
         const inputField = document.getElementById('giftCodeInput');
         if (!inputField) return;
         const code = inputField.value.trim().toUpperCase();
@@ -602,7 +597,7 @@
         } else {
             alert("الكود الذي أدخلته غير صحيح أو منتهي الصلاحية!");
         }
-    }
+    };
 
     window.modifyBarn = function(id, action) {
         const barn = window.barns.find(b => b.id === id);
@@ -644,10 +639,10 @@
         renderAll(); updateUI();
     };
 
-    // ذبح الحيوانات للحصول على نوع اللحم المخصص
+    // دالة ذبح الحيوانات وتحديث المخزن بشكل مباشر
     window.slaughterAnimal = function(id) {
         const animal = window.animals.find(a => a.id === id);
-        if (animal.count > 0) {
+        if (animal && animal.count > 0) {
             animal.count--;
             window.inventory[animal.meatType].count += animal.meatYield;
             logMessage(`🥩 تم ذبح (${animal.name}) وإضافة ${animal.meatYield} وحدة من (${window.inventory[animal.meatType].name}) للمخزن.`);
@@ -658,7 +653,6 @@
         }
     };
 
-    // زراعة المحاصيل
     window.plantCrops = function() {
         const greenhouse = window.barns.find(b => b.id === 'greenhouse');
         if (greenhouse.owned === 0) {
@@ -683,7 +677,6 @@
         }
     };
 
-    // حصاد المحاصيل الناضجة
     window.harvestCrops = function() {
         if (window.cropFields.isReady) {
             let harvestedAmount = window.cropFields.activePlots;
@@ -769,7 +762,6 @@
     window.repayLoan = function() { if (window.loan > 0 && window.money >= window.loan) { window.money -= window.loan; window.loan = 0; logMessage("سداد القرض بالكامل."); updateUI(); } };
     window.buyBonds = function() { if (window.money >= 20000) { window.money -= 20000; window.bondsOwned++; logMessage("شراء سندات حكومية آمنة."); updateUI(); } };
 
-    // تجديد الأيام بـ 100 جوهرة
     window.renewWithGems = function() {
         if (window.gems >= 100) {
             window.gems -= 100;
@@ -784,7 +776,6 @@
         }
     };
 
-    // الانتظار لمدة 12 ساعة (محاكاة تنازلية مبسطة أو جاهزة للتجربة)
     window.startWaitTimer = function() {
         alert("⏳ تم تفعيل مؤقت الانتظار (12 ساعة). يمكنك شحن الجواهر لتجاوز الانتظار فوراً عبر المتجر!");
         window.daysPlayedInCycle = 0;
@@ -816,7 +807,6 @@
             container.appendChild(row);
         });
 
-        // متجر الجواهر
         const gemContainer = document.getElementById('gemStoreList');
         if (gemContainer) {
             gemContainer.innerHTML = '';
@@ -838,14 +828,12 @@
         }
     }
 
-    // إنهاء اليوم وتحديث الأعمار والإنتاج
     window.nextTurn = function() {
         if (window.isLocked) return;
 
         window.day++;
         window.daysPlayedInCycle++;
 
-        // التحقق من وصول حد الـ 25 يوم
         if (window.daysPlayedInCycle >= 25) {
             window.isLocked = true;
             document.getElementById('renewalPanel').style.display = 'block';
@@ -853,23 +841,19 @@
             alert("⚠️ لقد أنهيت 25 يوماً! يجب تجديد الأيام إما بـ 100 جوهرة أو بالانتظار.");
         }
 
-        // إنتاج الحيوانات (1 بيضة / 1 لتر حليب) وتقدم العمر
         window.animals.forEach(animal => {
             if (animal.count > 0) {
-                animal.age++;
+                animal.age = (animal.age || 0) + 1;
                 if (animal.productType && window.inventory[animal.productType]) {
                     window.inventory[animal.productType].count += animal.count * animal.prodAmount;
                 }
-                // إذا تجاوز الحيوان عمره الافتراضي يموت
                 if (animal.age >= animal.maxAge) {
-                    let diedCount = Math.ceil(animal.count * 0.2); // يموت نسبة أو يتم خصمهم
                     animal.count = Math.max(0, animal.count - 1);
-                    logMessage(`⚠️ تنبيه: توفي حيوان من نوع (${animal.name}) بسبب انتهاء عمره الافتراضي (${animal.maxAge} يوم).`);
+                    logMessage(`⚠️ تنبيه: توفي حيوان من نوع (${animal.name}) بسبب انتهاء عمره الافتراضي.`);
                 }
             }
         });
 
-        // نمو المحاصيل
         if (window.cropFields.activePlots > 0 && !window.cropFields.isReady) {
             window.cropFields.currentDaysGrown++;
             if (window.cropFields.currentDaysGrown >= window.cropFields.growthDaysNeeded) {
@@ -954,7 +938,7 @@
             row.innerHTML = `
                 <div class="item-info">
                     <span class="item-title">${animal.name} (العدد: ${animal.count})</span>
-                    <span class="item-desc">${animal.desc} | العمر الافتراضي: ${animal.maxAge} يوم</span>
+                    <span class="item-desc">${animal.desc} | العمر: ${animal.maxAge} يوم</span>
                     <span class="item-meta">سعر الشراء: ${formatMoney(animal.cost)} | عند الذبح تعطي: ${animal.meatYield} وحدة لحم</span>
                 </div>
                 <div class="btn-group">
