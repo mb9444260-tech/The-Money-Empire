@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة مراقبة وإدارة الإمبراطورية الاحترافية</title>
+    <style>
+        :root {
+            --bg-color: #060911;
+            --card-bg: #0d1322;
+            --border-color: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --green: #22c55e;
+            --red: #ef4444;
+            --blue: #3b82f6;
+            --yellow: #eab308;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 15px; display: flex; justify-content: center; }
+        .admin-container { width: 100%; max-width: 650px; display: flex; flex-direction: column; gap: 12px; }
+        .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+        h1 { font-size: 1.1rem; color: var(--yellow); text-align: center; }
+        label { font-size: 0.72rem; color: var(--text-muted); }
+        input, select { background: #060911; border: 1px solid var(--border-color); border-radius: 4px; padding: 8px; color: var(--text-main); font-size: 0.8rem; width: 100%; }
+        .btn-row { display: flex; gap: 6px; }
+        button { flex: 1; border: none; padding: 9px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
+        .btn-add { background-color: var(--green); color: #060911; }
+        .btn-sub { background-color: var(--red); color: white; }
+        .btn-refresh { background-color: var(--blue); color: white; margin-bottom: 6px; }
+        .stats-box { background: rgba(0,0,0,0.4); border-radius: 6px; padding: 8px; font-size: 0.75rem; color: #cbd5e1; display: flex; flex-direction: column; gap: 4px; font-family: monospace; }
+        .log-box { background: rgba(0,0,0,0.5); padding: 8px; border-radius: 4px; font-family: monospace; font-size: 0.7rem; color: #94a3b8; max-height: 120px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <h1>🛡️ لوحة القيادة والمراقبة الإدارية للمطور</h1>
+
+    <!-- قسم اختيار اللاعب -->
+    <div class="card">
+        <button class="btn-refresh" onclick="fetchAllPlayers()">🔄 تحديث وتحميل قائمة اللاعبين</button>
+        <label>اختر اللاعب المطلوب مراقبته أو تعديله:</label>
+        <select id="playerSelect" onchange="loadPlayerStats()">
+            <option value="">-- اضغط زر التحديث أعلاه لجلب اللاعبين --</option>
+        </select>
+    </div>
+
+    <!-- لوحة عرض تفاصيل اللاعب المراقب -->
+    <div class="card" id="playerDetailsCard" style="display:none;">
+        <div style="font-size: 0.8rem; font-weight: bold; color: var(--yellow);">📊 سجل وبيانات اللاعب الحالي:</div>
+        <div class="stats-box" id="playerStatsDisplay">
+            <!-- ستظهر تفاصيل اللاعب هنا تلقائياً -->
+        </div>
+
+        <label style="margin-top: 4px;">أدخل المبلغ لتعديل رصيد اللاعب (شحن / خصم):</label>
+        <input type="number" id="modifyAmount" placeholder="مثال: 15000">
+
+        <div class="btn-row">
+            <button class="btn-add" onclick="modifyPlayerMoney('add')">➕ إضافة رصيد (شحن)</button>
+            <button class="btn-sub" onclick="modifyPlayerMoney('sub')">➖ خصم رصيد (عقوبة)</button>
+        </div>
+    </div>
+
+    <!-- سجل الأخطاء والعمليات -->
+    <div class="card">
+        <label>سجل العمليات الإدارية:</label>
+        <div class="log-box" id="adminLog">جاهز للاتصال بقاعدة البيانات...</div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // إعدادات فايربيس الخاصة بمشروعك
+    const firebaseConfig = {
+        apiKey: "AIzaSyDjmtuNuQf6zQwiHeRbbIWI19XdVJzyuU",
+        authDomain: "money-imperator.firebaseapp.com",
+        projectId: "money-imperator",
+        storageBucket: "money-imperator.firebasestorage.app",
+        messagingSenderId: "970812493430",
+        appId: "1:970812493430:web:ba86a9effdd7e92430d957",
+        measurementId: "G-HSJTS6DEJR"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let playersCache = {}; // تخزين مؤقت لبيانات اللاعبين
+
+    // دالة جلب قائمة جميع اللاعبين المسجلين في السحابة
+    window.fetchAllPlayers = async function() {
+        const selectBox = document.getElementById('playerSelect');
+        const logBox = document.getElementById('adminLog');
+        selectBox.innerHTML = '<option value="">جاري جلب اللاعبين...</option>';
+        
+        try {
+            const querySnapshot = await getDocs(collection(db, "players"));
+            selectBox.innerHTML = '<option value="">-- اختر لاعباً من القائمة --</option>';
+            playersCache = {};
+
+            querySnapshot.forEach((docSnap) => {
+                const pId = docSnap.id;
+                const pData = docSnap.data();
+                playersCache[pId] = pData;
+
+                const option = document.createElement('option');
+                option.value = pId;
+                option.text = `ID: ${pId} | النقد: $${(pData.money || 0).toLocaleString()} | اليوم: ${pData.day || 1}`;
+                selectBox.appendChild(option);
+            });
+
+            logBox.innerHTML += `<br>✅ تم تحديث وجلب بيانات جميع اللاعبين بنجاح.`;
+        } catch (e) {
+            console.error(e);
+            logBox.innerHTML += `<br>❌ خطأ أثناء جلب قائمة اللاعبين.`;
+            alert("حدث خطأ أثناء الاتصال بقاعدة البيانات.");
+        }
+    };
+
+    // دالة عرض بيانات اللاعب المختار ومراقبته
+    window.loadPlayerStats = function() {
+        const selectBox = document.getElementById('playerSelect');
+        const card = document.getElementById('playerDetailsCard');
+        const statsBox = document.getElementById('playerStatsDisplay');
+        const pId = selectBox.value;
+
+        if (!pId || !playersCache[pId]) {
+            card.style.display = 'none';
+            return;
+        }
+
+        const data = playersCache[pId];
+        card.style.display = 'flex';
+
+        statsBox.innerHTML = `
+            <div>🆔 معرّف اللاعب: ${pId}</div>
+            <div>💰 النقد السائل: $${(data.money || 0).toLocaleString()}</div>
+            <div>📅 اليوم الحالي باللعبة: ${data.day || 1}</div>
+            <div>🏦 القرض المستحق: $${(data.loan || 0).toLocaleString()}</div>
+            <div>📜 السندات الحكومية: ${data.bondsOwned || 0} سندات</div>
+            <div>🕒 آخر تحديث سحابي: ${data.lastUpdated ? new Date(data.lastUpdated.seconds * 1000).toLocaleString('ar-EG') : 'غير متوفر'}</div>
+        `;
+    };
+
+    // دالة إضافة أو خصم الأموال من رصيد اللاعب
+    window.modifyPlayerMoney = async function(action) {
+        const selectBox = document.getElementById('playerSelect');
+        const pId = selectBox.value;
+        const amountInput = document.getElementById('modifyAmount');
+        const amount = parseInt(amountInput.value);
+        const logBox = document.getElementById('adminLog');
+
+        if (!pId) { alert("الرجاء اختيار لاعب أولاً!"); return; }
+        if (isNaN(amount) || amount <= 0) { alert("الرجاء إدخال مبلغ صحيح."); return; }
+
+        try {
+            const playerRef = doc(db, "players", pId);
+            const playerSnap = await getDoc(playerRef);
+
+            if (playerSnap.exists()) {
+                let currentMoney = playerSnap.data().money || 0;
+                let newMoney = action === 'add' ? currentMoney + amount : currentMoney - amount;
+                
+                if (newMoney < 0) newMoney = 0; // منع نزول الرصيد تحت الصفر
+
+                // تحديث قاعدة البيانات
+                await setDoc(playerRef, { money: newMoney }, { merge: true });
+
+                // تحديث الكاش المحلي وعرض البيانات الجديدة
+                playersCache[pId].money = newMoney;
+                loadPlayerStats();
+                fetchAllPlayers();
+
+                let actionText = action === 'add' ? `إضافة $${amount.toLocaleString()}` : `خصم $${amount.toLocaleString()}`;
+                logBox.innerHTML += `<br>⚡ تم ${actionText} للاعب ${pId}. الرصيد الجديد: $${newMoney.toLocaleString()}`;
+                alert(`تم تنفيذ العملية بنجاح! الرصيد الجديد للاعب: $${newMoney.toLocaleString()}`);
+                
+                amountInput.value = '';
+            }
+        } catch (e) {
+            console.error(e);
+            alert("حدث خطأ أثناء تعديل رصيد اللاعب.");
+        }
+    };
+</script>
+
+</body>
+</html>

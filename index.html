@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاكي الإمبراطورية المالية والاستراتيجية الاحترافي</title>
+    <style>
+        :root {
+            --bg-color: #060911;
+            --card-bg: #0d1322;
+            --border-color: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --green: #22c55e;
+            --red: #ef4444;
+            --blue: #3b82f6;
+            --yellow: #eab308;
+            --orange: #f97316;
+            --purple: #a855f7;
+            --gold: #fbbf24;
+            --whatsapp: #25d366;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 720px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        header {
+            text-align: center;
+            padding: 4px 0;
+        }
+
+        header h1 {
+            font-size: 1.15rem;
+            color: var(--yellow);
+        }
+
+        .turn-panel {
+            background: linear-gradient(135deg, #1e1b4b, #0f172a);
+            border: 1px solid #4338ca;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .turn-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .turn-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #c7d2fe;
+        }
+
+        .turn-sub {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+        }
+
+        .btn-next-turn {
+            background-color: var(--green);
+            color: #060911;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .btn-next-turn:active {
+            transform: scale(0.95);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+
+        .metric-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.62rem;
+            color: var(--text-muted);
+        }
+
+        .metric-val {
+            font-size: 0.82rem;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        .positive { color: var(--green); }
+        .negative { color: var(--red); }
+
+        .tabs {
+            display: flex;
+            gap: 3px;
+            background-color: var(--card-bg);
+            padding: 3px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 6px 3px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.62rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--blue);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--yellow);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 4px;
+        }
+
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 310px;
+            overflow-y: auto;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .item-title {
+            font-size: 0.78rem;
+            font-weight: bold;
+        }
+
+        .item-desc {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        .item-meta {
+            font-size: 0.68rem;
+            color: var(--green);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 4px;
+        }
+
+        button.action-btn {
+            background-color: var(--blue);
+            color: white;
+            border: none;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        button.action-btn:disabled {
+            background-color: var(--border-color);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        button.sell-btn {
+            background-color: var(--red);
+        }
+
+        button.farm-btn {
+            background-color: var(--orange);
+        }
+
+        button.logistics-btn {
+            background-color: var(--purple);
+        }
+
+        .whatsapp-btn {
+            background-color: var(--whatsapp) !important;
+            color: #ffffff !important;
+            font-weight: bold;
+        }
+
+        .gift-input {
+            background-color: #060911;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 6px 10px;
+            color: var(--text-main);
+            font-size: 0.75rem;
+            flex: 1;
+        }
+
+        .ledger-box {
+            background-color: rgba(0,0,0,0.4);
+            border-radius: 6px;
+            padding: 8px;
+            height: 280px;
+            overflow-y: auto;
+            font-size: 0.72rem;
+            font-family: monospace;
+            color: #cbd5e1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🏛️ إمبراطورية التجارة والاستثمار العالمية</h1>
+    </header>
+
+    <div class="turn-panel">
+        <div class="turn-info">
+            <span class="turn-title" id="turnTitleDisplay">اليوم التكتيكي: 1</span>
+            <span class="turn-sub">اضغط "إنهاء اليوم" لجني أرباح مزارعك وأصولك</span>
+        </div>
+        <button class="btn-next-turn" onclick="nextTurn()">إنهاء اليوم ⏭️</button>
+    </div>
+
+    <!-- أزرار الحفظ والاسترجاع السحابي -->
+    <div style="display: flex; gap: 6px;">
+        <button class="action-btn" style="flex:1; background-color: var(--blue); padding: 8px;" onclick="saveGameOnline()">حفظ سحابي ☁️</button>
+        <button class="action-btn" style="flex:1; background-color: var(--green); color:#060911; padding: 8px;" onclick="loadGameOnline()">استرجاع سحابي 🔄</button>
+    </div>
+
+    <div class="metrics-grid">
+        <div class="metric-box">
+            <div class="metric-label">النقد السائل</div>
+            <div class="metric-val" id="moneyDisplay">$2,000</div>
+        </div>
+        <div class="metric-box">
+            <div class="metric-label">العائد المتوقع / يوم</div>
+            <div class="metric-val positive" id="incomeDisplay">$0</div>
+        </div>
+        <div class="metric-box">
+            <div class="metric-label">صافي الثروة</div>
+            <div class="metric-val" id="netWorthDisplay">$2,000</div>
+        </div>
+        <div class="metric-box">
+            <div class="metric-label">كفاءة التوصيل</div>
+            <div class="metric-val" id="logisticsScoreDisplay" style="color: var(--purple);">100%</div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('farms')">🌾 الحظائر</button>
+        <button class="tab-btn" onclick="switchTab('logistics')">🚚 الشحن</button>
+        <button class="tab-btn" onclick="switchTab('stocks')">📊 البورصة</button>
+        <button class="tab-btn" onclick="switchTab('industries')">🏢 الشركات</button>
+        <button class="tab-btn" onclick="switchTab('hr')">👔 الإدارة</button>
+        <button class="tab-btn" onclick="switchTab('finance')">🏦 البنوك</button>
+        <button class="tab-btn" onclick="switchTab('ledger')">📋 السجل</button>
+        <button class="tab-btn" onclick="switchTab('store')" style="color: var(--gold);">🛒 المتجر والهدايا</button>
+    </div>
+
+    <div id="tab-farms" class="tab-content active">
+        <div class="card">
+            <div class="section-title">🏗️ بناء وإدارة الحظائر والصوب</div>
+            <div class="item-list" id="barnsList"></div>
+        </div>
+        <div class="card">
+            <div class="section-title">🐄 تربية الحيوانات والطيور والمحاصيل</div>
+            <div class="item-list" id="animalsList"></div>
+        </div>
+    </div>
+
+    <div id="tab-logistics" class="tab-content">
+        <div class="card">
+            <div class="section-title">🚚 شبكة النقل والشحن</div>
+            <div class="item-list" id="logisticsList"></div>
+        </div>
+    </div>
+
+    <div id="tab-stocks" class="tab-content">
+        <div class="card">
+            <div class="section-title">📈 سوق الأسهم والبورصة العالمية</div>
+            <div class="item-list" id="stocksList"></div>
+        </div>
+    </div>
+
+    <div id="tab-industries" class="tab-content">
+        <div class="card">
+            <div class="section-title">🏢 العقارات والتكنولوجيا والمشاريع</div>
+            <div class="item-list" id="assetsList"></div>
+        </div>
+    </div>
+
+    <div id="tab-hr" class="tab-content">
+        <div class="card">
+            <div class="section-title">👔 تعيين المديرين التنفيذيين</div>
+            <div class="item-list" id="managersList"></div>
+        </div>
+    </div>
+
+    <div id="tab-finance" class="tab-content">
+        <div class="card">
+            <div class="section-title">🏦 التمويل والسندات</div>
+            <div class="item-row">
+                <div class="item-info">
+                    <span class="item-title">قرض استثماري موسع ($50,000)</span>
+                    <span class="item-desc">فائدة يومية بسيطة.</span>
+                </div>
+                <button class="action-btn" onclick="takeLoan()">اقتراض</button>
+            </div>
+            <div class="item-row">
+                <div class="item-info">
+                    <span class="item-title">سداد المديونية</span>
+                    <span class="item-meta" id="loanStatusDisplay">الدين: $0</span>
+                </div>
+                <button class="action-btn" onclick="repayLoan()">سداد الكامل</button>
+            </div>
+            <div class="item-row">
+                <div class="item-info">
+                    <span class="item-title">شراء سندات حكومية ($20,000)</span>
+                    <span class="item-desc">عوائد ثابتة يومية.</span>
+                </div>
+                <button class="action-btn" onclick="buyBonds()">شراء سند</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-ledger" class="tab-content">
+        <div class="card">
+            <div class="section-title">📋 سجل الحسابات والأحداث اليومية</div>
+            <div class="ledger-box" id="ledgerBox">
+                <div>[اليوم 1] أهلاً بك. قم ببناء حظيرة، اشترِ حيوانات، واضغط على "إنهاء اليوم" لجني الأرباح!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- تبويب المتجر وأكواد الهدايا -->
+    <div id="tab-store" class="tab-content">
+        <div class="card">
+            <div class="section-title" style="color: var(--yellow);">🎁 قسم أكواد الهدايا (Gift Codes)</div>
+            <div class="item-desc" style="font-size: 0.68rem; color: var(--text-muted);">ادخل كود الهدية الخاص بك للحصول على مكافآت نقدية فورية:</div>
+            
+            <div style="display: flex; gap: 6px; margin-top: 4px;">
+                <input type="text" id="giftCodeInput" class="gift-input" placeholder="اكتب الكود هنا (مثال: VIP1000)">
+                <button class="action-btn" style="background-color: var(--green); color: #060911;" onclick="redeemGiftCode()">تفعيل الكود 🎁</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-title" style="color: var(--gold);">🛒 متجر المستثمر المميز (تواصل واتساب)</div>
+            <div class="item-desc" style="font-size: 0.68rem; color: var(--text-muted);">تواصل عبر الواتساب لإتمام الدفع وشحن رصيدك المالي فوراً:</div>
+            <div class="item-list" id="storeList"></div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDjmtuNuQf6zQwiHeRbbIWI19XdVJzyuU",
+        authDomain: "money-imperator.firebaseapp.com",
+        projectId: "money-imperator",
+        storageBucket: "money-imperator.firebasestorage.app",
+        messagingSenderId: "970812493430",
+        appId: "1:970812493430:web:ba86a9effdd7e92430d957",
+        measurementId: "G-HSJTS6DEJR"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.getPlayerId = function() {
+        let playerId = localStorage.getItem("game_player_id");
+        if (!playerId) {
+            playerId = "player_" + Math.random().toString(36).substring(2, 9);
+            localStorage.setItem("game_player_id", playerId);
+        }
+        return playerId;
+    }
+
+    window.saveGameOnline = async function() {
+        const userId = getPlayerId();
+        try {
+            await setDoc(doc(db, "players", userId), {
+                money: money, loan: loan, bondsOwned: bondsOwned, day: day, globalMultiplier: globalMultiplier,
+                barns: barns, animals: animals, logistics: logistics, stocks: stocks, assets: assets, 
+                redeemedCodes: redeemedCodes, lastUpdated: new Date()
+            });
+            alert(`تم الحفظ السحابي بنجاح! ☁️\nمعرّفك: ${userId}`);
+        } catch (e) { console.error(e); alert("خطأ في الحفظ السحابي."); }
+    };
+
+    window.loadGameOnline = async function() {
+        const userId = getPlayerId();
+        try {
+            const docRef = doc(db, "players", userId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                money = data.money; loan = data.loan; bondsOwned = data.bondsOwned; day = data.day; globalMultiplier = data.globalMultiplier;
+                if(data.redeemedCodes) redeemedCodes = data.redeemedCodes;
+                if(data.barns) barns.splice(0, barns.length, ...data.barns);
+                if(data.animals) animals.splice(0, animals.length, ...data.animals);
+                if(data.logistics) logistics.splice(0, logistics.length, ...data.logistics);
+                if(data.stocks) stocks.splice(0, stocks.length, ...data.stocks);
+                if(data.assets) assets.splice(0, assets.length, ...data.assets);
+                renderAll(); updateUI();
+                alert("تم استرجاع إمبراطوريتك بنجاح! 🔄");
+            } else { alert("لا توجد بيانات محفوظة."); }
+        } catch (e) { console.error(e); alert("خطأ في الاسترجاع."); }
+    };
+</script>
+
+<script>
+    let money = 2000;
+    let loan = 0;
+    let bondsOwned = 0;
+    let day = 1;
+    let globalMultiplier = 1.0;
+    
+    // قائمة لتخزين الأكواد التي استعملها اللاعب حتى لا يكررها
+    let redeemedCodes = [];
+
+    const myWhatsAppNumber = "201070813027";
+
+    // قاعدة بيانات الأكواد المتاحة في اللعبة
+    const giftCodesDB = {
+        "VIP1000": { reward: 10000, desc: "هدية ترحيبية ($10,000)" },
+        "EMPIRE50K": { reward: 50000, desc: "منحة التوسع الكبرى ($50,000)" },
+        "START2026": { reward: 25000, desc: "هدية العام الجديد ($25,000)" }
+    };
+
+    const storePackages = [
+        { name: '💼 حقيبة المستثمر المبتدئ ($10,000 نقد)', price: '$2.99', amount: 10000 },
+        { name: '📈 محفظة رجال الأعمال ($75,000 نقد)', price: '$9.99', amount: 75000 },
+        { name: '🏛️ صندوق الإمبراطورية الماسي ($350,000 نقد)', price: '$29.99', amount: 350000 }
+    ];
+
+    const barns = [
+        { id: 'barn_chick', name: 'حظيرة دواجن وبياض', cost: 400, capacity: 25, owned: 0, desc: 'تربية وإنتاج الدواجن والبيض.' },
+        { id: 'barn_cow', name: 'حظيرة أبقار الألبان', cost: 2200, capacity: 12, owned: 0, desc: 'تربية الأبقار الحلوب.' },
+        { id: 'greenhouse', name: 'صوبة زراعية حديثة', cost: 10000, capacity: 20, owned: 0, desc: 'زراعة محاصيل عالية العائد.' }
+    ];
+
+    const animals = [
+        { id: 'anim_chick', barnId: 'barn_chick', name: 'دجاج بيض ولحم', cost: 60, income: 12, count: 0, desc: 'إنتاج يومي ثابت.' },
+        { id: 'anim_duck', barnId: 'barn_chick', name: 'بط فاخر', cost: 140, income: 28, count: 0, desc: 'عائد يومي مرتفع.' },
+        { id: 'anim_cow', barnId: 'barn_cow', name: 'بقرة حلوب هولندية', cost: 700, income: 130, count: 0, desc: 'حليب ولحوم ممتازة.' },
+        { id: 'crop_wheat', barnId: 'greenhouse', name: 'محصول قمح وغلال', cost: 1100, income: 320, count: 0, desc: 'محاصيل ضخمة للأسواق.' }
+    ];
+
+    const logistics = [
+        { id: 'log_van', name: 'شاحنة توزيع محلية', cost: 1200, income: 35, power: 15, count: 0, desc: 'توزيع محلي يدر عائداً.' },
+        { id: 'log_truck', name: 'أسطول شاحنات ثقيلة', cost: 8500, income: 240, power: 80, count: 0, desc: 'نقل ثقيل وعائد ممتاز.' },
+        { id: 'log_cargo', name: 'طائرة شحن تجارية', cost: 45000, income: 1350, power: 450, count: 0, desc: 'شحن دولي فائق الربحية.' }
+    ];
+
+    const stocks = [
+        { id: 's1', name: 'تيك فالي للتقنية (TECH)', price: 65, owned: 0, volatility: 0.14 },
+        { id: 's2', name: 'طاقة البترول العالمية (OIL)', price: 140, owned: 0, volatility: 0.08 },
+        { id: 's3', name: 'صندوق الذهب والمعادن (GLD)', price: 220, owned: 0, volatility: 0.05 },
+        { id: 's4', name: 'عقارات المستقبل (RE)', price: 310, owned: 0, volatility: 0.06 },
+        { id: 's5', name: 'الطاقة الخضراء (GREEN)', price: 95, owned: 0, volatility: 0.18 }
+    ];
+
+    const assets = [
+        { id: 'r1', name: 'مبنى تجاري إداري', cost: 120000, income: 1400, count: 0, desc: 'إيجارات يومية ثابتة.' },
+        { id: 't1', name: 'شركة برمجيات وسحابيات', cost: 2000000, income: 21000, count: 0, desc: 'بنية تقنية هائلة.' }
+    ];
+
+    const managers = [
+        { id: 'm1', name: 'خبير لوجستيات ونقل', cost: 15000, bonus: 1.25, hired: false, desc: 'يرفع كفاءة أسطول الشحن 25%.' },
+        { id: 'm2', name: 'مدير تنفيذي عام', cost: 120000, bonus: 1.3, hired: false, desc: 'يرفع إيرادات المشاريع 30%.' }
+    ];
+
+    function formatMoney(amount) { return '$' + amount.toLocaleString(); }
+
+    function logMessage(msg) {
+        const ledgerBox = document.getElementById('ledgerBox');
+        const entry = document.createElement('div');
+        entry.innerText = `[اليوم ${day}] ${msg}`;
+        ledgerBox.appendChild(entry);
+        ledgerBox.scrollTop = ledgerBox.scrollHeight;
+    }
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + tabName).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // دالة تفعيل كود الهدية
+    function redeemGiftCode() {
+        const inputField = document.getElementById('giftCodeInput');
+        const code = inputField.value.trim().toUpperCase();
+
+        if (!code) {
+            alert("الرجاء إدخال كود هدية صالح!");
+            return;
+        }
+
+        if (redeemedCodes.includes(code)) {
+            alert("لقد قمت باستخدام هذا الكود من قبل بالفعل!");
+            return;
+        }
+
+        if (giftCodesDB[code]) {
+            const rewardAmount = giftCodesDB[code].reward;
+            money += rewardAmount;
+            redeemedCodes.push(code);
+            logMessage(`🎁 تم تفعيل كود الهدية (${code}) بنجاح! المكافأة: +${formatMoney(rewardAmount)}`);
+            alert(`مبروك! تم تفعيل الكود بنجاح وحصلت على ${formatMoney(rewardAmount)} 🎉`);
+            inputField.value = '';
+            updateUI();
+        } else {
+            alert("الكود الذي أدخلته غير صحيح أو منتهي الصلاحية!");
+        }
+    }
+
+    function modifyBarn(id, action) {
+        const barn = barns.find(b => b.id === id);
+        if (action === 'buy' && money >= barn.cost) {
+            money -= barn.cost;
+            barn.owned++;
+            barn.cost = Math.floor(barn.cost * 1.2);
+            logMessage(`بناء حظيرة جديدة: ${barn.name}`);
+        } else if (action === 'sell' && barn.owned > 0) {
+            let refund = Math.floor((barn.cost / 1.2) * 0.75);
+            money += refund;
+            barn.owned--;
+            logMessage(`بيع حظيرة: ${barn.name} واسترداد ${formatMoney(refund)}`);
+        }
+        renderAll(); updateUI();
+    }
+
+    function modifyAnimal(id, action) {
+        const animal = animals.find(a => a.id === id);
+        const barn = barns.find(b => b.id === animal.barnId);
+        let currentAssigned = animals.filter(a => a.barnId === barn.id).reduce((sum, a) => sum + a.count, 0);
+        let maxCapacity = barn.owned * barn.capacity;
+
+        if (action === 'buy') {
+            if (barn.owned === 0) { alert("يجب بناء حظيرة مناسبة أولاً!"); return; }
+            if (currentAssigned >= maxCapacity) { alert("سعة الحظائر ممتلئة! ابنِ حظيرة جديدة."); return; }
+            if (money >= animal.cost) {
+                money -= animal.cost;
+                animal.count++;
+                animal.cost = Math.floor(animal.cost * 1.12);
+                logMessage(`إضافة حيوان/محصول: ${animal.name}`);
+            }
+        } else if (action === 'sell' && animal.count > 0) {
+            let refund = Math.floor((animal.cost / 1.12) * 0.8);
+            money += refund;
+            animal.count--;
+            logMessage(`بيع عنصر: ${animal.name} واسترداد ${formatMoney(refund)}`);
+        }
+        renderAll(); updateUI();
+    }
+
+    function modifyLogistics(id, action) {
+        const logItem = logistics.find(l => l.id === id);
+        if (action === 'buy' && money >= logItem.cost) {
+            money -= logItem.cost;
+            logItem.count++;
+            logItem.cost = Math.floor(logItem.cost * 1.15);
+            logMessage(`شراء أسطول شحن: ${logItem.name}`);
+        } else if (action === 'sell' && logItem.count > 0) {
+            let refund = Math.floor((logItem.cost / 1.15) * 0.8);
+            money += refund;
+            logItem.count--;
+            logMessage(`بيع وحدة شحن: ${logItem.name} واسترداد ${formatMoney(refund)}`);
+        }
+        renderLogistics(); updateUI();
+    }
+
+    function tradeStock(id, action) {
+        const stock = stocks.find(s => s.id === id);
+        if (action === 'buy' && money >= stock.price) {
+            money -= stock.price; stock.owned++;
+            logMessage(`شراء سهم ${stock.name}`);
+        } else if (action === 'sell' && stock.owned > 0) {
+            money += stock.price; stock.owned--;
+            logMessage(`بيع سهم ${stock.name}`);
+        } else if (action === 'sellAll' && stock.owned > 0) {
+            let val = stock.price * stock.owned;
+            money += val;
+            logMessage(`بيع كل أسهم ${stock.name} مقابل ${formatMoney(val)}`);
+            stock.owned = 0;
+        }
+        renderStocks(); updateUI();
+    }
+
+    function buyAsset(id) {
+        const asset = assets.find(a => a.id === id);
+        if (money >= asset.cost) {
+            money -= asset.cost; asset.count++;
+            asset.cost = Math.floor(asset.cost * 1.18);
+            logMessage(`شراء أصل تجاري: ${asset.name}`);
+            renderAll(); updateUI();
+        }
+    }
+
+    function hireManager(id) {
+        const mgr = managers.find(m => m.id === id);
+        if (!mgr.hired && money >= mgr.cost) {
+            money -= mgr.cost; mgr.hired = true;
+            globalMultiplier *= mgr.bonus;
+            logMessage(`تعيين الخبير الإداري: ${mgr.name}`);
+            renderManagers(); updateUI();
+        }
+    }
+
+    function takeLoan() { money += 50000; loan += 55000; logMessage("اقتراض بنكي بقيمة $50,000"); updateUI(); }
+    function repayLoan() { if (loan > 0 && money >= loan) { money -= loan; loan = 0; logMessage("سداد القرض بالكامل."); updateUI(); } }
+    function buyBonds() { if (money >= 20000) { money -= 20000; bondsOwned++; logMessage("شراء سندات حكومية آمنة."); updateUI(); } }
+
+    function renderStore() {
+        const container = document.getElementById('storeList');
+        container.innerHTML = '';
+        const playerId = window.getPlayerId ? window.getPlayerId() : "unknown_player";
+
+        storePackages.forEach(pkg => {
+            let message = encodeURIComponent(`مرحباً، أريد شراء "${pkg.name}" بسعر ${pkg.price} لتدعيم حسابي في لعبة إمبراطورية التجارة.\nمعرّف حسابي في اللعبة هو: ${playerId}`);
+            let whatsappLink = `https://wa.me/${myWhatsAppNumber}?text=${message}`;
+
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.innerHTML = `
+                <div class="item-info">
+                    <span class="item-title">${pkg.name}</span>
+                    <span class="item-desc">السعر: ${pkg.price}</span>
+                </div>
+                <a href="${whatsappLink}" target="_blank" class="action-btn whatsapp-btn">تواصل واتساب 💬</a>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function nextTurn() {
+        day++;
+
+        let totalProductionUnits = animals.reduce((sum, a) => sum + (a.count * 5), 0) + assets.reduce((sum, ast) => sum + (ast.count * 25), 0);
+        let totalLogisticsPower = logistics.reduce((sum, l) => sum + (l.power * l.count), 0);
+        let logisticsEfficiency = totalProductionUnits === 0 ? 100 : Math.min(100, Math.floor((totalLogisticsPower / totalProductionUnits) * 100));
+
+        let animalIncome = animals.reduce((sum, a) => sum + (Math.floor(a.income * globalMultiplier) * a.count), 0);
+        let logisticsIncome = logistics.reduce((sum, l) => sum + (Math.floor(l.income * globalMultiplier) * l.count), 0);
+        let assetIncome = assets.reduce((sum, ast) => sum + (Math.floor(ast.income * globalMultiplier) * ast.count), 0);
+        let bondsIncome = bondsOwned * 350;
+
+        let finalDailyProfit = Math.floor((animalIncome + assetIncome) * (logisticsEfficiency / 100)) + logisticsIncome + bondsIncome;
+        
+        if (loan > 0) {
+            let dailyInterest = Math.floor(loan * 0.01);
+            money -= dailyInterest;
+        }
+
+        money += finalDailyProfit;
+
+        stocks.forEach(stock => {
+            let change = (Math.random() * (stock.volatility * 2)) - stock.volatility;
+            stock.price = Math.max(10, Math.floor(stock.price * (1 + change)));
+        });
+
+        logMessage(`نتائج اليوم ${day}: صافي الأرباح المضافة = +${formatMoney(finalDailyProfit)} (كفاءة الشحن: ${logisticsEfficiency}%)`);
+        
+        renderAll(); updateUI();
+    }
+
+    function renderBarns() {
+        const container = document.getElementById('barnsList');
+        container.innerHTML = '';
+        barns.forEach(barn => {
+            let currentAssigned = animals.filter(a => a.barnId === barn.id).reduce((sum, a) => sum + a.count, 0);
+            let totalCap = barn.owned * barn.capacity;
+
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.innerHTML = `
+                <div class="item-info">
+                    <span class="item-title">${barn.name} (المملوك: ${barn.owned})</span>
+                    <span class="item-desc">${barn.desc}</span>
+                    <span class="item-meta">السعة: ${currentAssigned} / ${totalCap} | التكلفة: ${formatMoney(barn.cost)}</span>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn farm-btn" onclick="modifyBarn('${barn.id}', 'buy')">بناء</button>
+                    <button class="action-btn sell-btn" onclick="modifyBarn('${barn.id}', 'sell')" ${barn.owned === 0 ? 'disabled' : ''}>بيع</button>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function renderAnimals() {
+        const container = document.getElementById('animalsList');
+        container.innerHTML = '';
+        animals.forEach(animal => {
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.innerHTML = `
+                <div class="item-info">
+                    <span class="item-title">${animal.name} (العدد: ${animal.count})</span>
+                    <span class="item-desc">${animal.desc}</span>
+                    <span class="item-meta">العائد اليومي: +${formatMoney(Math.floor(animal.income * globalMultiplier))} | السعر: ${formatMoney(animal.cost)}</span>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn" onclick="modifyAnimal('${animal.id}', 'buy')">شراء</button>
+                    <button class="action-btn sell-btn" onclick="modifyAnimal('${animal.id}', 'sell')" ${animal.count === 0 ? 'disabled' : ''}>بيع</button>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function renderLogistics() {
+        const container = document.getElementById('logisticsList');
+        container.innerHTML = '';
+        logistics.forEach(logItem => {
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.innerHTML = `
+                <div class="item-info">
+                    <span class="item-title">${logItem.name} (الأسطول: ${logItem.count})</span>
+                    <span class="item-desc">${logItem.desc}</span>
+                    <span class="item-meta">العائد: +${formatMoney(Math.floor(logItem.income * globalMultiplier))} | السعر: ${formatMoney(logItem.cost)}</span>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn logistics-btn" onclick="modifyLogistics('${logItem.id}', 'buy')">شراء</button>
+                    <button class="action-btn sell-btn" onclick="modifyLogistics('${logItem.id}', 'sell')" ${logItem.count === 0 ? 'disabled' : ''}>بيع</button>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function renderStocks() {
+        const container = document.getElementById('stocksList');
+        container.innerHTML = '';
+        stocks.forEach(stock => {
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.innerHTML = `
+                <div class="item-info">
+                    <span class="item-title">${stock.name} (المحفظة: ${stock.owned})</span>
+                    <span class="item-meta">السعر: ${formatMoney(stock.price)}</span>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn" onclick="tradeStock('${stock.id}', 'buy')">شراء</button>
+                    <button class="action-btn sell-btn" onclick="tradeStock('${stock.id}', 'sell')" ${stock.owned === 0 ? 'disabled' : ''}>بيع</button>
+                    <button class="action-btn sell-btn" style="background-color: #b91c1c;" onclick="tradeStock('${stock.id}', 'sellAll')" ${stock.owned === 0 ? 'disabled' : ''}>بيع الكل</button>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function renderAssets() {
+        const container = document.getElementById('assetsList');
+        container.innerHTML = '';
+        assets.forEach(asset => {
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.innerHTML = `
+                <div class="item-info">
+                    <span class="item-title">${asset.name} (${asset.count})</span>
+                    <span class="item-desc">${asset.desc}</span>
+                    <span class="item-meta">العائد اليومي: +${formatMoney(Math.floor(asset.income * globalMultiplier))} | السعر: ${formatMoney(asset.cost)}</span>
+                </div>
+                <button class="action-btn" onclick="buyAsset('${asset.id}')">شراء</button>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function renderManagers() {
+        const container = document.getElementById('managersList');
+        container.innerHTML = '';
+        managers.forEach(mgr => {
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.innerHTML = `
+                <div class="item-info">
+                    <span class="item-title">${mgr.name} ${mgr.hired ? '(نشط ✅)' : ''}</span>
+                    <span class="item-desc">${mgr.desc}</span>
+                    <span class="item-meta">التكلفة: ${formatMoney(mgr.cost)}</span>
+                </div>
+                <button class="action-btn" onclick="hireManager('${mgr.id}')" ${mgr.hired ? 'disabled' : ''}>توظيف</button>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function renderAll() {
+        renderBarns();
+        renderAnimals();
+        renderLogistics();
+        renderStocks();
+        renderAssets();
+        renderManagers();
+        renderStore();
+    }
+
+    function updateUI() {
+        document.getElementById('turnTitleDisplay').innerText = `اليوم الاستراتيجي: ${day}`;
+        
+        let totalProductionUnits = animals.reduce((sum, a) => sum + (a.count * 5), 0) + assets.reduce((sum, ast) => sum + (ast.count * 25), 0);
+        let totalLogisticsPower = logistics.reduce((sum, l) => sum + (l.power * l.count), 0);
+        let logisticsEfficiency = totalProductionUnits === 0 ? 100 : Math.min(100, Math.floor((totalLogisticsPower / totalProductionUnits) * 100));
+
+        let animalIncome = animals.reduce((sum, a) => sum + (Math.floor(a.income * globalMultiplier) * a.count), 0);
+        let logisticsIncome = logistics.reduce((sum, l) => sum + (Math.floor(l.income * globalMultiplier) * l.count), 0);
+        let assetIncome = assets.reduce((sum, ast) => sum + (Math.floor(ast.income * globalMultiplier) * ast.count), 0);
+        let bondsIncome = bondsOwned * 350;
+        let expectedDailyProfit = Math.floor((animalIncome + assetIncome) * (logisticsEfficiency / 100)) + logisticsIncome + bondsIncome;
+
+        let animalsVal = animals.reduce((sum, a) => sum + (Math.floor(a.cost / 1.12) * a.count), 0);
+        let logisticsVal = logistics.reduce((sum, l) => sum + (Math.floor(l.cost / 1.15) * l.count), 0);
+        let assetsVal = assets.reduce((sum, ast) => sum + (Math.floor(ast.cost / 1.18) * ast.count), 0);
+        let stocksVal = stocks.reduce((sum, s) => sum + (s.price * s.owned), 0);
+        let netWorth = money + animalsVal + logisticsVal + assetsVal + stocksVal + (bondsOwned * 20000) - loan;
+
+        document.getElementById('moneyDisplay').innerText = formatMoney(money);
+        document.getElementById('incomeDisplay').innerText = `+${formatMoney(expectedDailyProfit)}`;
+        document.getElementById('netWorthDisplay').innerText = formatMoney(netWorth);
+        document.getElementById('logisticsScoreDisplay').innerText = logisticsEfficiency + '%';
+        document.getElementById('loanStatusDisplay').innerText = `الدين المستحق: ${formatMoney(loan)}`;
+    }
+
+    renderAll();
+    updateUI();
+</script>
+
+</body>
+</html>
+
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDjmtuNuQf6zQwiHeRbbIWI19XdVJzyuU",
+        authDomain: "money-imperator.firebaseapp.com",
+        projectId: "money-imperator",
+        storageBucket: "money-imperator.firebasestorage.app",
+        messagingSenderId: "970812493430",
+        appId: "1:970812493430:web:ba86a9effdd7e92430d957",
+        measurementId: "G-HSJTS6DEJR"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // توليد أو جلب معرف فريد لكل لاعب ومشاركته في المتصفح محلياً
+    function getPlayerId() {
+        let playerId = localStorage.getItem("game_player_id");
+        if (!playerId) {
+            playerId = "player_" + Math.random().toString(36).substring(2, 9);
+            localStorage.setItem("game_player_id", playerId);
+        }
+        return playerId;
+    }
+
+    // دالة حفظ الإمبراطورية بالكامل سحابياً
+    window.saveGameOnline = async function() {
+        const userId = getPlayerId();
+        try {
+            await setDoc(doc(db, "players", userId), {
+                money: money,
+                loan: loan,
+                bondsOwned: bondsOwned,
+                day: day,
+                globalMultiplier: globalMultiplier,
+                barns: barns,
+                animals: animals,
+                logistics: logistics,
+                stocks: stocks,
+                assets: assets,
+                lastUpdated: new Date()
+            });
+            alert(`تم حفظ إمبراطوريتك بنجاح! ☁️\nمعرّف حسابك: ${userId}`);
+        } catch (e) {
+            console.error("خطأ في الحفظ: ", e);
+            alert("حدث خطأ أثناء حفظ البيانات.");
+        }
+    };
+
+    // دالة استرجاع الإمبراطورية بالكامل من السحابة
+    window.loadGameOnline = async function() {
+        const userId = getPlayerId();
+        try {
+            const docRef = doc(db, "players", userId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                money = data.money;
+                loan = data.loan;
+                bondsOwned = data.bondsOwned;
+                day = data.day;
+                globalMultiplier = data.globalMultiplier;
+                
+                // تحديث مصفوفات اللعبة بالبيانات المسترجعة
+                if(data.barns) barns.splice(0, barns.length, ...data.barns);
+                if(data.animals) animals.splice(0, animals.length, ...data.animals);
+                if(data.logistics) logistics.splice(0, logistics.length, ...data.logistics);
+                if(data.stocks) stocks.splice(0, stocks.length, ...data.stocks);
+                if(data.assets) assets.splice(0, assets.length, ...data.assets);
+
+                renderAll();
+                updateUI();
+                alert("تم استرجاع بيانات إمبراطوريتك بنجاح! 🔄");
+            } else {
+                alert("لا توجد بيانات محفوظة لهذا الحساب بعد.");
+            }
+        } catch (e) {
+            console.error("خطأ في التحميل: ", e);
+            alert("حدث خطأ أثناء استرجاع البيانات.");
+        }
+    };
+</script>
+
+</body>
+</html>
