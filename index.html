@@ -954,24 +954,7 @@
         }
         return playerId;
     }
-
-    // دالة حفظ الإمبراطورية بالكامل سحابياً
-    window.saveGameOnline = async function() {
-        const userId = getPlayerId();
-        try {
-            await setDoc(doc(db, "players", userId), {
-                money: money,
-                loan: loan,
-                bondsOwned: bondsOwned,
-                day: day,
-                globalMultiplier: globalMultiplier,
-                barns: barns,
-                animals: animals,
-                logistics: logistics,
-                stocks: stocks,
-                assets: assets,
-                lastUpdated: new Date()
-                // داخل دالة حفظ اللعبة saveGameOnline
+     // داخل دالة حفظ اللعبة saveGameOnline
 window.saveGameOnline = async function() {
     const userId = getPlayerId();
     const username = document.getElementById('usernameInput').value.trim() || "مستثمر مجهول";
@@ -1002,6 +985,24 @@ window.saveUsername = function() {
             alert("حدث خطأ أثناء حفظ البيانات.");
         }
     };
+
+    // دالة حفظ الإمبراطورية بالكامل سحابياً
+    window.saveGameOnline = async function() {
+        const userId = getPlayerId();
+        try {
+            await setDoc(doc(db, "players", userId), {
+                money: money,
+                loan: loan,
+                bondsOwned: bondsOwned,
+                day: day,
+                globalMultiplier: globalMultiplier,
+                barns: barns,
+                animals: animals,
+                logistics: logistics,
+                stocks: stocks,
+                assets: assets,
+                lastUpdated: new Date()
+               
 
     // دالة استرجاع الإمبراطورية بالكامل من السحابة
     window.loadGameOnline = async function() {
