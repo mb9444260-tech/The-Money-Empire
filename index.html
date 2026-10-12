@@ -592,7 +592,6 @@
             cost: 120, 
             productType: 'chickenEggs', 
             prodAmount: 30, 
-            prodInterval: 1, 
             maxAge: 20, 
             age: 0, 
             count: 0, 
@@ -605,7 +604,6 @@
             cost: 280, 
             productType: 'duckEggs', 
             prodAmount: 10, 
-            prodInterval: 1, 
             maxAge: 22, 
             age: 0, 
             count: 0, 
@@ -618,7 +616,6 @@
             cost: 1400, 
             productType: 'milk', 
             prodAmount: 5, 
-            prodInterval: 1, 
             maxAge: 30, 
             age: 0, 
             count: 0, 
@@ -915,7 +912,7 @@
         document.getElementById('eventDisplay').innerText = `السوق: ${window.currentEvent.name}`;
     }
 
-    // دالة إنهاء اليوم المحدثة لضمان تقدم الأيام وأعمار الحيوانات والإنتاج
+    // دالة إنهاء اليوم المحدثة لضمان تقدم الأيام وأعمار الحيوانات والإنتاج في كل يوم
     window.nextTurn = function() {
         if (window.isLocked) return;
 
@@ -941,17 +938,15 @@
             logMessage(`👷 العمال الآليون قاموا ببزر وحصاد المحاصيل تلقائياً!`);
         }
 
-        // تحديث أعمار وإنتاج الحيوانات يومياً
+        // تحديث الأعمار والإنتاج يومياً لكل حيوان موجود
         window.animals.forEach(animal => {
             if (animal.count > 0) {
                 animal.age = (Number(animal.age) || 0) + 1;
 
                 if (animal.productType && window.inventory[animal.productType]) {
-                    if (window.day % (animal.prodInterval || 1) === 0) {
-                        let totalProduced = Math.floor(animal.count * animal.prodAmount * window.currentWeather.effect);
-                        window.inventory[animal.productType].count += totalProduced;
-                        logMessage(`🥚 إنتاج دوري: أنتجت (${animal.name}) عدد ${totalProduced} من (${window.inventory[animal.productType].name}).`);
-                    }
+                    let totalProduced = Math.floor(animal.count * animal.prodAmount * window.currentWeather.effect);
+                    window.inventory[animal.productType].count += totalProduced;
+                    logMessage(`🥚 إنتاج دوري: أنتجت (${animal.name}) عدد ${totalProduced} من (${window.inventory[animal.productType].name}).`);
                 }
 
                 if (animal.age >= animal.maxAge) {
@@ -1314,7 +1309,6 @@
         return emailOrUser.trim().toLowerCase().replace(/[@\.]/g, '_');
     }
 
-    // دالة مساعدة لدمج الحفظ السحابي مع الهيكل البرمجي المحدث لضمان عدم تلف البيانات القديمة
     function mergeSavedData(data) {
         window.money = data.money !== undefined ? data.money : window.money;
         window.gems = data.gems !== undefined ? data.gems : window.gems;
