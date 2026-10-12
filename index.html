@@ -376,8 +376,10 @@
         </div>
     </div>
 
+    <!-- أزرار الحفظ والاسترجاع السحابي وتسجيل الخروج -->
     <div style="display: flex; gap: 6px;">
         <button class="action-btn" style="flex:1; background-color: var(--blue); padding: 8px;" onclick="saveGameOnline()">حفظ سحابي ☁️</button>
+        <button class="action-btn" style="flex:1; background-color: var(--green); color:#060911; padding: 8px;" onclick="loadGameOnline()">استرجاع سحابي 🔄</button>
         <button class="action-btn" style="flex:1; background-color: var(--red); padding: 8px;" onclick="logoutGame()">تسجيل خروج 🚪</button>
     </div>
 
@@ -431,7 +433,6 @@
         </div>
     </div>
 
-    <!-- تبويب المصانع والتحويل -->
     <div id="tab-factories" class="tab-content">
         <div class="card">
             <div class="section-title">🏭 مصانع تحويل المواد الخام إلى سلع فاخرة</div>
@@ -453,7 +454,6 @@
         </div>
     </div>
 
-    <!-- تبويب المهام اليومية -->
     <div id="tab-quests" class="tab-content">
         <div class="card">
             <div class="section-title">🎯 المهام والإنجازات اليومية</div>
@@ -461,7 +461,6 @@
         </div>
     </div>
 
-    <!-- تبويب لوحة المتصدرين العالمية -->
     <div id="tab-leaderboard" class="tab-content">
         <div class="card">
             <div class="section-title">🏆 لوحة المتصدرين لأغنى الأباطرة</div>
@@ -916,11 +915,12 @@
         document.getElementById('eventDisplay').innerText = `السوق: ${window.currentEvent.name}`;
     }
 
+    // دالة إنهاء اليوم مع تقدم سليم للأيام
     window.nextTurn = function() {
         if (window.isLocked) return;
 
-        window.day++;
-        window.daysPlayedInCycle++;
+        window.day = (Number(window.day) || 1) + 1;
+        window.daysPlayedInCycle = (Number(window.daysPlayedInCycle) || 0) + 1;
 
         if (window.daysPlayedInCycle >= 25) {
             window.isLocked = true;
@@ -998,7 +998,6 @@
             if (stock.history.length > 5) stock.history.shift();
         });
 
-        // التحقق من إنجاز المهام
         window.quests.forEach(q => {
             if (q.id === 'q1') {
                 q.current = window.inventory.chickenEggs.count;
@@ -1291,7 +1290,7 @@
     }
 </script>
 
-<!-- ربط Firebase المصادقة وحفظ البيانات -->
+<!-- ربط Firebase المصادقة وحفظ واسترجاع البيانات -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -1405,8 +1404,43 @@
                 quests: window.quests,
                 lastUpdated: new Date()
             }, { merge: true });
+            alert("☁️ تم الحفظ السحابي بنجاح!");
         } catch (e) {
             console.error(e);
+            alert("❌ فشل الحفظ السحابي.");
+        }
+    };
+
+    window.loadGameOnline = async function() {
+        if (!window.currentUsername) return;
+        const userKey = sanitizeKey(window.currentUsername);
+        try {
+            const docSnap = await getDoc(doc(db, "players_accounts", userKey));
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                window.money = data.money !== undefined ? data.money : window.money;
+                window.gems = data.gems !== undefined ? data.gems : window.gems;
+                window.loan = data.loan !== undefined ? data.loan : window.loan;
+                window.day = data.day !== undefined ? data.day : 1;
+                window.daysPlayedInCycle = data.daysPlayedInCycle !== undefined ? data.daysPlayedInCycle : 0;
+                window.isLocked = data.isLocked || false;
+                if (data.inventory) window.inventory = data.inventory;
+                if (data.animals) window.animals = data.animals;
+                if (data.barns) window.barns = data.barns;
+                if (data.stocks) window.stocks = data.stocks;
+                if (data.cropFields) window.cropFields = data.cropFields;
+                if (data.factories) window.factories = data.factories;
+                if (data.quests) window.quests = data.quests;
+
+                renderAll();
+                updateUI();
+                alert("🔄 تم استرجاع البيانات بنجاح!");
+            } else {
+                alert("⚠️ لا توجد بيانات سحابية محفوظة لهذا الحساب.");
+            }
+        } catch (e) {
+            console.error(e);
+            alert("❌ فشل الاسترجاع السحابي.");
         }
     };
 </script>
