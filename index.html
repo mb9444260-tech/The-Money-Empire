@@ -592,11 +592,11 @@
             cost: 120, 
             productType: 'chickenEggs', 
             prodAmount: 30, 
-            prodInterval: 5, 
-            maxAge: 15, 
+            prodInterval: 1, 
+            maxAge: 20, 
             age: 0, 
             count: 0, 
-            desc: 'تنتج 30 بيضة كل 5 أيام. أقصى عمر: 15 يوم.' 
+            desc: 'تنتج 30 بيضة كل يوم. أقصى عمر: 20 يوم.' 
         },
         { 
             id: 'anim_duck', 
@@ -605,11 +605,11 @@
             cost: 280, 
             productType: 'duckEggs', 
             prodAmount: 10, 
-            prodInterval: 2, 
-            maxAge: 18, 
+            prodInterval: 1, 
+            maxAge: 22, 
             age: 0, 
             count: 0, 
-            desc: 'تنتج 10 بيضات كل يومين. أقصى عمر: 18 يوم.' 
+            desc: 'تنتج 10 بيضات كل يوم. أقصى عمر: 22 يوم.' 
         },
         { 
             id: 'anim_cow', 
@@ -618,11 +618,11 @@
             cost: 1400, 
             productType: 'milk', 
             prodAmount: 5, 
-            prodInterval: 3, 
-            maxAge: 25, 
+            prodInterval: 1, 
+            maxAge: 30, 
             age: 0, 
             count: 0, 
-            desc: 'تنتج 5 لترات حليب كل 3 أيام. أقصى عمر: 25 يوم.' 
+            desc: 'تنتج 5 لترات حليب كل يوم. أقصى عمر: 30 يوم.' 
         }
     ];
 
@@ -915,7 +915,7 @@
         document.getElementById('eventDisplay').innerText = `السوق: ${window.currentEvent.name}`;
     }
 
-    // دالة إنهاء اليوم المحدثة مع إصلاح تقدم أعمار الحيوانات والإنتاج
+    // دالة إنهاء اليوم المحدثة لضمان تقدم الأيام وأعمار الحيوانات والإنتاج
     window.nextTurn = function() {
         if (window.isLocked) return;
 
@@ -931,7 +931,7 @@
 
         randomizeDayEvents();
 
-        // تشغيل عمال الحصاد الآلي
+        // عمال الحصاد الآلي
         const huts = window.barns.find(b => b.id === 'worker_hut').owned;
         if (huts > 0 && window.cropFields.activePlots === 0 && window.money >= 450) {
             window.money -= 450;
@@ -941,13 +941,13 @@
             logMessage(`👷 العمال الآليون قاموا ببزر وحصاد المحاصيل تلقائياً!`);
         }
 
-        // إصلاح تحديث أعمار الحيوانات والإنتاج اليومي
+        // تحديث أعمار وإنتاج الحيوانات يومياً
         window.animals.forEach(animal => {
             if (animal.count > 0) {
-                animal.age = (animal.age || 0) + 1;
+                animal.age = (Number(animal.age) || 0) + 1;
 
                 if (animal.productType && window.inventory[animal.productType]) {
-                    if (window.day % animal.prodInterval === 0) {
+                    if (window.day % (animal.prodInterval || 1) === 0) {
                         let totalProduced = Math.floor(animal.count * animal.prodAmount * window.currentWeather.effect);
                         window.inventory[animal.productType].count += totalProduced;
                         logMessage(`🥚 إنتاج دوري: أنتجت (${animal.name}) عدد ${totalProduced} من (${window.inventory[animal.productType].name}).`);
@@ -1069,7 +1069,7 @@
                 <div class="item-info">
                     <span class="item-title">${animal.name} (العدد: ${animal.count})</span>
                     <span class="item-desc">${animal.desc}</span>
-                    <span class="item-meta">سعر الشراء: ${formatMoney(animal.cost)} | العمر الحالي: ${animal.age}/${animal.maxAge} يوم</span>
+                    <span class="item-meta">سعر الشراء: ${formatMoney(animal.cost)} | العمر الحالي: ${animal.age || 0}/${animal.maxAge} يوم</span>
                 </div>
                 <div class="btn-group">
                     <button class="action-btn" onclick="modifyAnimal('${animal.id}', 'buy')">شراء</button>
@@ -1291,6 +1291,7 @@
     }
 </script>
 
+<!-- ربط Firebase المصادقة وحفظ واسترجاع البيانات -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -1311,6 +1312,66 @@
 
     function sanitizeKey(emailOrUser) {
         return emailOrUser.trim().toLowerCase().replace(/[@\.]/g, '_');
+    }
+
+    // دالة مساعدة لدمج الحفظ السحابي مع الهيكل البرمجي المحدث لضمان عدم تلف البيانات القديمة
+    function mergeSavedData(data) {
+        window.money = data.money !== undefined ? data.money : window.money;
+        window.gems = data.gems !== undefined ? data.gems : window.gems;
+        window.loan = data.loan !== undefined ? data.loan : window.loan;
+        window.day = data.day !== undefined ? data.day : window.day;
+        window.daysPlayedInCycle = data.daysPlayedInCycle !== undefined ? data.daysPlayedInCycle : window.daysPlayedInCycle;
+        window.isLocked = data.isLocked !== undefined ? data.isLocked : window.isLocked;
+
+        if (data.inventory) {
+            Object.keys(data.inventory).forEach(k => {
+                if (window.inventory[k]) window.inventory[k].count = data.inventory[k].count;
+            });
+        }
+        if (data.animals && Array.isArray(data.animals)) {
+            data.animals.forEach(savedAnim => {
+                let localAnim = window.animals.find(a => a.id === savedAnim.id);
+                if (localAnim) {
+                    localAnim.count = savedAnim.count !== undefined ? savedAnim.count : localAnim.count;
+                    localAnim.age = savedAnim.age !== undefined ? savedAnim.age : localAnim.age;
+                    if (savedAnim.cost) localAnim.cost = savedAnim.cost;
+                }
+            });
+        }
+        if (data.barns && Array.isArray(data.barns)) {
+            data.barns.forEach(savedBarn => {
+                let localBarn = window.barns.find(b => b.id === savedBarn.id);
+                if (localBarn) {
+                    localBarn.owned = savedBarn.owned !== undefined ? savedBarn.owned : localBarn.owned;
+                    if (savedBarn.cost) localBarn.cost = savedBarn.cost;
+                }
+            });
+        }
+        if (data.stocks && Array.isArray(data.stocks)) {
+            data.stocks.forEach(savedStock => {
+                let localStock = window.stocks.find(s => s.id === savedStock.id);
+                if (localStock) {
+                    localStock.owned = savedStock.owned !== undefined ? savedStock.owned : localStock.owned;
+                    localStock.price = savedStock.price !== undefined ? savedStock.price : localStock.price;
+                    if (savedStock.history) localStock.history = savedStock.history;
+                }
+            });
+        }
+        if (data.cropFields) {
+            window.cropFields.growthDaysNeeded = data.cropFields.growthDaysNeeded ?? window.cropFields.growthDaysNeeded;
+            window.cropFields.currentDaysGrown = data.cropFields.currentDaysGrown ?? window.cropFields.currentDaysGrown;
+            window.cropFields.isReady = data.cropFields.isReady ?? window.cropFields.isReady;
+            window.cropFields.activePlots = data.cropFields.activePlots ?? window.cropFields.activePlots;
+        }
+        if (data.factories && Array.isArray(data.factories)) {
+            data.factories.forEach(savedFact => {
+                let localFact = window.factories.find(f => f.id === savedFact.id);
+                if (localFact) {
+                    localFact.owned = savedFact.owned !== undefined ? savedFact.owned : localFact.owned;
+                    if (savedFact.cost) localFact.cost = savedFact.cost;
+                }
+            });
+        }
     }
 
     window.handleLoginRegister = async function() {
@@ -1335,20 +1396,7 @@
                     alert("❌ كلمة المرور غير صحيحة!");
                     return;
                 }
-                window.money = data.money !== undefined ? data.money : 1000;
-                window.gems = data.gems !== undefined ? data.gems : 20;
-                window.loan = data.loan !== undefined ? data.loan : 0;
-                window.day = data.day !== undefined ? data.day : 1;
-                window.daysPlayedInCycle = data.daysPlayedInCycle !== undefined ? data.daysPlayedInCycle : 0;
-                window.isLocked = data.isLocked !== undefined ? data.isLocked : false;
-                if (data.inventory) window.inventory = data.inventory;
-                if (data.animals) window.animals = data.animals;
-                if (data.barns) window.barns = data.barns;
-                if (data.stocks) window.stocks = data.stocks;
-                if (data.cropFields) window.cropFields = data.cropFields;
-                if (data.factories) window.factories = data.factories;
-                if (data.quests) window.quests = data.quests;
-                
+                mergeSavedData(data);
                 alert(`✅ أهلاً بك مجدداً يا ${uInput}!`);
             } else {
                 await setDoc(docRef, {
@@ -1417,21 +1465,7 @@
         try {
             const docSnap = await getDoc(doc(db, "players_accounts", userKey));
             if (docSnap.exists()) {
-                const data = docSnap.data();
-                window.money = data.money !== undefined ? data.money : window.money;
-                window.gems = data.gems !== undefined ? data.gems : window.gems;
-                window.loan = data.loan !== undefined ? data.loan : window.loan;
-                window.day = data.day !== undefined ? data.day : 1;
-                window.daysPlayedInCycle = data.daysPlayedInCycle !== undefined ? data.daysPlayedInCycle : 0;
-                window.isLocked = data.isLocked || false;
-                if (data.inventory) window.inventory = data.inventory;
-                if (data.animals) window.animals = data.animals;
-                if (data.barns) window.barns = data.barns;
-                if (data.stocks) window.stocks = data.stocks;
-                if (data.cropFields) window.cropFields = data.cropFields;
-                if (data.factories) window.factories = data.factories;
-                if (data.quests) window.quests = data.quests;
-
+                mergeSavedData(docSnap.data());
                 renderAll();
                 updateUI();
                 alert("🔄 تم استرجاع البيانات بنجاح!");
