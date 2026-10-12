@@ -524,7 +524,7 @@
     window.day = 1;
     window.daysPlayedInCycle = 0;
     window.isLocked = false;
-    window.lockUntilTimestamp = 0; // وقت انتهاء الحظر بالمللي ثانية
+    window.lockUntilTimestamp = 0;
     window.globalMultiplier = 1.0;
     window.redeemedCodes = [];
     window.currentUsername = "";
@@ -533,7 +533,6 @@
 
     window.activeBoosts = { fastGrowth: false, financialShield: false, emperorLicense: false };
 
-    // تعديل الأسعار وكميات الإنتاج لتكون في حدود معقولة ومتوازنة
     window.inventory = {
         chickenEggs: { name: 'بيض دجاج طازج', count: 0, price: 15 },
         duckEggs: { name: 'بيض بط فاخر', count: 0, price: 45 },
@@ -586,7 +585,7 @@
         { id: 'worker_hut', name: 'كوخ العمال الآليين 👷', cost: 20000, capacity: 5, owned: 0, desc: 'حصاد المحاصيل وتجديدها تلقائياً يومياً.' }
     ];
 
-    // تقليل معدلات الإنتاج اليومية (prodAmount) لتكون مناسبة ومنطقية
+    // تم تحديث معدلات الإنتاج للقيم الجديدة المطلوبة
     window.animals = [
         { 
             id: 'anim_chick', 
@@ -594,11 +593,11 @@
             name: 'دجاج بياض', 
             cost: 120, 
             productType: 'chickenEggs', 
-            prodAmount: 2, 
+            prodAmount: 3, 
             maxAge: 20, 
             age: 0, 
             count: 0, 
-            desc: 'تنتج بيضتين كل يوم. أقصى عمر: 20 يوم.' 
+            desc: 'تنتج 3 بيضات كل يوم. أقصى عمر: 20 يوم.' 
         },
         { 
             id: 'anim_duck', 
@@ -606,11 +605,11 @@
             name: 'بط فاخر', 
             cost: 280, 
             productType: 'duckEggs', 
-            prodAmount: 1, 
+            prodAmount: 5, 
             maxAge: 22, 
             age: 0, 
             count: 0, 
-            desc: 'تنتج بيضة واحدة كل يوم. أقصى عمر: 22 يوم.' 
+            desc: 'تنتج 5 بيضات كل يوم. أقصى عمر: 22 يوم.' 
         },
         { 
             id: 'anim_cow', 
@@ -618,11 +617,11 @@
             name: 'بقرة حلب', 
             cost: 1400, 
             productType: 'milk', 
-            prodAmount: 3, 
+            prodAmount: 1, 
             maxAge: 30, 
             age: 0, 
             count: 0, 
-            desc: 'تنتج 3 لترات حليب كل يوم. أقصى عمر: 30 يوم.' 
+            desc: 'تنتج 1 لتر حليب كل يوم. أقصى عمر: 30 يوم.' 
         }
     ];
 
@@ -877,7 +876,6 @@
         }
     };
 
-    // تفعيل انتظار 12 ساعة فعلية (حساب الفارق الزمني بالمللي ثانية)
     window.startWaitTimer = function() {
         const twelveHoursMs = 12 * 60 * 60 * 1000;
         window.lockUntilTimestamp = Date.now() + twelveHoursMs;
@@ -913,7 +911,6 @@
         }
     }
 
-    // فحص مؤقت الانتظار كل ثانية
     setInterval(checkLockTimer, 1000);
 
     function randomizeDayEvents() {
@@ -951,7 +948,6 @@
 
         randomizeDayEvents();
 
-        // عمال الحصاد الآلي
         const huts = window.barns.find(b => b.id === 'worker_hut').owned;
         if (huts > 0 && window.cropFields.activePlots === 0 && window.money >= 450) {
             window.money -= 450;
@@ -961,7 +957,6 @@
             logMessage(`👷 العمال الآليون قاموا ببزر وحصاد المحاصيل تلقائياً!`);
         }
 
-        // تحديث الأعمار وإنتاج الحيوانات (الإنتاج بالكميات والأسعار الجديدة المتوازنة)
         window.animals.forEach(animal => {
             if (animal.count > 0) {
                 animal.age = (Number(animal.age) || 0) + 1;
@@ -1486,8 +1481,6 @@
         if (!window.currentUsername) return;
         const userKey = sanitizeKey(window.currentUsername);
         try {
-            const docSnap = await getDoc(doc(db, "products", userKey) || doc(db, "players_accounts", userKey));
-            // استخدام مرجع الحسابات الصحيح
             const accountDocSnap = await getDoc(doc(db, "players_accounts", userKey));
             if (accountDocSnap.exists()) {
                 mergeSavedData(accountDocSnap.data());
