@@ -85,11 +85,8 @@
         header {
             text-align: center;
             padding: 4px 0;
-        }
-
-        header h1 {
-            font-size: 1.15rem;
-            color: var(--yellow);
+            display: flex;
+            justify-content: center;
         }
 
         .turn-panel {
@@ -336,8 +333,30 @@
 <!-- شاشة تسجيل الدخول أو إنشاء الحساب -->
 <div id="authScreen">
     <div class="auth-card">
-        <h2 style="color: var(--yellow); font-size: 1.1rem;">🔐 تسجيل الدخول للإمبراطورية</h2>
-        <div style="font-size: 0.75rem; color: var(--text-muted);">ادخل اسم الحساب (أو البريد) وكلمة المرور الخاصة بك للبدء أو استرجاع حفظك:</div>
+        <!-- شعار اللعبة في شاشة الدخول -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160" width="100%" height="auto" style="margin-bottom: 5px;">
+            <defs>
+                <linearGradient id="goldGradAuth" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#fbbf24" />
+                    <stop offset="50%" stop-color="#d97706" />
+                    <stop offset="100%" stop-color="#b45309" />
+                </linearGradient>
+                <linearGradient id="gemGradAuth" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#06b6d4" />
+                    <stop offset="100%" stop-color="#3b82f6" />
+                </linearGradient>
+            </defs>
+            <g transform="translate(300, 35)">
+                <path d="M-25,-12 L-30,-28 L-12,-16 L0,-32 L12,-16 L30,-28 L25,-12 Z" fill="url(#goldGradAuth)" stroke="#fef3c7" stroke-width="1.5"/>
+                <rect x="-30" y="-10" width="60" height="6" rx="2" fill="url(#goldGradAuth)"/>
+                <circle cx="0" cy="-7" r="4" fill="url(#gemGradAuth)" />
+            </g>
+            <text x="300" y="95" font-family="system-ui, sans-serif" font-weight="900" font-size="28" fill="url(#goldGradAuth)" text-anchor="middle" letter-spacing="1">الإمبراطورية المالية</text>
+            <text x="300" y="130" font-family="system-ui, sans-serif" font-weight="700" font-size="16" fill="#38bdf8" text-anchor="middle" letter-spacing="2">🌾 والتجارة العالمية 💰</text>
+        </svg>
+
+        <h2 style="color: var(--yellow); font-size: 1.05rem;">🔐 تسجيل الدخول للإمبراطورية</h2>
+        <div style="font-size: 0.72rem; color: var(--text-muted);">ادخل اسم الحساب وكلمة المرور الخاصة بك للبدء أو استرجاع حفظك[cite: 3]:</div>
         
         <input type="text" id="authUsername" class="auth-input" placeholder="اسم المستخدم أو البريد الإلكتروني...">
         <input type="password" id="authPassword" class="auth-input" placeholder="كلمة المرور...">
@@ -349,7 +368,34 @@
 <!-- واجهة اللعبة الرئيسية -->
 <div class="container" id="gameContainer" style="display: none;">
     <header>
-        <h1>🏛️ إمبراطورية التجارة والاستثمار العالمية</h1>
+        <!-- شعار اللعبة الاحترافي داخل الهيدر -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 150" width="100%" height="auto">
+            <defs>
+                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#fbbf24" />
+                    <stop offset="50%" stop-color="#d97706" />
+                    <stop offset="100%" stop-color="#b45309" />
+                </linearGradient>
+                <linearGradient id="gemGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#06b6d4" />
+                    <stop offset="100%" stop-color="#3b82f6" />
+                </linearGradient>
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+            </defs>
+            <rect width="600" height="150" rx="12" fill="#0d1322" stroke="#1e293b" stroke-width="1.5"/>
+            <g transform="translate(300, 35)" filter="url(#glow)">
+                <path d="M-25,-12 L-30,-28 L-12,-16 L0,-32 L12,-16 L30,-28 L25,-12 Z" fill="url(#goldGrad)" stroke="#fef3c7" stroke-width="1.5"/>
+                <rect x="-30" y="-10" width="60" height="6" rx="2" fill="url(#goldGrad)"/>
+                <circle cx="0" cy="-7" r="4" fill="url(#gemGrad)" />
+            </g>
+            <text x="300" y="95" font-family="system-ui, sans-serif" font-weight="900" font-size="28" fill="url(#goldGrad)" text-anchor="middle" filter="url(#glow)" letter-spacing="1">الإمبراطورية المالية</text>
+            <text x="300" y="128" font-family="system-ui, sans-serif" font-weight="700" font-size="16" fill="#38bdf8" text-anchor="middle" letter-spacing="2">🌾 والتجارة العالمية 💰</text>
+            <path d="M 40 75 Q 90 75 120 75" stroke="url(#goldGrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+            <path d="M 480 75 Q 510 75 560 75" stroke="url(#goldGrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+        </svg>
     </header>
 
     <!-- شريط معلومات الطقس والأحداث الاقتصادية -->
@@ -369,7 +415,7 @@
     <!-- لوحة التجديد -->
     <div id="renewalPanel" class="card" style="display: none; background: rgba(6, 182, 212, 0.1); border-color: var(--gem); text-align: center; padding: 12px;">
         <div style="font-size: 0.85rem; font-weight: bold; color: var(--gem);">⚠️ انتهت محاولات الأيام الـ 25 المتاحة!</div>
-        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;" id="renewalSubText">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;" id="renewalSubText">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة[cite: 3].</div>
         <div style="display: flex; gap: 8px; margin-top: 8px; justify-content: center;" id="renewalButtonsContainer">
             <button class="action-btn gem-btn" onclick="renewWithGems()">تجديد بـ 100 جوهرة 💎</button>
             <button class="action-btn" style="background-color: var(--orange);" onclick="startWaitTimer()">انتظار 12 ساعة ⏳</button>
@@ -493,7 +539,7 @@
         <div class="card">
             <div class="section-title">📋 سجل الحسابات والأحداث اليومية</div>
             <div class="ledger-box" id="ledgerBox">
-                <div>[اليوم 1] أهلاً بك في النسخة المطورة والمدمجة بنجاح!</div>
+                <div>[اليوم 1] أهلاً بك في النسخة المطورة والمدمجة بنجاح[cite: 3]!</div>
             </div>
         </div>
     </div>
@@ -558,13 +604,12 @@
     };
 
     window.factories = [
-        { id: 'fact_cheese', name: 'مصنع الأجبان والألبان', cost: 15000, owned: 0, inputType: 'milk', inputAmt: 10, outputType: 'cheese', outputAmt: 2, desc: 'يحول 10 لتر حليب إلى 2 جبن فاخر ($1,400).' },
-        { id: 'fact_mill', name: 'مطحنة الحبوب', cost: 8000, owned: 0, inputType: 'crops', inputAmt: 15, outputType: 'flour', outputAmt: 5, desc: 'يحول 15 محصول إلى 5 أكياس دقيق ($320).' }
+        { id: 'fact_cheese', name: 'مصنع الأجبان والألبان', cost: 15000, owned: 0, inputType: 'milk', inputAmt: 10, outputType: 'cheese', outputAmt: 2, desc: 'يحول 10 لتر حليب إلى 2 جبن فاخر ($1,400)[cite: 3].' },
+        { id: 'fact_mill', name: 'مطحنة الحبوب', cost: 8000, owned: 0, inputType: 'crops', inputAmt: 15, outputType: 'flour', outputAmt: 5, desc: 'يحول 15 محصول إلى 5 أكياس دقيق ($320)[cite: 3].' }
     ];
 
-    // نظام المهام المتجددة كل 24 ساعة حقيقية
     window.activeQuests = [];
-    window.questResetTimestamp = 0; // وقت التجديد القادم بالـ Milliseconds
+    window.questResetTimestamp = 0;
     const twentyFourHoursMs = 24 * 60 * 60 * 1000;
 
     const possibleQuestsPool = [
@@ -688,11 +733,6 @@
     window.assets = [
         { id: 'r1', name: 'مبنى تجاري إداري', cost: 160000, income: 1100, count: 0, desc: 'إيجارات يومية.' },
         { id: 't1', name: 'شركة برمجيات وسحابيات', cost: 2500000, income: 16000, count: 0, desc: 'تقنية متقدمة.' }
-    ];
-
-    window.managers = [
-        { id: 'm1', name: 'خبير لوجستيات ونقل', cost: 25000, bonus: 1.15, hired: false, desc: 'يرفع كفاءة أسطول الشحن 15%.' },
-        { id: 'm2', name: 'مدير تنفيذي عام', cost: 180000, bonus: 1.2, hired: false, desc: 'يرفع إيرادات المشاريع 20%.' }
     ];
 
     function formatMoney(amount) { return '$' + amount.toLocaleString(); }
@@ -893,16 +933,6 @@
         renderStocks(); updateUI();
     };
 
-    window.buyAsset = function(id) {
-        const asset = window.assets.find(a => a.id === id);
-        if (window.money >= asset.cost) {
-            window.money -= asset.cost; asset.count++;
-            asset.cost = Math.floor(asset.cost * 1.2);
-            logMessage(`شراء أصل تجاري: ${asset.name}`);
-            renderAll(); updateUI();
-        }
-    };
-
     window.takeLoan = function() { window.money += 30000; window.loan += 36000; logMessage("اقتراض بنكي بقيمة $30,000"); updateUI(); };
     window.repayLoan = function() { if (window.loan > 0 && window.money >= window.loan) { window.money -= window.loan; window.loan = 0; logMessage("سداد القرض بالكامل."); updateUI(); } };
     window.buyBonds = function() { if (window.money >= 15000) { window.money -= 15000; window.bondsOwned++; logMessage("شراء سندات حكومية."); updateUI(); } };
@@ -952,7 +982,7 @@
                 document.getElementById('renewalButtonsContainer').style.display = 'none';
             }
         } else if (window.isLocked) {
-            document.getElementById('renewalSubText').innerText = "قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.";
+            document.getElementById('renewalSubText').innerText = "قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة[cite: 3].";
             document.getElementById('renewalButtonsContainer').style.display = 'flex';
         }
     }
@@ -992,9 +1022,7 @@
             alert("⚠️ لقد أنهيت 25 يوماً! يجب تجديد الأيام.");
         }
 
-        // فحص وقت المهام الحقيقي عند كل إنهاء يوم
         checkRealtimeQuestReset();
-
         randomizeDayEvents();
 
         const huts = window.barns.find(b => b.id === 'worker_hut').owned;
@@ -1061,7 +1089,6 @@
             if (stock.history.length > 5) stock.history.shift();
         });
 
-        // تتبع إنجاز المهام
         window.activeQuests.forEach(q => {
             if (!q.completed) {
                 if (q.type === 'stocks') {
@@ -1363,7 +1390,6 @@
         if (turnTitle) turnTitle.innerText = `اليوم التكتيكي: ${window.day} (دورة الـ 25: ${window.daysPlayedInCycle}/25)`;
         if (turnSub) turnSub.innerText = window.isLocked ? "انتهت محاولات الدورة الحالية!" : `متبقي ${25 - window.daysPlayedInCycle} يوماً في هذه الدورة`;
 
-        // حساب المتبقي لتجديد المهام الحقيقي
         let now = Date.now();
         let diffMs = window.questResetTimestamp - now;
         const questTimerDisplay = document.getElementById('questTimerDisplay');
@@ -1398,7 +1424,6 @@
         }
     }
 
-    // تحديث مؤقت المهام كل ثانية في الواجهة
     setInterval(updateUI, 1000);
 </script>
 
@@ -1441,7 +1466,6 @@
             window.activeQuests = data.activeQuests;
         }
 
-        // فحص وقت المهام بعد الاسترجاع السحابي
         checkRealtimeQuestReset();
 
         if (data.inventory) {
