@@ -915,7 +915,7 @@
         document.getElementById('eventDisplay').innerText = `السوق: ${window.currentEvent.name}`;
     }
 
-    // دالة إنهاء اليوم مع تقدم سليم للأيام
+    // دالة إنهاء اليوم المحدثة مع إصلاح تقدم أعمار الحيوانات والإنتاج
     window.nextTurn = function() {
         if (window.isLocked) return;
 
@@ -941,6 +941,7 @@
             logMessage(`👷 العمال الآليون قاموا ببزر وحصاد المحاصيل تلقائياً!`);
         }
 
+        // إصلاح تحديث أعمار الحيوانات والإنتاج اليومي
         window.animals.forEach(animal => {
             if (animal.count > 0) {
                 animal.age = (animal.age || 0) + 1;
@@ -1290,7 +1291,6 @@
     }
 </script>
 
-<!-- ربط Firebase المصادقة وحفظ واسترجاع البيانات -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
