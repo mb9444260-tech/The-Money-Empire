@@ -369,8 +369,8 @@
     <!-- لوحة التجديد -->
     <div id="renewalPanel" class="card" style="display: none; background: rgba(6, 182, 212, 0.1); border-color: var(--gem); text-align: center; padding: 12px;">
         <div style="font-size: 0.85rem; font-weight: bold; color: var(--gem);">⚠️ انتهت محاولات الأيام الـ 25 المتاحة!</div>
-        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر.</div>
-        <div style="display: flex; gap: 8px; margin-top: 8px; justify-content: center;">
+        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;" id="renewalSubText">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.</div>
+        <div style="display: flex; gap: 8px; margin-top: 8px; justify-content: center;" id="renewalButtonsContainer">
             <button class="action-btn gem-btn" onclick="renewWithGems()">تجديد بـ 100 جوهرة 💎</button>
             <button class="action-btn" style="background-color: var(--orange);" onclick="startWaitTimer()">انتظار 12 ساعة ⏳</button>
         </div>
@@ -524,6 +524,7 @@
     window.day = 1;
     window.daysPlayedInCycle = 0;
     window.isLocked = false;
+    window.lockUntilTimestamp = 0; // وقت انتهاء الحظر بالمللي ثانية
     window.globalMultiplier = 1.0;
     window.redeemedCodes = [];
     window.currentUsername = "";
@@ -532,10 +533,11 @@
 
     window.activeBoosts = { fastGrowth: false, financialShield: false, emperorLicense: false };
 
+    // تعديل الأسعار وكميات الإنتاج لتكون في حدود معقولة ومتوازنة
     window.inventory = {
-        chickenEggs: { name: 'بيض دجاج طازج', count: 0, price: 85 },
-        duckEggs: { name: 'بيض بط فاخر', count: 0, price: 450 },
-        milk: { name: 'حليب أبقار طازج (لتر)', count: 0, price: 500 },
+        chickenEggs: { name: 'بيض دجاج طازج', count: 0, price: 15 },
+        duckEggs: { name: 'بيض بط فاخر', count: 0, price: 45 },
+        milk: { name: 'حليب أبقار طازج (لتر)', count: 0, price: 30 },
         crops: { name: 'محاصيل زراعية ناضجة', count: 0, price: 100 },
         cheese: { name: 'جبن فاخر معالج 🧀', count: 0, price: 1400 },
         flour: { name: 'دقيق حبوب نقي 🌾', count: 0, price: 320 }
@@ -584,6 +586,7 @@
         { id: 'worker_hut', name: 'كوخ العمال الآليين 👷', cost: 20000, capacity: 5, owned: 0, desc: 'حصاد المحاصيل وتجديدها تلقائياً يومياً.' }
     ];
 
+    // تقليل معدلات الإنتاج اليومية (prodAmount) لتكون مناسبة ومنطقية
     window.animals = [
         { 
             id: 'anim_chick', 
@@ -591,11 +594,11 @@
             name: 'دجاج بياض', 
             cost: 120, 
             productType: 'chickenEggs', 
-            prodAmount: 30, 
+            prodAmount: 2, 
             maxAge: 20, 
             age: 0, 
             count: 0, 
-            desc: 'تنتج 30 بيضة كل يوم. أقصى عمر: 20 يوم.' 
+            desc: 'تنتج بيضتين كل يوم. أقصى عمر: 20 يوم.' 
         },
         { 
             id: 'anim_duck', 
@@ -603,11 +606,11 @@
             name: 'بط فاخر', 
             cost: 280, 
             productType: 'duckEggs', 
-            prodAmount: 10, 
+            prodAmount: 1, 
             maxAge: 22, 
             age: 0, 
             count: 0, 
-            desc: 'تنتج 10 بيضات كل يوم. أقصى عمر: 22 يوم.' 
+            desc: 'تنتج بيضة واحدة كل يوم. أقصى عمر: 22 يوم.' 
         },
         { 
             id: 'anim_cow', 
@@ -615,11 +618,11 @@
             name: 'بقرة حلب', 
             cost: 1400, 
             productType: 'milk', 
-            prodAmount: 5, 
+            prodAmount: 3, 
             maxAge: 30, 
             age: 0, 
             count: 0, 
-            desc: 'تنتج 5 لترات حليب كل يوم. أقصى عمر: 30 يوم.' 
+            desc: 'تنتج 3 لترات حليب كل يوم. أقصى عمر: 30 يوم.' 
         }
     ];
 
@@ -855,16 +858,6 @@
         }
     };
 
-    window.hireManager = function(id) {
-        const mgr = window.managers.find(m => m.id === id);
-        if (!mgr.hired && window.money >= mgr.cost) {
-            window.money -= mgr.cost; mgr.hired = true;
-            window.globalMultiplier *= mgr.bonus;
-            logMessage(`تعيين المدير: ${mgr.name}`);
-            renderManagers(); updateUI();
-        }
-    };
-
     window.takeLoan = function() { window.money += 30000; window.loan += 36000; logMessage("اقتراض بنكي بقيمة $30,000"); updateUI(); };
     window.repayLoan = function() { if (window.loan > 0 && window.money >= window.loan) { window.money -= window.loan; window.loan = 0; logMessage("سداد القرض بالكامل."); updateUI(); } };
     window.buyBonds = function() { if (window.money >= 15000) { window.money -= 15000; window.bondsOwned++; logMessage("شراء سندات حكومية."); updateUI(); } };
@@ -874,6 +867,7 @@
             window.gems -= 100;
             window.daysPlayedInCycle = 0;
             window.isLocked = false;
+            window.lockUntilTimestamp = 0;
             document.getElementById('renewalPanel').style.display = 'none';
             document.getElementById('nextTurnBtn').disabled = false;
             logMessage("💎 تم تجديد الأيام الـ 25 بنجاح باستخدام 100 جوهرة!");
@@ -883,14 +877,44 @@
         }
     };
 
+    // تفعيل انتظار 12 ساعة فعلية (حساب الفارق الزمني بالمللي ثانية)
     window.startWaitTimer = function() {
-        alert("⏳ تم تفعيل مؤقت الانتظار (12 ساعة).");
-        window.daysPlayedInCycle = 0;
-        window.isLocked = false;
-        document.getElementById('renewalPanel').style.display = 'none';
-        document.getElementById('nextTurnBtn').disabled = false;
+        const twelveHoursMs = 12 * 60 * 60 * 1000;
+        window.lockUntilTimestamp = Date.now() + twelveHoursMs;
+        window.isLocked = true;
+        document.getElementById('nextTurnBtn').disabled = true;
+        alert("⏳ تم تفعيل مؤقت الانتظار لمدة 12 ساعة فعلية.");
+        logMessage("⏳ تفعيل مؤقت الانتظار لفتح الدورة بعد 12 ساعة.");
         updateUI();
     };
+
+    function checkLockTimer() {
+        if (window.isLocked && window.lockUntilTimestamp > 0) {
+            let now = Date.now();
+            if (now >= window.lockUntilTimestamp) {
+                window.isLocked = false;
+                window.lockUntilTimestamp = 0;
+                window.daysPlayedInCycle = 0;
+                document.getElementById('renewalPanel').style.display = 'none';
+                document.getElementById('nextTurnBtn').disabled = false;
+                logMessage("🔓 انقضت فترة الانتظار 12 ساعة وتم إعادة تعيين الدورة بنجاح!");
+                updateUI();
+            } else {
+                let diffMs = window.lockUntilTimestamp - now;
+                let hours = Math.floor(diffMs / (1000 * 60 * 60));
+                let minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+                document.getElementById('renewalSubText').innerText = `⏳ متبقي على انتهاء الانتظار: ${hours} ساعة و ${minutes} دقيقة و ${seconds} ثانية`;
+                document.getElementById('renewalButtonsContainer').style.display = 'none';
+            }
+        } else if (window.isLocked) {
+            document.getElementById('renewalSubText').innerText = "قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.";
+            document.getElementById('renewalButtonsContainer').style.display = 'flex';
+        }
+    }
+
+    // فحص مؤقت الانتظار كل ثانية
+    setInterval(checkLockTimer, 1000);
 
     function randomizeDayEvents() {
         const weathers = [
@@ -912,7 +936,6 @@
         document.getElementById('eventDisplay').innerText = `السوق: ${window.currentEvent.name}`;
     }
 
-    // دالة إنهاء اليوم المحدثة لضمان تقدم الأيام وأعمار الحيوانات والإنتاج في كل يوم
     window.nextTurn = function() {
         if (window.isLocked) return;
 
@@ -938,7 +961,7 @@
             logMessage(`👷 العمال الآليون قاموا ببزر وحصاد المحاصيل تلقائياً!`);
         }
 
-        // تحديث الأعمار والإنتاج يومياً لكل حيوان موجود
+        // تحديث الأعمار وإنتاج الحيوانات (الإنتاج بالكميات والأسعار الجديدة المتوازنة)
         window.animals.forEach(animal => {
             if (animal.count > 0) {
                 animal.age = (Number(animal.age) || 0) + 1;
@@ -1282,6 +1305,9 @@
         if (window.isLocked) {
             document.getElementById('renewalPanel').style.display = 'block';
             document.getElementById('nextTurnBtn').disabled = true;
+        } else {
+            document.getElementById('renewalPanel').style.display = 'none';
+            document.getElementById('nextTurnBtn').disabled = false;
         }
     }
 </script>
@@ -1316,6 +1342,7 @@
         window.day = data.day !== undefined ? data.day : window.day;
         window.daysPlayedInCycle = data.daysPlayedInCycle !== undefined ? data.daysPlayedInCycle : window.daysPlayedInCycle;
         window.isLocked = data.isLocked !== undefined ? data.isLocked : window.isLocked;
+        window.lockUntilTimestamp = data.lockUntilTimestamp !== undefined ? data.lockUntilTimestamp : 0;
 
         if (data.inventory) {
             Object.keys(data.inventory).forEach(k => {
@@ -1402,6 +1429,7 @@
                     day: window.day,
                     daysPlayedInCycle: window.daysPlayedInCycle,
                     isLocked: window.isLocked,
+                    lockUntilTimestamp: window.lockUntilTimestamp,
                     inventory: window.inventory,
                     animals: window.animals,
                     barns: window.barns,
@@ -1437,6 +1465,7 @@
                 day: window.day,
                 daysPlayedInCycle: window.daysPlayedInCycle,
                 isLocked: window.isLocked,
+                lockUntilTimestamp: window.lockUntilTimestamp,
                 inventory: window.inventory,
                 animals: window.animals,
                 barns: window.barns,
@@ -1457,9 +1486,11 @@
         if (!window.currentUsername) return;
         const userKey = sanitizeKey(window.currentUsername);
         try {
-            const docSnap = await getDoc(doc(db, "players_accounts", userKey));
-            if (docSnap.exists()) {
-                mergeSavedData(docSnap.data());
+            const docSnap = await getDoc(doc(db, "products", userKey) || doc(db, "players_accounts", userKey));
+            // استخدام مرجع الحسابات الصحيح
+            const accountDocSnap = await getDoc(doc(db, "players_accounts", userKey));
+            if (accountDocSnap.exists()) {
+                mergeSavedData(accountDocSnap.data());
                 renderAll();
                 updateUI();
                 alert("🔄 تم استرجاع البيانات بنجاح!");
