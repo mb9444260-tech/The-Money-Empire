@@ -510,8 +510,13 @@
         </div>
 
         <div class="card">
-            <div class="section-title" style="color: var(--gold);">🛒 الشحن السريع عبر الواتساب</div>
+            <div class="section-title" style="color: var(--gold);">🛒 باقات الجواهر (عبر الواتساب)</div>
             <div class="item-list" id="gemStoreList"></div>
+        </div>
+
+        <div class="card">
+            <div class="section-title" style="color: var(--green);">💰 باقات المال السائل (عبر الواتساب)</div>
+            <div class="item-list" id="moneyStoreList"></div>
         </div>
     </div>
 </div>
@@ -578,6 +583,13 @@
         { name: '💎👑 خزنة الإمبراطور (1500 جوهرة)', price: '$19.99', gems: 1500 }
     ];
 
+    // باقات شراء المال السائل عبر الواتساب
+    const moneyPackages = [
+        { name: '💰 حقيبة سيولة ( $50,000 )', price: '$1.99', amount: 50000 },
+        { name: '💰💰 صندوق ثروة ( $250,000 )', price: '$6.99', amount: 250000 },
+        { name: '💰👑 خزنة الإمبراطورية المالية ( $1,000,000 )', price: '$19.99', amount: 1000000 }
+    ];
+
     window.barns = [
         { id: 'barn_chick', name: 'حظيرة دواجن وبياض', cost: 600, capacity: 20, owned: 0, desc: 'تربية الدجاج والبط وإنتاج البيض الدوري.' },
         { id: 'barn_cow', name: 'حظيرة أبقار الألبان', cost: 3500, capacity: 10, owned: 0, desc: 'تربية الأبقار لإنتاج الحليب الدوري.' },
@@ -585,7 +597,6 @@
         { id: 'worker_hut', name: 'كوخ العمال الآليين 👷', cost: 20000, capacity: 5, owned: 0, desc: 'حصاد المحاصيل وتجديدها تلقائياً يومياً.' }
     ];
 
-    // تم تحديث معدلات الإنتاج للقيم الجديدة المطلوبة
     window.animals = [
         { 
             id: 'anim_chick', 
@@ -1262,6 +1273,25 @@
                             <span class="item-desc">السعر: ${pkg.price}</span>
                         </div>
                         <a href="${whatsappLink}" target="_blank" class="action-btn whatsapp-btn">واتساب 💎</a>
+                    </div>
+                `;
+            });
+        }
+
+        const moneyContainer = document.getElementById('moneyStoreList');
+        if (moneyContainer) {
+            moneyContainer.innerHTML = '';
+            moneyPackages.forEach(pkg => {
+                let message = encodeURIComponent(`مرحباً، أريد شراء باقة المال "${pkg.name}" (بقيمة ${pkg.amount.toLocaleString()} $) بسعر ${pkg.price}.\nحسابي هو: ${window.currentUsername}`);
+                let whatsappLink = `https://wa.me/${myWhatsAppNumber}?text=${message}`;
+
+                moneyContainer.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <span class="item-title" style="color: var(--green);">${pkg.name}</span>
+                            <span class="item-desc">السعر: ${pkg.price}</span>
+                        </div>
+                        <a href="${whatsappLink}" target="_blank" class="action-btn whatsapp-btn">واتساب 💰</a>
                     </div>
                 `;
             });
