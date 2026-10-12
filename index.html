@@ -46,7 +46,6 @@
             gap: 10px;
         }
 
-        /* تصميم واجهة تسجيل الدخول */
         #authScreen {
             display: flex;
             flex-direction: column;
@@ -165,7 +164,7 @@
 
         .tabs {
             display: flex;
-            gap: 3px;
+            gap: 2px;
             background-color: var(--card-bg);
             padding: 3px;
             border-radius: 6px;
@@ -175,11 +174,11 @@
 
         .tab-btn {
             flex: 1;
-            padding: 6px 3px;
+            padding: 6px 2px;
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 0.62rem;
+            font-size: 0.55rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
@@ -224,7 +223,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            max-height: 310px;
+            max-height: 280px;
             overflow-y: auto;
         }
 
@@ -314,7 +313,7 @@
             background-color: rgba(0,0,0,0.4);
             border-radius: 6px;
             padding: 8px;
-            height: 280px;
+            height: 250px;
             overflow-y: auto;
             font-size: 0.72rem;
             font-family: monospace;
@@ -347,11 +346,17 @@
     </div>
 </div>
 
-<!-- واجهة اللعبة الرئيسية (مخفية حتى يتم تسجيل الدخول) -->
+<!-- واجهة اللعبة الرئيسية -->
 <div class="container" id="gameContainer" style="display: none;">
     <header>
         <h1>🏛️ إمبراطورية التجارة والاستثمار العالمية</h1>
     </header>
+
+    <!-- شريط معلومات الطقس والأحداث الاقتصادية -->
+    <div class="card" style="padding: 6px 10px; flex-direction: row; justify-content: space-between; align-items: center; background: rgba(59, 130, 246, 0.08);">
+        <div style="font-size: 0.72rem; color: var(--gem);" id="weatherDisplay">🌤️ الطقس: عادي</div>
+        <div style="font-size: 0.72rem; color: var(--yellow);" id="eventDisplay">📰 السوق: مستقر</div>
+    </div>
 
     <div class="turn-panel">
         <div class="turn-info">
@@ -396,20 +401,21 @@
     </div>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('farms')">🌾 الحظائر والمزرعة</button>
-        <button class="tab-btn" onclick="switchTab('inventory')">📦 المخزن والبيع</button>
+        <button class="tab-btn active" onclick="switchTab('farms')">🌾 المزرعة</button>
+        <button class="tab-btn" onclick="switchTab('inventory')">📦 المخزن</button>
+        <button class="tab-btn" onclick="switchTab('factories')">🏭 المصانع</button>
         <button class="tab-btn" onclick="switchTab('logistics')">🚚 الشحن</button>
         <button class="tab-btn" onclick="switchTab('stocks')">📊 البورصة</button>
-        <button class="tab-btn" onclick="switchTab('industries')">🏢 الشركات</button>
-        <button class="tab-btn" onclick="switchTab('hr')">👔 الإدارة</button>
+        <button class="tab-btn" onclick="switchTab('quests')">🎯 المهام</button>
+        <button class="tab-btn" onclick="switchTab('leaderboard')">🏆 المتصدرين</button>
         <button class="tab-btn" onclick="switchTab('finance')">🏦 البنوك</button>
         <button class="tab-btn" onclick="switchTab('ledger')">📋 السجل</button>
-        <button class="tab-btn" onclick="switchTab('store')" style="color: var(--gold);">🛒 المتجر والجواهر</button>
+        <button class="tab-btn" onclick="switchTab('store')" style="color: var(--gold);">🛒 المتجر</button>
     </div>
 
     <div id="tab-farms" class="tab-content active">
         <div class="card">
-            <div class="section-title">🏗️ بناء وإدارة الحظائر والصوب</div>
+            <div class="section-title">🏗️ الحظائر والصوب وعمال الحصاد الآلي</div>
             <div class="item-list" id="barnsList"></div>
         </div>
         <div class="card">
@@ -420,9 +426,16 @@
 
     <div id="tab-inventory" class="tab-content">
         <div class="card">
-            <div class="section-title">📦 مخزون المنتجات الزراعية والحيوانية</div>
-            <div class="item-desc" style="font-size: 0.68rem; color: var(--text-muted);">هنا يتم تخزين البيض والحليب والمحاصيل المحصودة:</div>
+            <div class="section-title">📦 مخزون المنتجات والمصنعات</div>
             <div class="item-list" id="inventoryList"></div>
+        </div>
+    </div>
+
+    <!-- تبويب المصانع والتحويل -->
+    <div id="tab-factories" class="tab-content">
+        <div class="card">
+            <div class="section-title">🏭 مصانع تحويل المواد الخام إلى سلع فاخرة</div>
+            <div class="item-list" id="factoriesList"></div>
         </div>
     </div>
 
@@ -435,22 +448,24 @@
 
     <div id="tab-stocks" class="tab-content">
         <div class="card">
-            <div class="section-title">📈 سوق الأسهم والبورصة العالمية (مع الرسم البياني للـ 5 حركات الأخيرة)</div>
+            <div class="section-title">📈 سوق الأسهم والبورصة العالمية</div>
             <div class="item-list" id="stocksList"></div>
         </div>
     </div>
 
-    <div id="tab-industries" class="tab-content">
+    <!-- تبويب المهام اليومية -->
+    <div id="tab-quests" class="tab-content">
         <div class="card">
-            <div class="section-title">🏢 العقارات والتكنولوجيا والمشاريع</div>
-            <div class="item-list" id="assetsList"></div>
+            <div class="section-title">🎯 المهام والإنجازات اليومية</div>
+            <div class="item-list" id="questsList"></div>
         </div>
     </div>
 
-    <div id="tab-hr" class="tab-content">
+    <!-- تبويب لوحة المتصدرين العالمية -->
+    <div id="tab-leaderboard" class="tab-content">
         <div class="card">
-            <div class="section-title">👔 تعيين المديرين التنفيذيين</div>
-            <div class="item-list" id="managersList"></div>
+            <div class="section-title">🏆 لوحة المتصدرين لأغنى الأباطرة</div>
+            <div class="item-list" id="leaderboardList"></div>
         </div>
     </div>
 
@@ -458,24 +473,15 @@
         <div class="card">
             <div class="section-title">🏦 التمويل والسندات</div>
             <div class="item-row">
-                <div class="item-info">
-                    <span class="item-title">قرض استثماري موسع ($30,000)</span>
-                    <span class="item-desc">فائدة يومية مرتفعة.</span>
-                </div>
+                <div class="item-info"><span class="item-title">قرض استثماري موسع ($30,000)</span></div>
                 <button class="action-btn" onclick="takeLoan()">اقتراض</button>
             </div>
             <div class="item-row">
-                <div class="item-info">
-                    <span class="item-title">سداد المديونية</span>
-                    <span class="item-meta" id="loanStatusDisplay">الدين: $0</span>
-                </div>
+                <div class="item-info"><span class="item-title">سداد المديونية</span><span class="item-meta" id="loanStatusDisplay">الدين: $0</span></div>
                 <button class="action-btn" onclick="repayLoan()">سداد الكامل</button>
             </div>
             <div class="item-row">
-                <div class="item-info">
-                    <span class="item-title">شراء سندات حكومية ($15,000)</span>
-                    <span class="item-desc">عوائد ثابتة يومية.</span>
-                </div>
+                <div class="item-info"><span class="item-title">شراء سندات حكومية ($15,000)</span></div>
                 <button class="action-btn" onclick="buyBonds()">شراء سند</button>
             </div>
         </div>
@@ -485,14 +491,14 @@
         <div class="card">
             <div class="section-title">📋 سجل الحسابات والأحداث اليومية</div>
             <div class="ledger-box" id="ledgerBox">
-                <div>[اليوم 1] أهلاً بك في بيئة أكثر تحدياً. تم تسجيل دخولك بنجاح!</div>
+                <div>[اليوم 1] أهلاً بك في النسخة المطورة والمدمجة بنجاح!</div>
             </div>
         </div>
     </div>
 
     <div id="tab-store" class="tab-content">
         <div class="card">
-            <div class="section-title" style="color: var(--yellow);">🎁 قسم أكواد الهدايا (Gift Codes)</div>
+            <div class="section-title" style="color: var(--yellow);">🎁 قسم أكواد الهدايا</div>
             <div style="display: flex; gap: 6px; margin-top: 4px;">
                 <input type="text" id="giftCodeInput" class="gift-input" placeholder="اكتب الكود هنا...">
                 <button class="action-btn" style="background-color: var(--green); color: #060911;" onclick="redeemGiftCode()">تفعيل 🎁</button>
@@ -500,13 +506,13 @@
         </div>
 
         <div class="card">
-            <div class="section-title" style="color: var(--gem);">💎 متجر شحن الجواهر (عبر واتساب)</div>
-            <div class="item-list" id="gemStoreList"></div>
+            <div class="section-title" style="color: var(--purple);">⚡ متجر العناصر الخاصة (تُشترى بالجواهر 💎)</div>
+            <div class="item-list" id="specialItemsList"></div>
         </div>
 
         <div class="card">
-            <div class="section-title" style="color: var(--gold);">🛒 متجر النقد والمستثمر المميز</div>
-            <div class="item-list" id="storeList"></div>
+            <div class="section-title" style="color: var(--gold);">🛒 الشحن السريع عبر الواتساب</div>
+            <div class="item-list" id="gemStoreList"></div>
         </div>
     </div>
 </div>
@@ -522,12 +528,18 @@
     window.globalMultiplier = 1.0;
     window.redeemedCodes = [];
     window.currentUsername = "";
+    window.currentWeather = { name: "عادي ☀️", effect: 1.0 };
+    window.currentEvent = { name: "سوق مستقر 📊", type: "none" };
+
+    window.activeBoosts = { fastGrowth: false, financialShield: false, emperorLicense: false };
 
     window.inventory = {
         chickenEggs: { name: 'بيض دجاج طازج', count: 0, price: 85 },
         duckEggs: { name: 'بيض بط فاخر', count: 0, price: 450 },
         milk: { name: 'حليب أبقار طازج (لتر)', count: 0, price: 500 },
-        crops: { name: 'محاصيل زراعية ناضجة', count: 0, price: 100 }
+        crops: { name: 'محاصيل زراعية ناضجة', count: 0, price: 100 },
+        cheese: { name: 'جبن فاخر معالج 🧀', count: 0, price: 1400 },
+        flour: { name: 'دقيق حبوب نقي 🌾', count: 0, price: 320 }
     };
 
     window.cropFields = {
@@ -537,6 +549,16 @@
         activePlots: 0
     };
 
+    window.factories = [
+        { id: 'fact_cheese', name: 'مصنع الأجبان والألبان', cost: 15000, owned: 0, inputType: 'milk', inputAmt: 10, outputType: 'cheese', outputAmt: 2, desc: 'يحول 10 لتر حليب إلى 2 جبن فاخر ($1,400).' },
+        { id: 'fact_mill', name: 'مطحنة الحبوب', cost: 8000, owned: 0, inputType: 'crops', inputAmt: 15, outputType: 'flour', outputAmt: 5, desc: 'يحول 15 محصول إلى 5 أكياس دقيق ($320).' }
+    ];
+
+    window.quests = [
+        { id: 'q1', title: 'إنتاج بيض دجاج', desc: 'اجمع 50 بيضة دجاج بالمخزن', target: 50, current: 0, rewardGem: 10, completed: false },
+        { id: 'q2', title: 'مستثمر الأسهم', desc: 'امتلك 3 أسهم في البورصة', target: 3, current: 0, rewardGem: 15, completed: false }
+    ];
+
     const myWhatsAppNumber = "201070813027";
 
     const giftCodesDB = {
@@ -544,22 +566,23 @@
         "GEM50": { gemReward: 25, desc: "منحة 25 جوهرة 💎" }
     };
 
+    const specialItems = [
+        { id: 'boost_growth', name: '⚡ جرعة النمو السريع', costGem: 50, desc: 'تقليص أيام نمو المحاصيل إلى النصف.', effect: () => { window.activeBoosts.fastGrowth = true; } },
+        { id: 'boost_shield', name: '🛡️ درع الحماية المالية', costGem: 80, desc: 'إيقاف خصم فوائد القروض لمدة 5 أيام.', effect: () => { window.activeBoosts.financialShield = true; } },
+        { id: 'boost_license', name: '🌟 رخصة الإمبراطور الذهبية', costGem: 200, desc: 'زيادة أرباح الأصول والعقارات بنسبة 50%.', effect: () => { window.activeBoosts.emperorLicense = true; window.globalMultiplier *= 1.5; } }
+    ];
+
     const gemPackages = [
         { name: '💎 حقيبة المبتدئ (100 جوهرة)', price: '$1.99', gems: 100 },
         { name: '💎💎 صندوق التوسع (500 جوهرة)', price: '$7.99', gems: 500 },
         { name: '💎👑 خزنة الإمبراطور (1500 جوهرة)', price: '$19.99', gems: 1500 }
     ];
 
-    const storePackages = [
-        { name: '💼 حقيبة المستثمر المبتدئ ($5,000 نقد)', price: '$2.99', amount: 5000 },
-        { name: '📈 محفظة رجال الأعمال ($35,000 نقد)', price: '$9.99', amount: 35000 },
-        { name: '🏛️ صندوق الإمبراطورية الماسي ($150,000 نقد)', price: '$29.99', amount: 150000 }
-    ];
-
     window.barns = [
         { id: 'barn_chick', name: 'حظيرة دواجن وبياض', cost: 600, capacity: 20, owned: 0, desc: 'تربية الدجاج والبط وإنتاج البيض الدوري.' },
         { id: 'barn_cow', name: 'حظيرة أبقار الألبان', cost: 3500, capacity: 10, owned: 0, desc: 'تربية الأبقار لإنتاج الحليب الدوري.' },
-        { id: 'greenhouse', name: 'صوبة زراعية حديثة', cost: 12000, capacity: 15, owned: 0, desc: 'زراعة المحاصيل وحصادها يدويًا.' }
+        { id: 'greenhouse', name: 'صوبة زراعية حديثة', cost: 12000, capacity: 15, owned: 0, desc: 'زراعة المحاصيل وحصادها يدويًا.' },
+        { id: 'worker_hut', name: 'كوخ العمال الآليين 👷', cost: 20000, capacity: 5, owned: 0, desc: 'حصاد المحاصيل وتجديدها تلقائياً يومياً.' }
     ];
 
     window.animals = [
@@ -673,6 +696,19 @@
         }
     };
 
+    window.buySpecialItem = function(itemId) {
+        const item = specialItems.find(i => i.id === itemId);
+        if (window.gems >= item.costGem) {
+            window.gems -= item.costGem;
+            item.effect();
+            alert(`✨ تم تفعيل العنصر بنجاح: ${item.name}`);
+            logMessage(`شراء عنصر خاص: ${item.name}`);
+            updateUI();
+        } else {
+            alert("❌ لا توجد جواهر كافية لشراء هذا العنصر!");
+        }
+    };
+
     window.modifyBarn = function(id, action) {
         const barn = window.barns.find(b => b.id === id);
         if (action === 'buy' && window.money >= barn.cost) {
@@ -743,10 +779,33 @@
         }
     };
 
+    window.modifyFactory = function(id) {
+        const fact = window.factories.find(f => f.id === id);
+        if (window.money >= fact.cost) {
+            window.money -= fact.cost; fact.owned++;
+            fact.cost = Math.floor(fact.cost * 1.3);
+            logMessage(`بناء أو ترقية مصنع: ${fact.name}`);
+            renderFactories(); updateUI();
+        } else { alert("❌ لا توجد سيولة كافية لبناء المصنع!"); }
+    };
+
+    window.runFactory = function(factId) {
+        const fact = window.factories.find(f => f.id === factId);
+        if (fact.owned > 0 && window.inventory[fact.inputType].count >= fact.inputAmt) {
+            window.inventory[fact.inputType].count -= fact.inputAmt;
+            window.inventory[fact.outputType].count += fact.outputAmt;
+            logMessage(`🏭 تم تشغيل المصنع (${fact.name}) وإنتاج ${fact.outputAmt} من (${window.inventory[fact.outputType].name}).`);
+            renderAll(); updateUI();
+        } else {
+            alert("❌ لا تملك مصنعاً أو ليس لديك مواد خام كافية لتشغيله!");
+        }
+    };
+
     window.sellProduct = function(prodKey) {
         const prod = window.inventory[prodKey];
         if (prod.count > 0) {
-            let totalRevenue = prod.count * prod.price;
+            let mult = window.currentEvent.type === 'market_boom' ? 1.3 : (window.currentEvent.type === 'market_crash' ? 0.8 : 1.0);
+            let totalRevenue = Math.floor(prod.count * prod.price * mult);
             window.money += totalRevenue;
             logMessage(`💰 تم بيع ${prod.count} وحدة من (${prod.name}) مقابل ${formatMoney(totalRevenue)}`);
             prod.count = 0;
@@ -837,46 +896,24 @@
         updateUI();
     };
 
-    function renderStore() {
-        const container = document.getElementById('storeList');
-        if (!container) return;
-        container.innerHTML = '';
+    function randomizeDayEvents() {
+        const weathers = [
+            { name: "عادي ☀️", effect: 1.0 },
+            { name: "مطر خير 🌧️ (نمو أسرع للمحاصيل)", effect: 1.5 },
+            { name: "موجة حر 🌡️", effect: 0.9 },
+            { name: "صقيع بارد ❄️", effect: 0.8 }
+        ];
+        window.currentWeather = weathers[Math.floor(Math.random() * weathers.length)];
 
-        storePackages.forEach(pkg => {
-            let message = encodeURIComponent(`مرحباً، أريد شراء "${pkg.name}" بسعر ${pkg.price}.\nحسابي هو: ${window.currentUsername}`);
-            let whatsappLink = `https://wa.me/${myWhatsAppNumber}?text=${message}`;
+        const events = [
+            { name: "سوق مستقر 📊", type: "none" },
+            { name: "📈 رواج تجاري! أسعار البيع أعلى 30%", type: "market_boom" },
+            { name: "📉 ركود اقتصادي مؤقت", type: "market_crash" }
+        ];
+        window.currentEvent = events[Math.floor(Math.random() * events.length)];
 
-            const row = document.createElement('div');
-            row.className = 'item-row';
-            row.innerHTML = `
-                <div class="item-info">
-                    <span class="item-title">${pkg.name}</span>
-                    <span class="item-desc">السعر: ${pkg.price}</span>
-                </div>
-                <a href="${whatsappLink}" target="_blank" class="action-btn whatsapp-btn">تواصل واتساب 💬</a>
-            `;
-            container.appendChild(row);
-        });
-
-        const gemContainer = document.getElementById('gemStoreList');
-        if (gemContainer) {
-            gemContainer.innerHTML = '';
-            gemPackages.forEach(pkg => {
-                let message = encodeURIComponent(`مرحباً، أريد شراء باقة الجواهر "${pkg.name}" بسعر ${pkg.price}.\nحسابي هو: ${window.currentUsername}`);
-                let whatsappLink = `https://wa.me/${myWhatsAppNumber}?text=${message}`;
-
-                const row = document.createElement('div');
-                row.className = 'item-row';
-                row.innerHTML = `
-                    <div class="item-info">
-                        <span class="item-title" style="color: var(--gem);">${pkg.name}</span>
-                        <span class="item-desc">السعر: ${pkg.price}</span>
-                    </div>
-                    <a href="${whatsappLink}" target="_blank" class="action-btn whatsapp-btn">شحن واتساب 💎</a>
-                `;
-                gemContainer.appendChild(row);
-            });
-        }
+        document.getElementById('weatherDisplay').innerText = `الطقس: ${window.currentWeather.name}`;
+        document.getElementById('eventDisplay').innerText = `السوق: ${window.currentEvent.name}`;
     }
 
     window.nextTurn = function() {
@@ -892,13 +929,25 @@
             alert("⚠️ لقد أنهيت 25 يوماً! يجب تجديد الأيام.");
         }
 
+        randomizeDayEvents();
+
+        // تشغيل عمال الحصاد الآلي
+        const huts = window.barns.find(b => b.id === 'worker_hut').owned;
+        if (huts > 0 && window.cropFields.activePlots === 0 && window.money >= 450) {
+            window.money -= 450;
+            window.cropFields.activePlots = 10 * huts;
+            window.cropFields.currentDaysGrown = window.cropFields.growthDaysNeeded;
+            window.cropFields.isReady = true;
+            logMessage(`👷 العمال الآليون قاموا ببزر وحصاد المحاصيل تلقائياً!`);
+        }
+
         window.animals.forEach(animal => {
             if (animal.count > 0) {
                 animal.age = (animal.age || 0) + 1;
 
                 if (animal.productType && window.inventory[animal.productType]) {
                     if (window.day % animal.prodInterval === 0) {
-                        let totalProduced = animal.count * animal.prodAmount;
+                        let totalProduced = Math.floor(animal.count * animal.prodAmount * window.currentWeather.effect);
                         window.inventory[animal.productType].count += totalProduced;
                         logMessage(`🥚 إنتاج دوري: أنتجت (${animal.name}) عدد ${totalProduced} من (${window.inventory[animal.productType].name}).`);
                     }
@@ -913,8 +962,10 @@
         });
 
         if (window.cropFields.activePlots > 0 && !window.cropFields.isReady) {
+            let reqDays = window.activeBoosts.fastGrowth ? Math.ceil(window.cropFields.growthDaysNeeded / 2) : window.cropFields.growthDaysNeeded;
+            if (window.currentWeather.effect === 1.5) reqDays = Math.max(1, reqDays - 1);
             window.cropFields.currentDaysGrown++;
-            if (window.cropFields.currentDaysGrown >= window.cropFields.growthDaysNeeded) {
+            if (window.cropFields.currentDaysGrown >= reqDays) {
                 window.cropFields.isReady = true;
                 logMessage(`🌾 تنبيه: المحاصيل نضجت وجاهزة للحصاد!`);
             }
@@ -926,7 +977,7 @@
 
         let finalDailyProfit = assetIncome + logisticsIncome + bondsIncome;
         
-        if (window.loan > 0) {
+        if (window.loan > 0 && !window.activeBoosts.financialShield) {
             let dailyInterest = Math.floor(window.loan * 0.02);
             window.money -= dailyInterest;
         }
@@ -945,6 +996,17 @@
             if (!stock.history) stock.history = ['=', '=', '=', '=', '='];
             stock.history.push(trendSymbol);
             if (stock.history.length > 5) stock.history.shift();
+        });
+
+        // التحقق من إنجاز المهام
+        window.quests.forEach(q => {
+            if (q.id === 'q1') {
+                q.current = window.inventory.chickenEggs.count;
+                if (!q.completed && q.current >= q.target) { q.completed = true; window.gems += q.rewardGem; logMessage(`🎯 تم إنجاز المهمة (${q.title}) وحصلت على ${q.rewardGem} 💎`); }
+            } else if (q.id === 'q2') {
+                q.current = window.stocks.reduce((sum, s) => sum + s.owned, 0);
+                if (!q.completed && q.current >= q.target) { q.completed = true; window.gems += q.rewardGem; logMessage(`🎯 تم إنجاز المهمة (${q.title}) وحصلت على ${q.rewardGem} 💎`); }
+            }
         });
 
         logMessage(`نتائج اليوم ${window.day}: تحديث الأسواق المالية وأعمار الحيوانات.`);
@@ -983,7 +1045,7 @@
                     <div class="item-info">
                         <span class="item-title">${barn.name} (المملوك: ${barn.owned})</span>
                         <span class="item-desc">${barn.desc}</span>
-                        ${barn.id !== 'greenhouse' ? `<span class="item-meta">السعة: ${currentAssigned} / ${totalCap} \vert{} التكلفة: ${formatMoney(barn.cost)}</span>` : `<span class="item-meta">التكلفة: ${formatMoney(barn.cost)}</span>`}
+                        ${barn.id !== 'greenhouse' && barn.id !== 'worker_hut' ? `<span class="item-meta">السعة: ${currentAssigned} / ${totalCap} \vert{} التكلفة: ${formatMoney(barn.cost)}</span>` : `<span class="item-meta">التكلفة: ${formatMoney(barn.cost)}</span>`}
                     </div>
                     <div class="btn-group">
                         <button class="action-btn farm-btn" onclick="modifyBarn('${barn.id}', 'buy')">بناء</button>
@@ -1038,6 +1100,27 @@
         });
     }
 
+    function renderFactories() {
+        const container = document.getElementById('factoriesList');
+        if (!container) return;
+        container.innerHTML = '';
+        window.factories.forEach(fact => {
+            container.innerHTML += `
+                <div class="item-row">
+                    <div class="item-info">
+                        <span class="item-title">${fact.name} (العدد: ${fact.owned})</span>
+                        <span class="item-desc">${fact.desc}</span>
+                        <span class="item-meta">تكلفة البناء: ${formatMoney(fact.cost)}</span>
+                    </div>
+                    <div class="btn-group">
+                        <button class="action-btn farm-btn" onclick="modifyFactory('${fact.id}')">بناء</button>
+                        <button class="action-btn" style="background:var(--purple);" onclick="runFactory('${fact.id}')" ${fact.owned===0?'disabled':''}>تشغيل ⚙️</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
     function renderLogistics() {
         const container = document.getElementById('logisticsList');
         if (!container) return;
@@ -1084,52 +1167,103 @@
         });
     }
 
-    function renderAssets() {
-        const container = document.getElementById('assetsList');
+    function renderQuests() {
+        const container = document.getElementById('questsList');
         if (!container) return;
         container.innerHTML = '';
-        window.assets.forEach(asset => {
-            const row = document.createElement('div');
-            row.className = 'item-row';
-            row.innerHTML = `
-                <div class="item-info">
-                    <span class="item-title">${asset.name} (${asset.count})</span>
-                    <span class="item-desc">${asset.desc}</span>
-                    <span class="item-meta">العائد اليومي: +${formatMoney(Math.floor(asset.income * window.globalMultiplier))} | السعر: ${formatMoney(asset.cost)}</span>
+        window.quests.forEach(q => {
+            container.innerHTML += `
+                <div class="item-row">
+                    <div class="item-info">
+                        <span class="item-title">${q.title} ${q.completed ? '(مكتملة ✅)' : ''}</span>
+                        <span class="item-desc">${q.desc} (${q.current}/${q.target})</span>
+                        <span class="item-meta">المكافأة: ${q.rewardGem} 💎</span>
+                    </div>
                 </div>
-                <button class="action-btn" onclick="buyAsset('${asset.id}')">شراء</button>
             `;
-            container.appendChild(row);
         });
     }
 
-    function renderManagers() {
-        const container = document.getElementById('managersList');
+    async function renderLeaderboard() {
+        const container = document.getElementById('leaderboardList');
         if (!container) return;
-        container.innerHTML = '';
-        window.managers.forEach(mgr => {
-            const row = document.createElement('div');
-            row.className = 'item-row';
-            row.innerHTML = `
-                <div class="item-info">
-                    <span class="item-title">${mgr.name} ${mgr.hired ? '(نشط ✅)' : ''}</span>
-                    <span class="item-desc">${mgr.desc}</span>
-                    <span class="item-meta">التكلفة: ${formatMoney(mgr.cost)}</span>
-                </div>
-                <button class="action-btn" onclick="hireManager('${mgr.id}')" ${mgr.hired ? 'disabled' : ''}>توظيف</button>
-            `;
-            container.appendChild(row);
-        });
+        container.innerHTML = '<div style="text-align:center; color:var(--text-muted);">جاري التحميل...</div>';
+        try {
+            const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+            const db = window.firebaseDB;
+            if (!db) return;
+            const querySnapshot = await getDocs(collection(db, "players_accounts"));
+            let players = [];
+            querySnapshot.forEach((doc) => {
+                let d = doc.data();
+                let net = (d.money || 1000) + ((d.gems || 20) * 100);
+                players.push({ name: d.username || "مستثمر", netWorth: net });
+            });
+            players.sort((a, b) => b.netWorth - a.netWorth);
+
+            container.innerHTML = '';
+            players.slice(0, 10).forEach((p, idx) => {
+                container.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <span class="item-title">#${idx+1} ${p.name}</span>
+                            <span class="item-meta">صافي الثروة: ${formatMoney(p.netWorth)}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        } catch (e) {
+            container.innerHTML = '<div style="text-align:center; color:var(--red);">تعذر جلب لوحة المتصدرين.</div>';
+        }
+    }
+
+    function renderStore() {
+        const specialContainer = document.getElementById('specialItemsList');
+        if (specialContainer) {
+            specialContainer.innerHTML = '';
+            specialItems.forEach(item => {
+                specialContainer.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <span class="item-title">${item.name}</span>
+                            <span class="item-desc">${item.desc}</span>
+                            <span class="item-meta">السعر: ${item.costGem} 💎</span>
+                        </div>
+                        <button class="action-btn gem-btn" onclick="buySpecialItem('${item.id}')">شراء</button>
+                    </div>
+                `;
+            });
+        }
+
+        const container = document.getElementById('gemStoreList');
+        if (container) {
+            container.innerHTML = '';
+            gemPackages.forEach(pkg => {
+                let message = encodeURIComponent(`مرحباً، أريد شراء باقة الجواهر "${pkg.name}" بسعر ${pkg.price}.\nحسابي هو: ${window.currentUsername}`);
+                let whatsappLink = `https://wa.me/${myWhatsAppNumber}?text=${message}`;
+
+                container.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <span class="item-title" style="color: var(--gem);">${pkg.name}</span>
+                            <span class="item-desc">السعر: ${pkg.price}</span>
+                        </div>
+                        <a href="${whatsappLink}" target="_blank" class="action-btn whatsapp-btn">واتساب 💎</a>
+                    </div>
+                `;
+            });
+        }
     }
 
     function renderAll() {
         renderBarns();
         renderAnimals();
         renderInventory();
+        renderFactories();
         renderLogistics();
         renderStocks();
-        renderAssets();
-        renderManagers();
+        renderQuests();
+        renderLeaderboard();
         renderStore();
     }
 
@@ -1141,9 +1275,8 @@
 
         let animalsVal = window.animals.reduce((sum, a) => sum + (Math.floor(a.cost / 1.15) * a.count), 0);
         let logisticsVal = window.logistics.reduce((sum, l) => sum + (Math.floor(l.cost / 1.18) * l.count), 0);
-        let assetsVal = window.assets.reduce((sum, ast) => sum + (Math.floor(ast.cost / 1.2) * ast.count), 0);
         let stocksVal = window.stocks.reduce((sum, s) => sum + (s.price * s.owned), 0);
-        let netWorth = window.money + animalsVal + logisticsVal + assetsVal + stocksVal + (window.bondsOwned * 15000) - window.loan;
+        let netWorth = window.money + animalsVal + logisticsVal + stocksVal + (window.bondsOwned * 15000) - window.loan;
 
         if (document.getElementById('moneyDisplay')) document.getElementById('moneyDisplay').innerText = formatMoney(window.money);
         if (document.getElementById('gemsDisplay')) document.getElementById('gemsDisplay').innerText = window.gems;
@@ -1175,6 +1308,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    window.firebaseDB = db;
 
     function sanitizeKey(emailOrUser) {
         return emailOrUser.trim().toLowerCase().replace(/[@\.]/g, '_');
@@ -1202,7 +1336,6 @@
                     alert("❌ كلمة المرور غير صحيحة!");
                     return;
                 }
-                // استرجاع البيانات المحفوظة
                 window.money = data.money !== undefined ? data.money : 1000;
                 window.gems = data.gems !== undefined ? data.gems : 20;
                 window.loan = data.loan !== undefined ? data.loan : 0;
@@ -1214,10 +1347,11 @@
                 if (data.barns) window.barns = data.barns;
                 if (data.stocks) window.stocks = data.stocks;
                 if (data.cropFields) window.cropFields = data.cropFields;
+                if (data.factories) window.factories = data.factories;
+                if (data.quests) window.quests = data.quests;
                 
                 alert(`✅ أهلاً بك مجدداً يا ${uInput}!`);
             } else {
-                // إنشاء حساب جديد وقاعدة بيانات مستقلة له
                 await setDoc(docRef, {
                     username: uInput,
                     password: pInput,
@@ -1232,12 +1366,13 @@
                     barns: window.barns,
                     stocks: window.stocks,
                     cropFields: window.cropFields,
+                    factories: window.factories,
+                    quests: window.quests,
                     createdAt: new Date()
                 });
                 alert(`🎉 تم إنشاء حساب جديد باسم "${uInput}" بنجاح!`);
             }
 
-            // إخفاء شاشة تسجيل الدخول وإظهار اللعبة
             document.getElementById('authScreen').style.display = 'none';
             document.getElementById('gameContainer').style.display = 'flex';
             renderAll();
@@ -1266,12 +1401,12 @@
                 barns: window.barns,
                 stocks: window.stocks,
                 cropFields: window.cropFields,
+                factories: window.factories,
+                quests: window.quests,
                 lastUpdated: new Date()
             }, { merge: true });
-            alert("☁️ تم حفظ اللعبة سحابياً بنجاح!");
         } catch (e) {
             console.error(e);
-            alert("❌ حدث خطأ أثناء الحفظ السحابي.");
         }
     };
 </script>
