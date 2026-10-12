@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم والرقابة - إمبراطورية المال</title>
+    <title>لوحة التحكم والإدارة (Admin Panel) | إمبراطورية التجارة</title>
     <style>
         :root {
             --bg-color: #060911;
@@ -28,7 +28,7 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding: 15px;
+            padding: 12px;
             display: flex;
             justify-content: center;
             min-height: 100vh;
@@ -36,7 +36,7 @@
 
         .container {
             width: 100%;
-            max-width: 650px;
+            max-width: 900px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -44,7 +44,8 @@
 
         header {
             text-align: center;
-            padding: 10px 0;
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
         }
 
         header h1 {
@@ -52,11 +53,37 @@
             color: var(--yellow);
         }
 
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .stat-val {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 4px;
+            color: var(--green);
+        }
+
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
+            border-radius: 8px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -67,110 +94,148 @@
             font-weight: bold;
             color: var(--yellow);
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 5px;
+            padding-bottom: 6px;
         }
 
-        select, input {
-            background: #162032;
+        .search-box {
+            background-color: #162032;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 10px;
+            padding: 8px 12px;
             color: var(--text-main);
-            font-size: 0.9rem;
-            width: 100%;
+            font-size: 0.85rem;
             outline: none;
+            width: 100%;
         }
 
-        select:focus, input:focus {
-            border-color: var(--yellow);
+        .players-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 500px;
+            overflow-y: auto;
         }
 
-        button {
+        .player-row {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .player-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--blue);
+        }
+
+        .player-info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: rgba(0,0,0,0.2);
+            padding: 6px;
+            border-radius: 4px;
+        }
+
+        .control-inputs {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .admin-input {
+            background-color: #060911;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 6px;
+            color: var(--text-main);
+            font-size: 0.75rem;
+            width: 100px;
+        }
+
+        .btn {
             border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
             font-weight: bold;
             cursor: pointer;
-            font-size: 0.85rem;
-            transition: 0.2s;
+            color: white;
         }
 
-        button:active { transform: scale(0.98); }
+        .btn-green { background-color: var(--green); color: #060911; }
+        .btn-blue { background-color: var(--blue); }
+        .btn-red { background-color: var(--red); }
+        .btn-gem { background-color: var(--gem); color: #060911; }
 
-        .btn-primary { background-color: var(--blue); color: white; width: 100%; }
-        .btn-success { background-color: var(--green); color: #060911; flex: 1; }
-        .btn-danger { background-color: var(--red); color: white; flex: 1; }
-        .btn-gem { background-color: var(--gem); color: #060911; flex: 1; }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            background: rgba(0,0,0,0.3);
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-family: monospace;
+        #loginSection {
+            max-width: 400px;
+            margin: 100px auto;
+            text-align: center;
         }
-
-        .row { display: flex; gap: 8px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>🛠️ لوحة تحكم الأدمن - إمبراطورية المال</h1>
-    </header>
-
-    <!-- قائمة اللاعبين -->
-    <div class="card">
-        <div class="section-title">👥 قائمة اللاعبين المسجلين سحابياً</div>
-        <div class="row">
-            <select id="playerSelect" onchange="loadSelectedPlayerData()">
-                <option value="">-- اضغط لتحميل قائمة اللاعبين --</option>
-            </select>
-            <button class="btn-primary" style="width: 140px;" onclick="fetchPlayersList()">تحديث القائمة 🔄</button>
-        </div>
+    <!-- شاشة حماية دخول الأدمن -->
+    <div id="loginSection" class="card">
+        <h2 style="color: var(--yellow); font-size: 1.1rem;">👑 تسجيل دخول لوحة الإدارة</h2>
+        <input type="password" id="adminPassInput" class="search-box" placeholder="كلمة سر الأدمن...">
+        <button class="btn btn-green" style="padding: 10px;" onclick="checkAdminAuth()">دخول اللوحة 🔑</button>
     </div>
 
-    <!-- لوحة التحكم في اللاعب المختار -->
-    <div class="card" id="controlPanel" style="display: none;">
-        <div class="section-title" id="selectedPlayerTitle">📊 بيانات وموارد الإمبراطورية المحددة</div>
-        
-        <div class="info-grid">
-            <div>👤 اسم المستخدم: <span id="pName" style="color: var(--yellow);">--</span></div>
-            <div>💰 النقد السائل: <span id="pMoney" style="color: var(--green);">--</span></div>
-            <div>💎 الجواهر: <span id="pGems" style="color: var(--gem);">--</span></div>
-            <div>📅 اليوم التكتيكي: <span id="pDay">--</span></div>
+    <!-- المحتوى الرئيسي للوحة الأدمن -->
+    <div id="adminMainContent" style="display: none; flex-direction: column; gap: 12px;">
+        <header>
+            <h1>⚙️ لوحة مراقبة وإدارة اللاعبين المتقدمة</h1>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">إجمالي الحسابات</div>
+                <div class="stat-val" id="totalPlayersCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">إجمالي السيولة ($)</div>
+                <div class="stat-val" id="totalMoneyCount" style="color: var(--yellow);">$0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">إجمالي الجواهر (💎)</div>
+                <div class="stat-val" id="totalGemsCount" style="color: var(--gem);">0</div>
+            </div>
         </div>
 
-        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">أدخل القيمة المراد إضافتها (أو خصمها بالسالب مثل: -5000 أو -50):</div>
-        
-        <div class="row">
-            <input type="number" id="modifierValue" placeholder="أدخل الرقم هنا (مثال: 10000 أو 100)...">
+        <div class="card">
+            <div class="section-title">🔍 البحث عن لاعب وتشغيل المراقبة</div>
+            <input type="text" id="searchInput" class="search-box" placeholder="ابحث باسم المستخدم..." oninput="filterPlayers()">
         </div>
 
-        <!-- أزرار التحكم في النقد والجواهر والأيام -->
-        <div class="row">
-            <button class="btn-success" onclick="modifyPlayerResource('money', 1)">إضافة نقد 💰</button>
-            <button class="btn-danger" onclick="modifyPlayerResource('money', -1)">خصم نقد 💸</button>
-        </div>
-
-        <div class="row">
-            <button class="btn-gem" onclick="modifyPlayerResource('gems', 1)">إضافة جواهر 💎</button>
-            <button class="btn-danger" onclick="modifyPlayerResource('gems', -1)">خصم جواهر 🔻</button>
-        </div>
-
-        <div class="row">
-            <button class="btn-primary" style="background-color: var(--purple);" onclick="modifyPlayerResource('day', 1)">تعديل الأيام 📅</button>
+        <div class="card">
+            <div class="section-title">👥 قائمة حسابات اللاعبين والتعديل المباشر</div>
+            <div class="players-list" id="playersList">
+                <div style="text-align: center; color: var(--text-muted); padding: 10px;">جاري تحميل البيانات...</div>
+            </div>
         </div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDjmtuNuQf6zQwiHeRbbIWI19XdVJzyuU",
@@ -185,119 +250,142 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    let playersDataCache = {};
-    let currentSelectedId = null;
+    let allPlayers = [];
 
-    // جلب قائمة اللاعبين من فايربيس
-    window.fetchPlayersList = async function() {
-        const select = document.getElementById('playerSelect');
-        select.innerHTML = '<option value="">جاري تحميل القائمة...</option>';
-        playersDataCache = {};
+    // كلمة سر دخول لوحة الأدمن (يمكنك تغييرها من هنا)
+    const ADMIN_PASSWORD = "admin123456";
 
+    window.checkAdminAuth = function() {
+        const inputPass = document.getElementById('adminPassInput').value.trim();
+        if (inputPass === ADMIN_PASSWORD) {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('adminMainContent').style.display = 'flex';
+            loadAllPlayers();
+        } else {
+            alert("❌ كلمة المرور غير صحيحة!");
+        }
+    };
+
+    async function loadAllPlayers() {
+        const container = document.getElementById('playersList');
+        container.innerHTML = '<div style="text-align: center; color: var(--text-muted);">جاري الاتصال بالسيرفر...</div>';
+        
         try {
-            const querySnapshot = await getDocs(collection(db, "players"));
-            select.innerHTML = '<option value="">-- اختر لاعباً للتحكم به --</option>';
-            
-            if (querySnapshot.empty) {
-                select.innerHTML = '<option value="">لا يوجد لاعبون مسجلون بعد</option>';
-                return;
-            }
+            const querySnapshot = await getDocs(collection(db, "players_accounts"));
+            allPlayers = [];
+            let totalMoney = 0;
+            let totalGems = 0;
 
-            querySnapshot.forEach((documentSnapshot) => {
-                const data = documentSnapshot.data();
-                const id = documentSnapshot.id;
-                playersDataCache[id] = data;
-                
-                const displayName = data.username ? `${data.username} (${id.slice(-4)})` : `مستثمر (${id})`;
-                const opt = document.createElement('option');
-                opt.value = id;
-                opt.innerText = displayName;
-                select.appendChild(opt);
+            querySnapshot.forEach((docSnap) => {
+                let data = docSnap.data();
+                data.id = docSnap.id;
+                allPlayers.push(data);
+                totalMoney += (data.money || 0);
+                totalGems += (data.gems || 0);
             });
-            alert("✅ تم تحديث قائمة اللاعبين بنجاح!");
+
+            document.getElementById('totalPlayersCount').innerText = allPlayers.length;
+            document.getElementById('totalMoneyCount').innerText = '$' + totalMoney.toLocaleString();
+            document.getElementById('totalGemsCount').innerText = totalGems.toLocaleString();
+
+            renderPlayers(allPlayers);
         } catch (e) {
             console.error(e);
-            alert("❌ حدث خطأ أثناء جلب قائمة اللاعبين.");
+            container.innerHTML = '<div style="text-align: center; color: var(--red);">❌ فشل في جلب بيانات اللاعبين!</div>';
         }
-    };
+    }
 
-    // عرض بيانات اللاعب المختار
-    window.loadSelectedPlayerData = function() {
-        const select = document.getElementById('playerSelect');
-        const id = select.value;
-        currentSelectedId = id;
-        const panel = document.getElementById('controlPanel');
+    function renderPlayers(players) {
+        const container = document.getElementById('playersList');
+        container.innerHTML = '';
 
-        if (!id || !playersDataCache[id]) {
-            panel.style.display = 'none';
+        if (players.length === 0) {
+            container.innerHTML = '<div style="text-align: center; color: var(--text-muted);">لا يوجد لاعبين مطابقين للبحث.</div>';
             return;
         }
 
-        const data = playersDataCache[id];
-        document.getElementById('pName').innerText = data.username || "مستثمر مجهول";
-        document.getElementById('pMoney').innerText = '$' + (data.money || 0).toLocaleString();
-        document.getElementById('pGems').innerText = (data.gems || 0).toLocaleString() + ' 💎';
-        document.getElementById('pDay').innerText = data.day || 1;
+        players.forEach((p) => {
+            container.innerHTML += `
+                <div class="player-row">
+                    <div class="player-header">
+                        <span class="player-name">👤 ${p.username || p.id}</span>
+                        <span style="font-size: 0.7rem; color: var(--text-muted);">كلمة المرور: ${p.password || 'غير معروفة'}</span>
+                    </div>
 
-        panel.style.display = 'flex';
+                    <div class="player-info-grid">
+                        <div>💰 النقد: $${(p.money || 0).toLocaleString()}</div>
+                        <div>💎 الجواهر: ${p.gems || 0}</div>
+                        <div>🏦 الدين: $${(p.loan || 0).toLocaleString()}</div>
+                        <div>📅 اليوم: ${p.day || 1}</div>
+                    </div>
+
+                    <div class="control-inputs">
+                        <input type="number" id="money_${p.id}" class="admin-input" placeholder="الأموال الجديدة...">
+                        <button class="btn btn-green" onclick="updatePlayerField('${p.id}', 'money')">تعديل النقد 💰</button>
+
+                        <input type="number" id="gems_${p.id}" class="admin-input" placeholder="الجواهر...">
+                        <button class="btn btn-gem" onclick="updatePlayerField('${p.id}', 'gems')">تعديل الجواهر 💎</button>
+
+                        <button class="btn btn-blue" onclick="resetLockAndCycle('${p.id}')">إلغاء القفل/الانتظار 🔓</button>
+                        <button class="btn btn-red" onclick="deletePlayerAccount('${p.id}')">حذف الحساب 🗑️</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    window.filterPlayers = function() {
+        const q = document.getElementById('searchInput').value.trim().toLowerCase();
+        const filtered = allPlayers.filter(p => (p.username || p.id).toLowerCase().includes(q));
+        renderPlayers(filtered);
     };
 
-    // تعديل موارد اللاعب (نقد، جواهر، أيام) زيادة أو نقصان
-    window.modifyPlayerResource = async function(resourceType, direction) {
-        if (!currentSelectedId) return;
-
-        const valInput = document.getElementById('modifierValue');
-        let amount = parseInt(valInput.value);
-
-        if (isNaN(amount) || amount <= 0) {
-            alert("❌ الرجاء إدخال رقم صحيح وموجب في خانة القيمة.");
-            return;
-        }
-
-        let finalDelta = amount * direction;
-        const playerRef = doc(db, "players", currentSelectedId);
+    window.updatePlayerField = async function(docId, field) {
+        const input = document.getElementById(`${field}_${docId}`);
+        const val = parseInt(input.value);
+        if (isNaN(val)) { alert("❌ يرجى إدخال رقم صحيح!"); return; }
 
         try {
-            const docSnap = await getDoc(playerRef);
-            if (!docSnap.exists()) {
-                alert("❌ اللاعب غير موجود في قاعدة البيانات.");
-                return;
-            }
+            const playerRef = doc(db, "players_accounts", docId);
+            let updateData = {};
+            updateData[field] = val;
 
-            let currentData = docSnap.data();
-            let updatePayload = {};
-
-            if (resourceType === 'money') {
-                let currentMoney = currentData.money || 0;
-                let newMoney = Math.max(0, currentMoney + finalDelta);
-                updatePayload.money = newMoney;
-                playersDataCache[currentSelectedId].money = newMoney;
-            } else if (resourceType === 'gems') {
-                let currentGems = currentData.gems || 0;
-                let newGems = Math.max(0, currentGems + finalDelta);
-                updatePayload.gems = newGems;
-                playersDataCache[currentSelectedId].gems = newGems;
-            } else if (resourceType === 'day') {
-                let currentDay = currentData.day || 1;
-                let newDay = Math.max(1, currentDay + finalDelta);
-                updatePayload.day = newDay;
-                playersDataCache[currentSelectedId].day = newDay;
-            }
-
-            await updateDoc(playerRef, updatePayload);
-            loadSelectedPlayerData();
-            valInput.value = '';
-            alert("🚀 تم تحديث رصيد اللاعب بنجاح في قاعدة البيانات!");
+            await updateDoc(playerRef, updateData);
+            alert(`✅ تم تعديل ${field === 'money' ? 'الأموال' : 'الجواهر'} بنجاح!`);
+            loadAllPlayers();
         } catch (e) {
             console.error(e);
-            alert("❌ حدث خطأ أثناء تعديل بيانات اللاعب.");
+            alert("❌ حدث خطأ أثناء التحديث.");
         }
     };
 
-    // تحميل القائمة تلقائياً عند فتح الصفحة
-    window.addEventListener('DOMContentLoaded', () => {
-        fetchPlayersList();
-    });
+    window.resetLockAndCycle = async function(docId) {
+        try {
+            const playerRef = doc(db, "players_accounts", docId);
+            await updateDoc(playerRef, {
+                isLocked: false,
+                daysPlayedInCycle: 0
+            });
+            alert("✅ تم فك القفل وتصفير أيام الانتظار للاعب بنجاح!");
+            loadAllPlayers();
+        } catch (e) {
+            console.error(e);
+            alert("❌ حدث خطأ أثناء العملية.");
+        }
+    };
+
+    window.deletePlayerAccount = async function(docId) {
+        if (confirm(`⚠️ هل أنت تأكد تماماً من حذف حساب اللاعب (${docId})؟ لا يمكن التراجع!`)) {
+            try {
+                await deleteDoc(doc(db, "players_accounts", docId));
+                alert("🗑️ تم حذف الحساب بنجاح.");
+                loadAllPlayers();
+            } catch (e) {
+                console.error(e);
+                alert("❌ فشل في حذف الحساب.");
+            }
+        }
+    };
 </script>
 
 </body>
