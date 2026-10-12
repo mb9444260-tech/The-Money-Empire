@@ -457,8 +457,8 @@
     <div id="tab-quests" class="tab-content">
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
-                <span>🎯 المهام والإنجازات اليومية المتجددة</span>
-                <span id="questTimerDisplay" style="font-size:0.68rem; color:var(--gem);">تجدد بعد: 24 يوم</span>
+                <span>🎯 المهام اليومية المتجددة</span>
+                <span id="questTimerDisplay" style="font-size:0.68rem; color:var(--gem);">جاري الحساب...</span>
             </div>
             <div class="item-list" id="questsList"></div>
         </div>
@@ -562,18 +562,21 @@
         { id: 'fact_mill', name: 'مطحنة الحبوب', cost: 8000, owned: 0, inputType: 'crops', inputAmt: 15, outputType: 'flour', outputAmt: 5, desc: 'يحول 15 محصول إلى 5 أكياس دقيق ($320).' }
     ];
 
-    // قائمة المهام المحتملة لتوليد مهام عشوائية كل 24 ساعة (كل 24 يوم داخل اللعبة)
+    // نظام المهام المتجددة كل 24 ساعة حقيقية
     window.activeQuests = [];
+    window.questResetTimestamp = 0; // وقت التجديد القادم بالـ Milliseconds
+    const twentyFourHoursMs = 24 * 60 * 60 * 1000;
+
     const possibleQuestsPool = [
-        { id: 'q_eggs', title: 'إنتاج بيض الدجاج', desc: 'اجمع 20 بيضة دجاج بالمخزن', target: 20, rewardGem: 10, type: 'chickenEggs' },
-        { id: 'q_milk', title: 'موسم الألبان', desc: 'اجمع 10 لترات حليب أبقار بالمخزن', target: 10, rewardGem: 12, type: 'milk' },
+        { id: 'q_eggs', title: 'إنتاج بيض الدجاج', desc: 'اجمع 25 بيضة دجاج بالمخزن', target: 25, rewardGem: 10, type: 'chickenEggs' },
+        { id: 'q_milk', title: 'موسم الألبان', desc: 'اجمع 12 لترات حليب أبقار بالمخزن', target: 12, rewardGem: 12, type: 'milk' },
         { id: 'q_crops', title: 'الحصاد الزراعي', desc: 'اجمع 30 وحدة محاصيل زراعية بالمخزن', target: 30, rewardGem: 15, type: 'crops' },
         { id: 'q_stocks', title: 'مستثمر البورصة', desc: 'امتلك 3 أسهم في المحفظة', target: 3, rewardGem: 15, type: 'stocks' },
-        { id: 'q_ducks', title: 'ثروة البط', desc: 'اجمع 15 بيضة بط فاخر بالمخزن', target: 15, rewardGem: 14, type: 'duckEggs' }
+        { id: 'q_ducks', title: 'ثروة البط', desc: 'اجمع 15 بيضة بط فاخر بالمخزن', target: 15, rewardGem: 14, type: 'duckEggs' },
+        { id: 'q_flour', title: 'إنتاج الدقيق الفاخر', desc: 'اجمع 10 أكياس دقيق نقي بالمخزن', target: 10, rewardGem: 20, type: 'flour' }
     ];
 
     function generateDailyQuests() {
-        // اختيار 3 مهام عشوائية مختلفة كل 24 يوم
         let shuffled = [...possibleQuestsPool].sort(() => 0.5 - Math.random());
         window.activeQuests = shuffled.slice(0, 3).map((q, idx) => ({
             index: idx,
@@ -586,6 +589,15 @@
             type: q.type,
             completed: false
         }));
+        window.questResetTimestamp = Date.now() + twentyFourHoursMs;
+    }
+
+    function checkRealtimeQuestReset() {
+        let now = Date.now();
+        if (!window.questResetTimestamp || now >= window.questResetTimestamp || !window.activeQuests || window.activeQuests.length === 0) {
+            generateDailyQuests();
+            logMessage("🎯 تم تحديث المهام اليومية بمهام وهدايا جديدة (دورة الـ 24 ساعة الحقيقية)!");
+        }
     }
 
     const myWhatsAppNumber = "201070813027";
@@ -602,15 +614,15 @@
     ];
 
     const gemPackages = [
-        { name: '💎 حقيبة المبتدئ (100 جوهرة)', price: '$1.99', gems: 100 },
-        { name: '💎💎 صندوق التوسع (500 جوهرة)', price: '$7.99', gems: 500 },
-        { name: '💎👑 خزنة الإمبراطور (1500 جوهرة)', price: '$19.99', gems: 1500 }
+        { name: '💎 حقيبة المبتدئ (100 جوهرة)', price: '50 L.E', gems: 100 },
+        { name: '💎💎 صندوق التوسع (500 جوهرة)', price: '200 L.E', gems: 500 },
+        { name: '💎👑 خزنة الإمبراطور (1500 جوهرة)', price: '350 L.E', gems: 1500 }
     ];
 
     const moneyPackages = [
-        { name: '💰 حقيبة سيولة ( $50,000 )', price: '$1.99', amount: 50000 },
-        { name: '💰💰 صندوق ثروة ( $250,000 )', price: '$6.99', amount: 250000 },
-        { name: '💰👑 خزنة الإمبراطورية المالية ( $1,000,000 )', price: '$19.99', amount: 1000000 }
+        { name: '💰 حقيبة سيولة ( $50,000 )', price: '40 L.E', amount: 50000 },
+        { name: '💰💰 صندوق ثروة ( $250,000 )', price: '120 L.E', amount: 250000 },
+        { name: '💰👑 خزنة الإمبراطورية المالية ( $1,000,000 )', price: '240 L.E', amount: 1000000 }
     ];
 
     window.barns = [
@@ -980,11 +992,8 @@
             alert("⚠️ لقد أنهيت 25 يوماً! يجب تجديد الأيام.");
         }
 
-        // تجديد المهام كل 24 يوم داخل اللعبة
-        if (window.day % 24 === 0) {
-            generateDailyQuests();
-            logMessage("🎯 تم تجديد المهام اليومية بمهام جديدة!");
-        }
+        // فحص وقت المهام الحقيقي عند كل إنهاء يوم
+        checkRealtimeQuestReset();
 
         randomizeDayEvents();
 
@@ -1052,7 +1061,7 @@
             if (stock.history.length > 5) stock.history.shift();
         });
 
-        // تحديث تقدم المهام المتجددة تلقائياً
+        // تتبع إنجاز المهام
         window.activeQuests.forEach(q => {
             if (!q.completed) {
                 if (q.type === 'stocks') {
@@ -1231,7 +1240,7 @@
         if (!container) return;
         container.innerHTML = '';
         if (!window.activeQuests || window.activeQuests.length === 0) {
-            generateDailyQuests();
+            checkRealtimeQuestReset();
         }
         window.activeQuests.forEach(q => {
             container.innerHTML += `
@@ -1354,9 +1363,20 @@
         if (turnTitle) turnTitle.innerText = `اليوم التكتيكي: ${window.day} (دورة الـ 25: ${window.daysPlayedInCycle}/25)`;
         if (turnSub) turnSub.innerText = window.isLocked ? "انتهت محاولات الدورة الحالية!" : `متبقي ${25 - window.daysPlayedInCycle} يوماً في هذه الدورة`;
 
-        let daysLeftForQuest = 24 - (window.day % 24);
+        // حساب المتبقي لتجديد المهام الحقيقي
+        let now = Date.now();
+        let diffMs = window.questResetTimestamp - now;
         const questTimerDisplay = document.getElementById('questTimerDisplay');
-        if (questTimerDisplay) questTimerDisplay.innerText = `تجدد بعد: ${daysLeftForQuest} يوم`;
+        if (questTimerDisplay) {
+            if (diffMs > 0) {
+                let hours = Math.floor(diffMs / (1000 * 60 * 60));
+                let minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                questTimerDisplay.innerText = `تجدد بعد: ${hours} س و ${minutes} د`;
+            } else {
+                questTimerDisplay.innerText = `جاري التجديد...`;
+                checkRealtimeQuestReset();
+            }
+        }
 
         let animalsVal = window.animals.reduce((sum, a) => sum + (Math.floor(a.cost / 1.15) * a.count), 0);
         let logisticsVal = window.logistics.reduce((sum, l) => sum + (Math.floor(l.cost / 1.18) * l.count), 0);
@@ -1377,6 +1397,9 @@
             document.getElementById('nextTurnBtn').disabled = false;
         }
     }
+
+    // تحديث مؤقت المهام كل ثانية في الواجهة
+    setInterval(updateUI, 1000);
 </script>
 
 <!-- ربط Firebase المصادقة وحفظ واسترجاع البيانات -->
@@ -1411,11 +1434,15 @@
         window.isLocked = data.isLocked !== undefined ? data.isLocked : window.isLocked;
         window.lockUntilTimestamp = data.lockUntilTimestamp !== undefined ? data.lockUntilTimestamp : 0;
 
+        if (data.questResetTimestamp) {
+            window.questResetTimestamp = data.questResetTimestamp;
+        }
         if (data.activeQuests && Array.isArray(data.activeQuests)) {
             window.activeQuests = data.activeQuests;
-        } else {
-            generateDailyQuests();
         }
+
+        // فحص وقت المهام بعد الاسترجاع السحابي
+        checkRealtimeQuestReset();
 
         if (data.inventory) {
             Object.keys(data.inventory).forEach(k => {
@@ -1505,6 +1532,7 @@
                     isLocked: window.isLocked,
                     lockUntilTimestamp: window.lockUntilTimestamp,
                     activeQuests: window.activeQuests,
+                    questResetTimestamp: window.questResetTimestamp,
                     inventory: window.inventory,
                     animals: window.animals,
                     barns: window.barns,
@@ -1541,6 +1569,7 @@
                 isLocked: window.isLocked,
                 lockUntilTimestamp: window.lockUntilTimestamp,
                 activeQuests: window.activeQuests,
+                questResetTimestamp: window.questResetTimestamp,
                 inventory: window.inventory,
                 animals: window.animals,
                 barns: window.barns,
@@ -1550,7 +1579,7 @@
                 lastUpdated: new Date()
             }, { merge: true });
             alert("☁️ تم الحفظ السحابي بنجاح!");
-        } (e) => {
+        } catch (e) {
             console.error(e);
             alert("❌ فشل الحفظ السحابي.");
         }
