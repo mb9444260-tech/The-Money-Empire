@@ -29,6 +29,65 @@
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
+<div style="display: flex; justify-content: center; align-items: center; background: #060911; padding: 30px; border-radius: 12px;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" width="100%" height="100%">
+        <defs>
+            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fbbf24" />
+                <stop offset="50%" stop-color="#d97706" />
+                <stop offset="100%" stop-color="#b45309" />
+            </linearGradient>
+            <linearGradient id="gemGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#06b6d4" />
+                <stop offset="100%" stop-color="#3b82f6" />
+            </linearGradient>
+            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+        </defs>
+
+        <!-- الخلفية الداكنة للشعار -->
+        <rect width="600" height="200" rx="16" fill="#0d1322" stroke="#1e293b" stroke-width="2"/>
+
+        <!-- أيقونة التاج والإمبراطورية (الأعلى) -->
+        <g transform="translate(300, 45)" filter="url(#glow)">
+            <!-- التاج الذهبي -->
+            <path d="M-30,-15 L-35,-35 L-15,-20 L0,-40 L15,-20 L35,-35 L30,-15 Z" fill="url(#goldGrad)" stroke="#fef3c7" stroke-width="2"/>
+            <rect x="-35" y="-12" width="70" height="8" rx="3" fill="url(#goldGrad)"/>
+            <!-- جوهرة التاج -->
+            <circle cx="0" cy="-8" r="5" fill="url(#gemGrad)" />
+        </g>
+
+        <!-- العنوان الرئيسي: الإمبراطورية -->
+        <text x="300" y="115" 
+              font-family="system-ui, -apple-system, sans-serif" 
+              font-weight="900" 
+              font-size="36" 
+              fill="url(#goldGrad)" 
+              text-anchor="middle" 
+              filter="url(#glow)"
+              letter-spacing="2">
+            الإمبراطورية المالية
+        </text>
+
+        <!-- العنوان الفرعي: والزراعية -->
+        <text x="300" y="155" 
+              font-family="system-ui, -apple-system, sans-serif" 
+              font-weight="700" 
+              font-size="20" 
+              fill="#38bdf8" 
+              text-anchor="middle"
+              letter-spacing="4">
+            🌾 والتجارة العالمية 💰
+        </text>
+
+        <!-- زخرفة إضافية (أخطبوط ذهبي أو خطوط جانبية) -->
+        <path d="M 50 100 Q 120 100 150 100" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <path d="M 450 100 Q 480 100 550 100" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    </svg>
+</div>
+        
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
