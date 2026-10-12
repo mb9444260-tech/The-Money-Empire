@@ -46,6 +46,43 @@
             gap: 10px;
         }
 
+        /* تصميم واجهة تسجيل الدخول */
+        #authScreen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+            gap: 15px;
+        }
+
+        .auth-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .auth-input {
+            background: #162032;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            width: 100%;
+            outline: none;
+            text-align: right;
+        }
+
+        .auth-input:focus { border-color: var(--yellow); }
+
         header {
             text-align: center;
             padding: 4px 0;
@@ -297,19 +334,24 @@
 </head>
 <body>
 
-<div class="container">
+<!-- شاشة تسجيل الدخول أو إنشاء الحساب -->
+<div id="authScreen">
+    <div class="auth-card">
+        <h2 style="color: var(--yellow); font-size: 1.1rem;">🔐 تسجيل الدخول للإمبراطورية</h2>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">ادخل اسم الحساب (أو البريد) وكلمة المرور الخاصة بك للبدء أو استرجاع حفظك:</div>
+        
+        <input type="text" id="authUsername" class="auth-input" placeholder="اسم المستخدم أو البريد الإلكتروني...">
+        <input type="password" id="authPassword" class="auth-input" placeholder="كلمة المرور...">
+        
+        <button class="action-btn" style="background-color: var(--green); color: #060911; padding: 10px; font-size: 0.85rem;" onclick="handleLoginRegister()">دخول / تسجيل حساب جديد 🚀</button>
+    </div>
+</div>
+
+<!-- واجهة اللعبة الرئيسية (مخفية حتى يتم تسجيل الدخول) -->
+<div class="container" id="gameContainer" style="display: none;">
     <header>
         <h1>🏛️ إمبراطورية التجارة والاستثمار العالمية</h1>
     </header>
-
-    <!-- اسم المستخدم -->
-    <div class="card" style="padding: 8px; text-align: center;">
-        <div style="font-size: 0.75rem; color: var(--yellow); margin-bottom: 4px;">اسم مستخدم الإمبراطورية (للأدمن):</div>
-        <div style="display: flex; gap: 6px;">
-            <input type="text" id="usernameInput" placeholder="اكتب اسمك هنا..." class="gift-input" style="text-align: center;">
-            <button class="action-btn" style="background-color: var(--blue);" onclick="saveUsername()">تثبيت الاسم 💾</button>
-        </div>
-    </div>
 
     <div class="turn-panel">
         <div class="turn-info">
@@ -331,7 +373,7 @@
 
     <div style="display: flex; gap: 6px;">
         <button class="action-btn" style="flex:1; background-color: var(--blue); padding: 8px;" onclick="saveGameOnline()">حفظ سحابي ☁️</button>
-        <button class="action-btn" style="flex:1; background-color: var(--green); color:#060911; padding: 8px;" onclick="loadGameOnline()">استرجاع سحابي 🔄</button>
+        <button class="action-btn" style="flex:1; background-color: var(--red); padding: 8px;" onclick="logoutGame()">تسجيل خروج 🚪</button>
     </div>
 
     <div class="metrics-grid">
@@ -443,7 +485,7 @@
         <div class="card">
             <div class="section-title">📋 سجل الحسابات والأحداث اليومية</div>
             <div class="ledger-box" id="ledgerBox">
-                <div>[اليوم 1] أهلاً بك في بيئة أكثر تحدياً. تم تقليل السيولة الابتدائية وزيادة تقلبات البورصة!</div>
+                <div>[اليوم 1] أهلاً بك في بيئة أكثر تحدياً. تم تسجيل دخولك بنجاح!</div>
             </div>
         </div>
     </div>
@@ -470,7 +512,6 @@
 </div>
 
 <script>
-    // تم تقليل السيولة الابتدائية لزيادة الصعوبة
     window.money = 1000;
     window.gems = 20;
     window.loan = 0;
@@ -480,8 +521,8 @@
     window.isLocked = false;
     window.globalMultiplier = 1.0;
     window.redeemedCodes = [];
+    window.currentUsername = "";
 
-    // الأسعار الجديدة للبيض والحليب والمحاصيل
     window.inventory = {
         chickenEggs: { name: 'بيض دجاج طازج', count: 0, price: 85 },
         duckEggs: { name: 'بيض بط فاخر', count: 0, price: 450 },
@@ -521,7 +562,6 @@
         { id: 'greenhouse', name: 'صوبة زراعية حديثة', cost: 12000, capacity: 15, owned: 0, desc: 'زراعة المحاصيل وحصادها يدويًا.' }
     ];
 
-    // الأعمار القصوى والإنتاج المطلوب تماماً
     window.animals = [
         { 
             id: 'anim_chick', 
@@ -530,8 +570,8 @@
             cost: 120, 
             productType: 'chickenEggs', 
             prodAmount: 30, 
-            prodInterval: 5, // كل 5 أيام
-            maxAge: 15, // حد أقصى 15 يوم
+            prodInterval: 5, 
+            maxAge: 15, 
             age: 0, 
             count: 0, 
             desc: 'تنتج 30 بيضة كل 5 أيام. أقصى عمر: 15 يوم.' 
@@ -543,8 +583,8 @@
             cost: 280, 
             productType: 'duckEggs', 
             prodAmount: 10, 
-            prodInterval: 2, // كل يومين
-            maxAge: 18, // حد أقصى 18 يوم
+            prodInterval: 2, 
+            maxAge: 18, 
             age: 0, 
             count: 0, 
             desc: 'تنتج 10 بيضات كل يومين. أقصى عمر: 18 يوم.' 
@@ -556,8 +596,8 @@
             cost: 1400, 
             productType: 'milk', 
             prodAmount: 5, 
-            prodInterval: 3, // كل 3 أيام
-            maxAge: 25, // حد أقصى 25 يوم
+            prodInterval: 3, 
+            maxAge: 25, 
             age: 0, 
             count: 0, 
             desc: 'تنتج 5 لترات حليب كل 3 أيام. أقصى عمر: 25 يوم.' 
@@ -570,7 +610,6 @@
         { id: 'log_cargo', name: 'طائرة شحن تجارية', cost: 60000, income: 950, power: 450, count: 0, desc: 'شحن دولي.' }
     ];
 
-    // أسهم البورصة مع سجل الحركات (الرسم البياني النصي لآخر 5 حركات)
     window.stocks = [
         { id: 's1', name: 'تيك فالي للتقنية (TECH)', price: 75, owned: 0, volatility: 0.22, history: ['=', '=', '=', '=', '='] },
         { id: 's2', name: 'طاقة البترول العالمية (OIL)', price: 160, owned: 0, volatility: 0.18, history: ['=', '=', '=', '=', '='] },
@@ -607,6 +646,11 @@
         if (targetTab) targetTab.classList.add('active');
         if (event && event.currentTarget) event.currentTarget.classList.add('active');
     }
+
+    window.logoutGame = function() {
+        document.getElementById('gameContainer').style.display = 'none';
+        document.getElementById('authScreen').style.display = 'flex';
+    };
 
     window.redeemGiftCode = function() {
         const inputField = document.getElementById('giftCodeInput');
@@ -797,10 +841,9 @@
         const container = document.getElementById('storeList');
         if (!container) return;
         container.innerHTML = '';
-        const playerId = window.getPlayerId ? window.getPlayerId() : "unknown_player";
 
         storePackages.forEach(pkg => {
-            let message = encodeURIComponent(`مرحباً، أريد شراء "${pkg.name}" بسعر ${pkg.price}.\nمعرّف حسابي هو: ${playerId}`);
+            let message = encodeURIComponent(`مرحباً، أريد شراء "${pkg.name}" بسعر ${pkg.price}.\nحسابي هو: ${window.currentUsername}`);
             let whatsappLink = `https://wa.me/${myWhatsAppNumber}?text=${message}`;
 
             const row = document.createElement('div');
@@ -819,7 +862,7 @@
         if (gemContainer) {
             gemContainer.innerHTML = '';
             gemPackages.forEach(pkg => {
-                let message = encodeURIComponent(`مرحباً، أريد شراء باقة الجواهر "${pkg.name}" بسعر ${pkg.price}.\nمعرّف حسابي هو: ${playerId}`);
+                let message = encodeURIComponent(`مرحباً، أريد شراء باقة الجواهر "${pkg.name}" بسعر ${pkg.price}.\nحسابي هو: ${window.currentUsername}`);
                 let whatsappLink = `https://wa.me/${myWhatsAppNumber}?text=${message}`;
 
                 const row = document.createElement('div');
@@ -836,7 +879,6 @@
         }
     }
 
-    // إنهاء اليوم مع تحديث الأسهم، الرسم البياني، ودورات الإنتاج والأعمار
     window.nextTurn = function() {
         if (window.isLocked) return;
 
@@ -891,7 +933,6 @@
 
         window.money += finalDailyProfit;
 
-        // تحديث أسعار الأسهم والرسم البياني لآخر 5 حركات (📈 صعود، 📉 هبوط، ➡️ استقرار)
         window.stocks.forEach(stock => {
             let oldPrice = stock.price;
             let change = (Math.random() * (stock.volatility * 2)) - stock.volatility;
@@ -908,6 +949,7 @@
 
         logMessage(`نتائج اليوم ${window.day}: تحديث الأسواق المالية وأعمار الحيوانات.`);
         renderAll(); updateUI();
+        if (window.saveGameOnline) window.saveGameOnline();
     };
 
     function renderBarns() {
@@ -1018,7 +1060,6 @@
         });
     }
 
-    // عرض الأسهم مع الرسم البياني للحركات الـ 5 الأخيرة
     function renderStocks() {
         const container = document.getElementById('stocksList');
         if (!container) return;
@@ -1115,17 +1156,9 @@
             document.getElementById('nextTurnBtn').disabled = true;
         }
     }
-
-    window.addEventListener('DOMContentLoaded', () => {
-        const savedName = localStorage.getItem("game_username");
-        if (savedName && document.getElementById('usernameInput')) {
-            document.getElementById('usernameInput').value = savedName;
-        }
-        renderAll();
-        updateUI();
-    });
 </script>
 
+<!-- ربط Firebase المصادقة وحفظ البيانات -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -1143,101 +1176,102 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    window.getPlayerId = function() {
-        let playerId = localStorage.getItem("game_player_id");
-        if (!playerId) {
-            playerId = "player_" + Math.random().toString(36).substring(2, 9);
-            localStorage.setItem("game_player_id", playerId);
-        }
-        return playerId;
-    };
+    function sanitizeKey(emailOrUser) {
+        return emailOrUser.trim().toLowerCase().replace(/[@\.]/g, '_');
+    }
 
-    window.saveUsername = function() {
-        const inputField = document.getElementById('usernameInput');
-        const username = inputField ? inputField.value.trim() : "";
-        if (username) {
-            localStorage.setItem("game_username", username);
-            alert(`✅ تم حفظ الاسم (${username}) محلياً!`);
-        } else {
-            alert("❌ الرجاء كتابة اسم مستخدم صحيح.");
+    window.handleLoginRegister = async function() {
+        const uInput = document.getElementById('authUsername').value.trim();
+        const pInput = document.getElementById('authPassword').value.trim();
+
+        if (!uInput || !pInput) {
+            alert("❌ الرجاء إدخال اسم المستخدم وكلمة المرور!");
+            return;
+        }
+
+        const userKey = sanitizeKey(uInput);
+        window.currentUsername = uInput;
+
+        try {
+            const docRef = doc(db, "players_accounts", userKey);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                if (data.password !== pInput) {
+                    alert("❌ كلمة المرور غير صحيحة!");
+                    return;
+                }
+                // استرجاع البيانات المحفوظة
+                window.money = data.money !== undefined ? data.money : 1000;
+                window.gems = data.gems !== undefined ? data.gems : 20;
+                window.loan = data.loan !== undefined ? data.loan : 0;
+                window.day = data.day !== undefined ? data.day : 1;
+                window.daysPlayedInCycle = data.daysPlayedInCycle !== undefined ? data.daysPlayedInCycle : 0;
+                window.isLocked = data.isLocked !== undefined ? data.isLocked : false;
+                if (data.inventory) window.inventory = data.inventory;
+                if (data.animals) window.animals = data.animals;
+                if (data.barns) window.barns = data.barns;
+                if (data.stocks) window.stocks = data.stocks;
+                if (data.cropFields) window.cropFields = data.cropFields;
+                
+                alert(`✅ أهلاً بك مجدداً يا ${uInput}!`);
+            } else {
+                // إنشاء حساب جديد وقاعدة بيانات مستقلة له
+                await setDoc(docRef, {
+                    username: uInput,
+                    password: pInput,
+                    money: window.money,
+                    gems: window.gems,
+                    loan: window.loan,
+                    day: window.day,
+                    daysPlayedInCycle: window.daysPlayedInCycle,
+                    isLocked: window.isLocked,
+                    inventory: window.inventory,
+                    animals: window.animals,
+                    barns: window.barns,
+                    stocks: window.stocks,
+                    cropFields: window.cropFields,
+                    createdAt: new Date()
+                });
+                alert(`🎉 تم إنشاء حساب جديد باسم "${uInput}" بنجاح!`);
+            }
+
+            // إخفاء شاشة تسجيل الدخول وإظهار اللعبة
+            document.getElementById('authScreen').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'flex';
+            renderAll();
+            updateUI();
+
+        } catch (e) {
+            console.error(e);
+            alert("❌ حدث خطأ أثناء الاتصال بقاعدة البيانات.");
         }
     };
 
     window.saveGameOnline = async function() {
-        const userId = window.getPlayerId();
-        const inputField = document.getElementById('usernameInput');
-        const username = (inputField && inputField.value.trim()) ? inputField.value.trim() : (localStorage.getItem("game_username") || "مستثمر_" + userId.slice(-4));
-        
-        localStorage.setItem("game_username", username);
-
+        if (!window.currentUsername) return;
+        const userKey = sanitizeKey(window.currentUsername);
         try {
-            await setDoc(doc(db, "players", userId), {
-                username: username,
+            await setDoc(doc(db, "players_accounts", userKey), {
+                username: window.currentUsername,
                 money: window.money,
                 gems: window.gems,
                 loan: window.loan,
-                bondsOwned: window.bondsOwned,
                 day: window.day,
                 daysPlayedInCycle: window.daysPlayedInCycle,
                 isLocked: window.isLocked,
-                globalMultiplier: window.globalMultiplier,
-                barns: window.barns,
-                animals: window.animals,
                 inventory: window.inventory,
-                cropFields: window.cropFields,
-                logistics: window.logistics,
+                animals: window.animals,
+                barns: window.barns,
                 stocks: window.stocks,
-                assets: window.assets,
-                redeemedCodes: window.redeemedCodes,
+                cropFields: window.cropFields,
                 lastUpdated: new Date()
             }, { merge: true });
-            
-            alert(`🚀 تم الحفظ السحابي بنجاح باسم: [ ${username} ]! ☁️`);
+            alert("☁️ تم حفظ اللعبة سحابياً بنجاح!");
         } catch (e) {
             console.error(e);
             alert("❌ حدث خطأ أثناء الحفظ السحابي.");
-        }
-    };
-
-    window.loadGameOnline = async function() {
-        const userId = window.getPlayerId();
-        try {
-            const docSnap = await getDoc(doc(db, "players", userId));
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                window.money = data.money !== undefined ? data.money : window.money;
-                window.gems = data.gems !== undefined ? data.gems : window.gems;
-                window.loan = data.loan !== undefined ? data.loan : window.loan;
-                window.bondsOwned = data.bondsOwned !== undefined ? data.bondsOwned : window.bondsOwned;
-                window.day = data.day !== undefined ? data.day : window.day;
-                window.daysPlayedInCycle = data.daysPlayedInCycle !== undefined ? data.daysPlayedInCycle : window.daysPlayedInCycle;
-                window.isLocked = data.isLocked !== undefined ? data.isLocked : window.isLocked;
-                window.globalMultiplier = data.globalMultiplier !== undefined ? data.globalMultiplier : window.globalMultiplier;
-                
-                if (data.username) {
-                    const inputField = document.getElementById('usernameInput');
-                    if (inputField) inputField.value = data.username;
-                    localStorage.setItem("game_username", data.username);
-                }
-                
-                if (data.redeemedCodes) window.redeemedCodes = data.redeemedCodes;
-                if (data.inventory) window.inventory = data.inventory;
-                if (data.cropFields) window.cropFields = data.cropFields;
-                if (data.barns) window.barns.splice(0, window.barns.length, ...data.barns);
-                if (data.animals) window.animals.splice(0, window.animals.length, ...data.animals);
-                if (data.logistics) window.logistics.splice(0, window.logistics.length, ...data.logistics);
-                if (data.stocks) window.stocks.splice(0, window.stocks.length, ...data.stocks);
-                if (data.assets) window.assets.splice(0, window.assets.length, ...data.assets);
-
-                renderAll();
-                updateUI();
-                alert("📥 تم استرجاع بيانات الإمبراطورية بنجاح! 🔄");
-            } else {
-                alert("⚠️ لا توجد بيانات محفوظة سحابياً لهذا الحساب.");
-            }
-        } catch (e) {
-            console.error(e);
-            alert("❌ حدث خطأ أثناء الاسترجاع.");
         }
     };
 </script>
