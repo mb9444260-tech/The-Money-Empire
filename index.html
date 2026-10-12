@@ -456,7 +456,10 @@
 
     <div id="tab-quests" class="tab-content">
         <div class="card">
-            <div class="section-title">🎯 المهام والإنجازات اليومية</div>
+            <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
+                <span>🎯 المهام والإنجازات اليومية المتجددة</span>
+                <span id="questTimerDisplay" style="font-size:0.68rem; color:var(--gem);">تجدد بعد: 24 يوم</span>
+            </div>
             <div class="item-list" id="questsList"></div>
         </div>
     </div>
@@ -559,10 +562,31 @@
         { id: 'fact_mill', name: 'مطحنة الحبوب', cost: 8000, owned: 0, inputType: 'crops', inputAmt: 15, outputType: 'flour', outputAmt: 5, desc: 'يحول 15 محصول إلى 5 أكياس دقيق ($320).' }
     ];
 
-    window.quests = [
-        { id: 'q1', title: 'إنتاج بيض دجاج', desc: 'اجمع 50 بيضة دجاج بالمخزن', target: 50, current: 0, rewardGem: 10, completed: false },
-        { id: 'q2', title: 'مستثمر الأسهم', desc: 'امتلك 3 أسهم في البورصة', target: 3, current: 0, rewardGem: 15, completed: false }
+    // قائمة المهام المحتملة لتوليد مهام عشوائية كل 24 ساعة (كل 24 يوم داخل اللعبة)
+    window.activeQuests = [];
+    const possibleQuestsPool = [
+        { id: 'q_eggs', title: 'إنتاج بيض الدجاج', desc: 'اجمع 20 بيضة دجاج بالمخزن', target: 20, rewardGem: 10, type: 'chickenEggs' },
+        { id: 'q_milk', title: 'موسم الألبان', desc: 'اجمع 10 لترات حليب أبقار بالمخزن', target: 10, rewardGem: 12, type: 'milk' },
+        { id: 'q_crops', title: 'الحصاد الزراعي', desc: 'اجمع 30 وحدة محاصيل زراعية بالمخزن', target: 30, rewardGem: 15, type: 'crops' },
+        { id: 'q_stocks', title: 'مستثمر البورصة', desc: 'امتلك 3 أسهم في المحفظة', target: 3, rewardGem: 15, type: 'stocks' },
+        { id: 'q_ducks', title: 'ثروة البط', desc: 'اجمع 15 بيضة بط فاخر بالمخزن', target: 15, rewardGem: 14, type: 'duckEggs' }
     ];
+
+    function generateDailyQuests() {
+        // اختيار 3 مهام عشوائية مختلفة كل 24 يوم
+        let shuffled = [...possibleQuestsPool].sort(() => 0.5 - Math.random());
+        window.activeQuests = shuffled.slice(0, 3).map((q, idx) => ({
+            index: idx,
+            id: q.id,
+            title: q.title,
+            desc: q.desc,
+            target: q.target,
+            current: 0,
+            rewardGem: q.rewardGem,
+            type: q.type,
+            completed: false
+        }));
+    }
 
     const myWhatsAppNumber = "201070813027";
 
@@ -578,16 +602,15 @@
     ];
 
     const gemPackages = [
-        { name: '💎 حقيبة المبتدئ (100 جوهرة)', price: '50 L.E', gems: 100 },
-        { name: '💎💎 صندوق التوسع (500 جوهرة)', price: '200 L.E', gems: 500 },
-        { name: '💎👑 خزنة الإمبراطور (1500 جوهرة)', price: '350 L.E', gems: 1500 }
+        { name: '💎 حقيبة المبتدئ (100 جوهرة)', price: '$1.99', gems: 100 },
+        { name: '💎💎 صندوق التوسع (500 جوهرة)', price: '$7.99', gems: 500 },
+        { name: '💎👑 خزنة الإمبراطور (1500 جوهرة)', price: '$19.99', gems: 1500 }
     ];
 
-    // باقات شراء المال السائل عبر الواتساب
     const moneyPackages = [
-        { name: '💰 حقيبة سيولة ( $50,000 )', price: '40 L.E', amount: 50000 },
-        { name: '💰💰 صندوق ثروة ( $250,000 )', price: '120 L.E', amount: 250000 },
-        { name: '💰👑 خزنة الإمبراطورية المالية ( $1,000,000 )', price: '240 L.E', amount: 1000000 }
+        { name: '💰 حقيبة سيولة ( $50,000 )', price: '$1.99', amount: 50000 },
+        { name: '💰💰 صندوق ثروة ( $250,000 )', price: '$6.99', amount: 250000 },
+        { name: '💰👑 خزنة الإمبراطورية المالية ( $1,000,000 )', price: '$19.99', amount: 1000000 }
     ];
 
     window.barns = [
@@ -957,6 +980,12 @@
             alert("⚠️ لقد أنهيت 25 يوماً! يجب تجديد الأيام.");
         }
 
+        // تجديد المهام كل 24 يوم داخل اللعبة
+        if (window.day % 24 === 0) {
+            generateDailyQuests();
+            logMessage("🎯 تم تجديد المهام اليومية بمهام جديدة!");
+        }
+
         randomizeDayEvents();
 
         const huts = window.barns.find(b => b.id === 'worker_hut').owned;
@@ -1023,13 +1052,19 @@
             if (stock.history.length > 5) stock.history.shift();
         });
 
-        window.quests.forEach(q => {
-            if (q.id === 'q1') {
-                q.current = window.inventory.chickenEggs.count;
-                if (!q.completed && q.current >= q.target) { q.completed = true; window.gems += q.rewardGem; logMessage(`🎯 تم إنجاز المهمة (${q.title}) وحصلت على ${q.rewardGem} 💎`); }
-            } else if (q.id === 'q2') {
-                q.current = window.stocks.reduce((sum, s) => sum + s.owned, 0);
-                if (!q.completed && q.current >= q.target) { q.completed = true; window.gems += q.rewardGem; logMessage(`🎯 تم إنجاز المهمة (${q.title}) وحصلت على ${q.rewardGem} 💎`); }
+        // تحديث تقدم المهام المتجددة تلقائياً
+        window.activeQuests.forEach(q => {
+            if (!q.completed) {
+                if (q.type === 'stocks') {
+                    q.current = window.stocks.reduce((sum, s) => sum + s.owned, 0);
+                } else if (window.inventory[q.type]) {
+                    q.current = window.inventory[q.type].count;
+                }
+                if (q.current >= q.target) {
+                    q.completed = true;
+                    window.gems += q.rewardGem;
+                    logMessage(`🎯 تم إنجاز المهمة المتجددة (${q.title}) وحصلت على ${q.rewardGem} 💎`);
+                }
             }
         });
 
@@ -1195,7 +1230,10 @@
         const container = document.getElementById('questsList');
         if (!container) return;
         container.innerHTML = '';
-        window.quests.forEach(q => {
+        if (!window.activeQuests || window.activeQuests.length === 0) {
+            generateDailyQuests();
+        }
+        window.activeQuests.forEach(q => {
             container.innerHTML += `
                 <div class="item-row">
                     <div class="item-info">
@@ -1316,6 +1354,10 @@
         if (turnTitle) turnTitle.innerText = `اليوم التكتيكي: ${window.day} (دورة الـ 25: ${window.daysPlayedInCycle}/25)`;
         if (turnSub) turnSub.innerText = window.isLocked ? "انتهت محاولات الدورة الحالية!" : `متبقي ${25 - window.daysPlayedInCycle} يوماً في هذه الدورة`;
 
+        let daysLeftForQuest = 24 - (window.day % 24);
+        const questTimerDisplay = document.getElementById('questTimerDisplay');
+        if (questTimerDisplay) questTimerDisplay.innerText = `تجدد بعد: ${daysLeftForQuest} يوم`;
+
         let animalsVal = window.animals.reduce((sum, a) => sum + (Math.floor(a.cost / 1.15) * a.count), 0);
         let logisticsVal = window.logistics.reduce((sum, l) => sum + (Math.floor(l.cost / 1.18) * l.count), 0);
         let stocksVal = window.stocks.reduce((sum, s) => sum + (s.price * s.owned), 0);
@@ -1368,6 +1410,12 @@
         window.daysPlayedInCycle = data.daysPlayedInCycle !== undefined ? data.daysPlayedInCycle : window.daysPlayedInCycle;
         window.isLocked = data.isLocked !== undefined ? data.isLocked : window.isLocked;
         window.lockUntilTimestamp = data.lockUntilTimestamp !== undefined ? data.lockUntilTimestamp : 0;
+
+        if (data.activeQuests && Array.isArray(data.activeQuests)) {
+            window.activeQuests = data.activeQuests;
+        } else {
+            generateDailyQuests();
+        }
 
         if (data.inventory) {
             Object.keys(data.inventory).forEach(k => {
@@ -1445,6 +1493,7 @@
                 mergeSavedData(data);
                 alert(`✅ أهلاً بك مجدداً يا ${uInput}!`);
             } else {
+                generateDailyQuests();
                 await setDoc(docRef, {
                     username: uInput,
                     password: pInput,
@@ -1455,13 +1504,13 @@
                     daysPlayedInCycle: window.daysPlayedInCycle,
                     isLocked: window.isLocked,
                     lockUntilTimestamp: window.lockUntilTimestamp,
+                    activeQuests: window.activeQuests,
                     inventory: window.inventory,
                     animals: window.animals,
                     barns: window.barns,
                     stocks: window.stocks,
                     cropFields: window.cropFields,
                     factories: window.factories,
-                    quests: window.quests,
                     createdAt: new Date()
                 });
                 alert(`🎉 تم إنشاء حساب جديد باسم "${uInput}" بنجاح!`);
@@ -1491,17 +1540,17 @@
                 daysPlayedInCycle: window.daysPlayedInCycle,
                 isLocked: window.isLocked,
                 lockUntilTimestamp: window.lockUntilTimestamp,
+                activeQuests: window.activeQuests,
                 inventory: window.inventory,
                 animals: window.animals,
                 barns: window.barns,
                 stocks: window.stocks,
                 cropFields: window.cropFields,
                 factories: window.factories,
-                quests: window.quests,
                 lastUpdated: new Date()
             }, { merge: true });
             alert("☁️ تم الحفظ السحابي بنجاح!");
-        } catch (e) {
+        } (e) => {
             console.error(e);
             alert("❌ فشل الحفظ السحابي.");
         }
