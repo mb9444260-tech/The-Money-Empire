@@ -468,7 +468,7 @@
         </div>
         <div class="metric-box">
             <div class="metric-label">الربح اليومي</div>
-            <div class="metric-val" id="dailyProfitDisplay" style="color: var(--green);">$0</div>
+            <div class="metric-val" id="dailyProfitDisplay">$0</div>
         </div>
     </div>
 
@@ -541,7 +541,6 @@
         </div>
     </div>
 
-    <!-- تبويب البنوك والخزنة الاستثمارية والضرائب -->
     <div id="tab-finance" class="tab-content">
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
@@ -660,7 +659,7 @@
         <div class="card">
             <div class="section-title">📋 سجل الحسابات والأحداث اليومية</div>
             <div class="ledger-box" id="ledgerBox">
-                <div>[اليوم 1] أهلاً بك في النسخة المحدثة مع الخزنة الاستثمارية والضرائب!</div>
+                <div>[اليوم 1] أهلاً بك في النسخة المحدثة مع خنة البنك والربح اللوني المطور!</div>
             </div>
         </div>
     </div>
@@ -706,10 +705,9 @@
     window.currentWeather = { name: "عادي ☀️", effect: 1.0 };
     window.currentEvent = { name: "سوق مستقر 📊", type: "none" };
 
-    // نظام الخزنة الاستثمارية في البنك
     window.bankVault = {
         balance: 0,
-        level: 1, // المستوى 1 إلى 11 (الأساسي + 10 تطويرات بالجواهر)
+        level: 1,
     };
 
     window.activeBoosts = { fastGrowth: false, financialShield: false, emperorLicense: false };
@@ -891,12 +889,6 @@
         { id: 'anim_cow', barnId: 'barn_cow', name: 'بقرة حلب', cost: 1400, productType: 'milk', prodAmount: 1, maxAge: 30, age: 0, count: 0, desc: 'تنتج 1 لتر حليب كل يوم.' }
     ];
 
-    window.logistics = [
-        { id: 'log_van', name: 'شاحنة توزيع محلية', cost: 1800, income: 25, power: 15, count: 0, desc: 'توزيع محلي.' },
-        { id: 'log_truck', name: 'أسطول شاحنات ثقيلة', cost: 12000, income: 180, power: 80, count: 0, desc: 'نقل ثقيل.' },
-        { id: 'log_cargo', name: 'طائرة شحن تجارية', cost: 60000, income: 950, power: 450, count: 0, desc: 'شحن دولي.' }
-    ];
-
     window.stocks = [
         { id: 's1', name: 'تيك فالي للتقنية (TECH)', price: 75, owned: 0, volatility: 0.22, history: ['=', '=', '=', '=', '='] },
         { id: 's2', name: 'طاقة البترول العالمية (OIL)', price: 160, owned: 0, volatility: 0.18, history: ['=', '=', '=', '=', '='] },
@@ -968,7 +960,6 @@
         }
     };
 
-    // إدارة عمليات البنك والخزنة الاستثمارية
     window.depositVault = function() {
         let amt = parseInt(document.getElementById('vaultAmountInput').value);
         if (!amt || amt <= 0) { alert("أدخل مبلغاً صالحاً للإيداع!"); return; }
@@ -1381,7 +1372,6 @@
         checkB2BRefresh();
         randomizeDayEvents();
 
-        // رواتب الموظفين
         let totalDailySalaries = 0;
         window.employeesPool.forEach(emp => {
             if (emp.hiredCount > 0 && !emp.isPerfect) {
@@ -1393,7 +1383,6 @@
             logMessage(`👥 دفع رواتب الموظفين اليومية بإجمالي ${formatMoney(totalDailySalaries)}.`);
         }
 
-        // أرباح وخزنة البنك
         let vaultInterestRates = [0, 0.03, 0.045, 0.06, 0.08, 0.10, 0.13, 0.16, 0.20, 0.25, 0.32, 0.40];
         let currentRate = vaultInterestRates[window.bankVault.level] || 0.03;
         let vaultProfit = Math.floor(window.bankVault.balance * currentRate);
@@ -1402,7 +1391,6 @@
             logMessage(`🏦 أرباح الخزنة البنكية (عائد ${Math.round(currentRate*100)}%): أضافت ${formatMoney(vaultProfit)} للرصيد المودع.`);
         }
 
-        // شحنات B2B
         if (window.incomingShipments && window.incomingShipments.length > 0) {
             window.incomingShipments.forEach(inc => {
                 inc.daysRemaining--;
@@ -1457,7 +1445,6 @@
         let bondsIncome = window.bondsOwned * 250;
         let finalDailyProfit = assetIncome + bondsIncome;
 
-        // نظام الضرائب على الثروات
         let totalNetWealth = window.money + window.bankVault.balance + (window.bondsOwned * 15000);
         let taxRate = totalNetWealth > 500000 ? 0.04 : (totalNetWealth > 100000 ? 0.025 : 0.015);
         let taxDeduction = Math.floor(totalNetWealth * taxRate);
@@ -1468,8 +1455,9 @@
         let accountantHired = window.employeesPool.find(e => e.position === 'accountant' && e.hiredCount > 0);
         if (accountantHired) loanInterestRate = accountantHired.isPerfect ? 0.0 : 0.01;
 
+        let dailyInterest = 0;
         if (window.loan > 0 && !window.activeBoosts.financialShield) {
-            let dailyInterest = Math.floor(window.loan * loanInterestRate);
+            dailyInterest = Math.floor(window.loan * loanInterestRate);
             window.money -= dailyInterest;
         }
 
@@ -1950,16 +1938,45 @@
         let stocksVal = window.stocks.reduce((sum, s) => sum + (s.price * s.owned), 0);
         let netWorth = window.money + window.bankVault.balance + animalsVal + stocksVal + (window.bondsOwned * 15000) - window.loan;
 
+        // حساب صافي الربح أو الخسارة اليومي الفعلي
         let assetIncome = window.assets.reduce((sum, ast) => sum + (Math.floor(ast.income * window.globalMultiplier) * ast.count), 0);
         let bondsIncome = window.bondsOwned * 250;
         let vaultRates = [0, 0.03, 0.045, 0.06, 0.08, 0.10, 0.13, 0.16, 0.20, 0.25, 0.32, 0.40];
         let vaultDailyProfit = Math.floor(window.bankVault.balance * (vaultRates[window.bankVault.level] || 0.03));
-        let totalDailyProfit = assetIncome + bondsIncome + vaultDailyProfit;
+        
+        let totalDailySalaries = 0;
+        window.employeesPool.forEach(emp => {
+            if (emp.hiredCount > 0 && !emp.isPerfect) totalDailySalaries += emp.hiredCount * emp.dailySalary;
+        });
+
+        let totalNetWealth = window.money + window.bankVault.balance + (window.bondsOwned * 15000);
+        let taxRate = totalNetWealth > 500000 ? 0.04 : (totalNetWealth > 100000 ? 0.025 : 0.015);
+        let taxDeduction = Math.floor(totalNetWealth * taxRate);
+
+        let loanInterestRate = 0.02;
+        let accountantHired = window.employeesPool.find(e => e.position === 'accountant' && e.hiredCount > 0);
+        if (accountantHired) loanInterestRate = accountantHired.isPerfect ? 0.0 : 0.01;
+        let dailyInterest = (window.loan > 0 && !window.activeBoosts.financialShield) ? Math.floor(window.loan * loanInterestRate) : 0;
+
+        let totalIncomes = assetIncome + bondsIncome + vaultDailyProfit;
+        let totalExpenses = totalDailySalaries + taxDeduction + dailyInterest;
+        let netDailyProfit = totalIncomes - totalExpenses;
 
         if (document.getElementById('moneyDisplay')) document.getElementById('moneyDisplay').innerText = formatMoney(window.money);
         if (document.getElementById('gemsDisplay')) document.getElementById('gemsDisplay').innerText = window.gems;
         if (document.getElementById('netWorthDisplay')) document.getElementById('netWorthDisplay').innerText = formatMoney(netWorth);
-        if (document.getElementById('dailyProfitDisplay')) document.getElementById('dailyProfitDisplay').innerText = formatMoney(totalDailyProfit);
+        
+        const dailyProfitDisplay = document.getElementById('dailyProfitDisplay');
+        if (dailyProfitDisplay) {
+            if (netDailyProfit >= 0) {
+                dailyProfitDisplay.style.color = 'var(--green)';
+                dailyProfitDisplay.innerText = formatMoney(netDailyProfit);
+            } else {
+                dailyProfitDisplay.style.color = 'var(--red)';
+                dailyProfitDisplay.innerText = '-$' + Math.abs(netDailyProfit).toLocaleString();
+            }
+        }
+
         if (document.getElementById('loanStatusDisplay')) document.getElementById('loanStatusDisplay').innerText = `الدين المستحق: ${formatMoney(window.loan)}`;
 
         if (window.isLocked) {
@@ -1974,7 +1991,6 @@
     setInterval(updateUI, 1000);
 </script>
 
-<!-- ربط Firebase وتوابع الشات وسوق اللاعبين -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
