@@ -175,7 +175,7 @@
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 0.52rem;
+            font-size: 0.5rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
@@ -381,7 +381,7 @@
         </svg>
 
         <h2 style="color: var(--yellow); font-size: 1.05rem;">🔐 تسجيل الدخول للإمبراطورية</h2>
-        <div style="font-size: 0.72rem; color: var(--text-muted);">ادخل اسم الحساب وكلمة المرور الخاصة بك للبدء أو استرجاع حفظك:</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted);">ادخل اسم الحساب وكلمة المرور الخاصة بك للبدء أو استرجاع حفظك[cite: 3]:</div>
         
         <input type="text" id="authUsername" class="auth-input" placeholder="اسم المستخدم أو البريد الإلكتروني...">
         <input type="password" id="authPassword" class="auth-input" placeholder="كلمة المرور...">
@@ -439,7 +439,7 @@
     <!-- لوحة التجديد -->
     <div id="renewalPanel" class="card" style="display: none; background: rgba(6, 182, 212, 0.1); border-color: var(--gem); text-align: center; padding: 12px;">
         <div style="font-size: 0.85rem; font-weight: bold; color: var(--gem);">⚠️ انتهت محاولات الأيام الـ 25 المتاحة!</div>
-        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;" id="renewalSubText">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;" id="renewalSubText">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة[cite: 3].</div>
         <div style="display: flex; gap: 8px; margin-top: 8px; justify-content: center;" id="renewalButtonsContainer">
             <button class="action-btn gem-btn" onclick="renewWithGems()">تجديد بـ 100 جوهرة 💎</button>
             <button class="action-btn" style="background-color: var(--orange);" onclick="startWaitTimer()">انتظار 12 ساعة ⏳</button>
@@ -478,7 +478,7 @@
         <button class="tab-btn" onclick="switchTab('factories')">🏭 المصانع</button>
         <button class="tab-btn" onclick="switchTab('logistics')">🚚 الشحن</button>
         <button class="tab-btn" onclick="switchTab('stocks')">📊 البورصة</button>
-        <button class="tab-btn" onclick="switchTab('market')">🛒 سوق اللاعبين</button>
+        <button class="tab-btn" onclick="switchTab('market')">🛒 السوق الحر</button>
         <button class="tab-btn" onclick="switchTab('chat')">💬 الشات العام</button>
         <button class="tab-btn" onclick="switchTab('quests')">🎯 المهام</button>
         <button class="tab-btn" onclick="switchTab('leaderboard')">🏆 المتصدرين</button>
@@ -608,7 +608,7 @@
         <div class="card">
             <div class="section-title">📋 سجل الحسابات والأحداث اليومية</div>
             <div class="ledger-box" id="ledgerBox">
-                <div>[اليوم 1] أهلاً بك في النسخة المطورة والمدمجة بنجاح!</div>
+                <div>[اليوم 1] أهلاً بك في النسخة المطورة والمدمجة بنجاح[cite: 3]!</div>
             </div>
         </div>
     </div>
@@ -673,8 +673,8 @@
     };
 
     window.factories = [
-        { id: 'fact_cheese', name: 'مصنع الأجبان والألبان', cost: 15000, owned: 0, inputType: 'milk', inputAmt: 10, outputType: 'cheese', outputAmt: 2, desc: 'يحول 10 لتر حليب إلى 2 جبن فاخر ($1,400).' },
-        { id: 'fact_mill', name: 'مطحنة الحبوب', cost: 8000, owned: 0, inputType: 'crops', inputAmt: 15, outputType: 'flour', outputAmt: 5, desc: 'يحول 15 محصول إلى 5 أكياس دقيق ($320).' }
+        { id: 'fact_cheese', name: 'مصنع الأجبان والألبان', cost: 15000, owned: 0, inputType: 'milk', inputAmt: 10, outputType: 'cheese', outputAmt: 2, desc: 'يحول 10 لتر حليب إلى 2 جبن فاخر ($1,400)[cite: 3].' },
+        { id: 'fact_mill', name: 'مطحنة الحبوب', cost: 8000, owned: 0, inputType: 'crops', inputAmt: 15, outputType: 'flour', outputAmt: 5, desc: 'يحول 15 محصول إلى 5 أكياس دقيق ($320)[cite: 3].' }
     ];
 
     window.activeQuests = [];
@@ -710,7 +710,7 @@
         let now = Date.now();
         if (!window.questResetTimestamp || now >= window.questResetTimestamp || !window.activeQuests || window.activeQuests.length === 0) {
             generateDailyQuests();
-            logMessage("🎯 تم تحديث المهام اليومية بمهام وهدايا جديدة!");
+            logMessage("🎯 تم تحديث المهام اليومية بمهام وهدايا جديدة (دورة الـ 24 ساعة الحقيقية)!");
         }
     }
 
@@ -1085,7 +1085,7 @@
                 document.getElementById('renewalButtonsContainer').style.display = 'none';
             }
         } else if (window.isLocked) {
-            document.getElementById('renewalSubText').innerText = "قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.";
+            document.getElementById('renewalSubText').innerText = "قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة[cite: 3].";
             document.getElementById('renewalButtonsContainer').style.display = 'flex';
         }
     }
@@ -1521,7 +1521,7 @@
 <!-- ربط Firebase وتوابع الشات وسوق اللاعبين -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, addEx, addDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDjmtuNuQf6zQwiHeRbbIWI19XdVJzyuU",
@@ -1621,7 +1621,6 @@
             window.money -= totalPrice;
             window.inventory[productKey].count += amount;
 
-            // حذف الإعلان من السوق
             await deleteDoc(doc(db, "marketplace", docId));
             alert(`✅ تم شراء المنتجات بنجاح وتم إضافتها لمخزونك!`);
             logMessage(`شراء ${amount} من السوق مقابل ${formatMoney(totalPrice)} من البائع ${seller}`);
@@ -1693,12 +1692,9 @@
                 `;
             });
             chatBox.scrollTop = chatBox.scrollHeight;
-        } catch (e) {
-            // صامت لتجنب إزعاج الشات عند عدم الاتصال اللحظي
-        }
+        } catch (e) {}
     };
 
-    // تحديث الشات تلقائياً كل 10 ثواني
     setInterval(() => {
         if (window.currentUsername) {
             window.loadChatMessages();
