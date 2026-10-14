@@ -1407,10 +1407,9 @@
         const huts = window.barns.find(b => b.id === 'worker_hut').owned;
         if (huts > 0 && window.cropFields.activePlots === 0 && window.money >= 450) {
             window.money -= 450;
-            window.cropFields.activePlots = 10 * huts;
-            window.cropFields.currentDaysGrown = window.cropFields.growthDaysNeeded;
-            window.cropFields.isReady = true;
-            logMessage(`👷 العمال الآليون قاموا ببزر وحصاد المحاصيل تلقائياً!`);
+            let harvestedAmount = 10 * huts;
+            window.inventory.crops.count += harvestedAmount;
+            logMessage(`👷 العمال الآليون قاموا بـزرع وحصاد ${harvestedAmount} وحدة من المحاصيل تلقائياً وإضافتها للمخزن!`);
         }
 
         window.animals.forEach(animal => {
@@ -1938,7 +1937,6 @@
         let stocksVal = window.stocks.reduce((sum, s) => sum + (s.price * s.owned), 0);
         let netWorth = window.money + window.bankVault.balance + animalsVal + stocksVal + (window.bondsOwned * 15000) - window.loan;
 
-        // حساب صافي الربح أو الخسارة اليومي الفعلي
         let assetIncome = window.assets.reduce((sum, ast) => sum + (Math.floor(ast.income * window.globalMultiplier) * ast.count), 0);
         let bondsIncome = window.bondsOwned * 250;
         let vaultRates = [0, 0.03, 0.045, 0.06, 0.08, 0.10, 0.13, 0.16, 0.20, 0.25, 0.32, 0.40];
