@@ -1404,12 +1404,28 @@
             window.incomingShipments = window.incomingShipments.filter(inc => inc.daysRemaining > 0);
         }
 
+      // --- التعديل هنا: تشغيل العمال الآليين للحصاد والبذر تلقائياً ---
         const huts = window.barns.find(b => b.id === 'worker_hut').owned;
-        if (huts > 0 && window.cropFields.activePlots === 0 && window.money >= 450) {
-            window.money -= 450;
-            let harvestedAmount = 10 * huts;
-            window.inventory.crops.count += harvestedAmount;
-            logMessage(`👷 العمال الآليون قاموا بـزرع وحصاد ${harvestedAmount} وحدة من المحاصيل تلقائياً وإضافتها للمخزن!`);
+        if (huts > 0 && window.money >= 450) {
+            // إذا كانت المحاصيل ناضجة بالفعل، يقوم العمال بحصادها أولاً
+            if (window.cropFields.activePlots > 0 && window.cropFields.isReady) {
+                let harvestedAmount = window.cropFields.activePlots;
+                window.inventory.crops.count += harvestedAmount;
+                window.cropFields.activePlots = 0;
+                window.cropFields.isReady = false;
+                logMessage(`👷 العمال الآليون قاموا بحصاد ${harvestedAmount} وحدة من المحاصيل وإضافتها للمخزن!`);
+            }
+
+            // إذا أصبحت الأراضي فارغة بعد الحصاد (أو كانت فارغة أصلاً)، يقوم العمال ببذر محاصيل جديدة
+            if (window.cropFields.activePlots === 0) {
+                window.money -= 450;
+                window.cropFields.activePlots = 10 * huts;
+                window.cropFields.currentDaysGrown = 0;
+                window.cropFields.isReady = false;
+                logMessage(`👷 العمال الآليون قاموا ببذر محاصيل جديدة بتكلفة $450.`);
+            }
+        }
+        // -----------------------------------------------------------------
         }
 
         window.animals.forEach(animal => {
