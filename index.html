@@ -175,7 +175,7 @@
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 0.55rem;
+            font-size: 0.52rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
@@ -310,7 +310,7 @@
             background-color: rgba(0,0,0,0.4);
             border-radius: 6px;
             padding: 8px;
-            height: 250px;
+            height: 220px;
             overflow-y: auto;
             font-size: 0.72rem;
             font-family: monospace;
@@ -318,6 +318,32 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
+        }
+
+        .chat-box {
+            background-color: rgba(0,0,0,0.4);
+            border-radius: 6px;
+            padding: 8px;
+            height: 220px;
+            overflow-y: auto;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .chat-msg {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .chat-user {
+            font-weight: bold;
+            color: var(--yellow);
+            font-size: 0.7rem;
+            margin-bottom: 2px;
         }
 
         .mini-chart {
@@ -333,7 +359,6 @@
 <!-- شاشة تسجيل الدخول أو إنشاء الحساب -->
 <div id="authScreen">
     <div class="auth-card">
-        <!-- شعار اللعبة في شاشة الدخول -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160" width="100%" height="auto" style="margin-bottom: 5px;">
             <defs>
                 <linearGradient id="goldGradAuth" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -356,7 +381,7 @@
         </svg>
 
         <h2 style="color: var(--yellow); font-size: 1.05rem;">🔐 تسجيل الدخول للإمبراطورية</h2>
-        <div style="font-size: 0.72rem; color: var(--text-muted);">ادخل اسم الحساب وكلمة المرور الخاصة بك للبدء أو استرجاع حفظك[cite: 3]:</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted);">ادخل اسم الحساب وكلمة المرور الخاصة بك للبدء أو استرجاع حفظك:</div>
         
         <input type="text" id="authUsername" class="auth-input" placeholder="اسم المستخدم أو البريد الإلكتروني...">
         <input type="password" id="authPassword" class="auth-input" placeholder="كلمة المرور...">
@@ -368,7 +393,6 @@
 <!-- واجهة اللعبة الرئيسية -->
 <div class="container" id="gameContainer" style="display: none;">
     <header>
-        <!-- شعار اللعبة الاحترافي داخل الهيدر -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 150" width="100%" height="auto">
             <defs>
                 <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -415,7 +439,7 @@
     <!-- لوحة التجديد -->
     <div id="renewalPanel" class="card" style="display: none; background: rgba(6, 182, 212, 0.1); border-color: var(--gem); text-align: center; padding: 12px;">
         <div style="font-size: 0.85rem; font-weight: bold; color: var(--gem);">⚠️ انتهت محاولات الأيام الـ 25 المتاحة!</div>
-        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;" id="renewalSubText">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة[cite: 3].</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;" id="renewalSubText">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.</div>
         <div style="display: flex; gap: 8px; margin-top: 8px; justify-content: center;" id="renewalButtonsContainer">
             <button class="action-btn gem-btn" onclick="renewWithGems()">تجديد بـ 100 جوهرة 💎</button>
             <button class="action-btn" style="background-color: var(--orange);" onclick="startWaitTimer()">انتظار 12 ساعة ⏳</button>
@@ -454,6 +478,8 @@
         <button class="tab-btn" onclick="switchTab('factories')">🏭 المصانع</button>
         <button class="tab-btn" onclick="switchTab('logistics')">🚚 الشحن</button>
         <button class="tab-btn" onclick="switchTab('stocks')">📊 البورصة</button>
+        <button class="tab-btn" onclick="switchTab('market')">🛒 سوق اللاعبين</button>
+        <button class="tab-btn" onclick="switchTab('chat')">💬 الشات العام</button>
         <button class="tab-btn" onclick="switchTab('quests')">🎯 المهام</button>
         <button class="tab-btn" onclick="switchTab('leaderboard')">🏆 المتصدرين</button>
         <button class="tab-btn" onclick="switchTab('finance')">🏦 البنوك</button>
@@ -495,8 +521,51 @@
 
     <div id="tab-stocks" class="tab-content">
         <div class="card">
-            <div class="section-title">📈 سوق الأسهم والبورصة العالمية</div>
+            <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
+                <span>📈 سوق الأسهم والبورصة العالمية</span>
+                <span id="stockTimerDisplay" style="font-size:0.68rem; color:var(--gem);">تحديث الأسعار بعد: 60ث</span>
+            </div>
             <div class="item-list" id="stocksList"></div>
+        </div>
+    </div>
+
+    <!-- تبويب سوق اللاعبين الحر -->
+    <div id="tab-market" class="tab-content">
+        <div class="card">
+            <div class="section-title">📦 عرض منتج جديد للبيع للاعبين الآخرين</div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px;">
+                <select id="marketProductSelect" class="auth-input" style="flex: 2;">
+                    <option value="chickenEggs">بيض دجاج طازج</option>
+                    <option value="duckEggs">بيض بط فاخر</option>
+                    <option value="milk">حليب أبقار طازج (لتر)</option>
+                    <option value="crops">محاصيل زراعية ناضجة</option>
+                    <option value="cheese">جبن فاخر معالج 🧀</option>
+                    <option value="flour">دقيق حبوب نقي 🌾</option>
+                </select>
+                <input type="number" id="marketAmountInput" class="auth-input" placeholder="الكمية..." style="flex: 1;" min="1">
+                <input type="number" id="marketPriceInput" class="auth-input" placeholder="السعر الإجمالي ($)..." style="flex: 1;" min="1">
+                <button class="action-btn" style="background-color: var(--green); color: #060911; flex: 1;" onclick="createMarketListing()">عرض بالسوق 🛒</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="section-title">🛒 عروض اللاعبين المتاحة للشراء</div>
+            <div class="item-list" id="marketList">
+                <div style="text-align:center; color:var(--text-muted);">جاري تحميل السوق...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- تبويب الشات العام -->
+    <div id="tab-chat" class="tab-content">
+        <div class="card">
+            <div class="section-title">💬 الدردشة الجماعية بين الأباطرة</div>
+            <div class="chat-box" id="chatBox">
+                <div class="chat-msg"><div class="chat-user">النظام</div>أهلاً بك في الشات العام للإمبراطورية! تحدث مع باقي اللاعبين بحرية.</div>
+            </div>
+            <div style="display: flex; gap: 6px; margin-top: 4px;">
+                <input type="text" id="chatInput" class="gift-input" placeholder="اكتب رسالتك هنا..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+                <button class="action-btn" style="background-color: var(--blue);" onclick="sendChatMessage()">إرسال ✉️</button>
+            </div>
         </div>
     </div>
 
@@ -539,7 +608,7 @@
         <div class="card">
             <div class="section-title">📋 سجل الحسابات والأحداث اليومية</div>
             <div class="ledger-box" id="ledgerBox">
-                <div>[اليوم 1] أهلاً بك في النسخة المطورة والمدمجة بنجاح[cite: 3]!</div>
+                <div>[اليوم 1] أهلاً بك في النسخة المطورة والمدمجة بنجاح!</div>
             </div>
         </div>
     </div>
@@ -604,8 +673,8 @@
     };
 
     window.factories = [
-        { id: 'fact_cheese', name: 'مصنع الأجبان والألبان', cost: 15000, owned: 0, inputType: 'milk', inputAmt: 10, outputType: 'cheese', outputAmt: 2, desc: 'يحول 10 لتر حليب إلى 2 جبن فاخر ($1,400)[cite: 3].' },
-        { id: 'fact_mill', name: 'مطحنة الحبوب', cost: 8000, owned: 0, inputType: 'crops', inputAmt: 15, outputType: 'flour', outputAmt: 5, desc: 'يحول 15 محصول إلى 5 أكياس دقيق ($320)[cite: 3].' }
+        { id: 'fact_cheese', name: 'مصنع الأجبان والألبان', cost: 15000, owned: 0, inputType: 'milk', inputAmt: 10, outputType: 'cheese', outputAmt: 2, desc: 'يحول 10 لتر حليب إلى 2 جبن فاخر ($1,400).' },
+        { id: 'fact_mill', name: 'مطحنة الحبوب', cost: 8000, owned: 0, inputType: 'crops', inputAmt: 15, outputType: 'flour', outputAmt: 5, desc: 'يحول 15 محصول إلى 5 أكياس دقيق ($320).' }
     ];
 
     window.activeQuests = [];
@@ -641,9 +710,43 @@
         let now = Date.now();
         if (!window.questResetTimestamp || now >= window.questResetTimestamp || !window.activeQuests || window.activeQuests.length === 0) {
             generateDailyQuests();
-            logMessage("🎯 تم تحديث المهام اليومية بمهام وهدايا جديدة (دورة الـ 24 ساعة الحقيقية)!");
+            logMessage("🎯 تم تحديث المهام اليومية بمهام وهدايا جديدة!");
         }
     }
+
+    // تحديث البورصة كل 60 ثانية حقيقية
+    window.stockNextUpdateTimestamp = Date.now() + 60000;
+    function updateStockMarketRealtime() {
+        let now = Date.now();
+        let diffMs = window.stockNextUpdateTimestamp - now;
+        let secLeft = Math.ceil(diffMs / 1000);
+
+        const stockTimerDisplay = document.getElementById('stockTimerDisplay');
+        if (stockTimerDisplay) {
+            if (secLeft > 0) {
+                stockTimerDisplay.innerText = `تحديث الأسعار بعد: ${secLeft}ث`;
+            } else {
+                stockTimerDisplay.innerText = `جاري التحديث...`;
+                window.stockNextUpdateTimestamp = Date.now() + 60000;
+                
+                window.stocks.forEach(stock => {
+                    let oldPrice = stock.price;
+                    let change = (Math.random() * (stock.volatility * 2)) - stock.volatility;
+                    stock.price = Math.max(10, Math.floor(stock.price * (1 + change)));
+
+                    let trendSymbol = "➡️";
+                    if (stock.price > oldPrice) trendSymbol = "📈";
+                    else if (stock.price < oldPrice) trendSymbol = "📉";
+
+                    if (!stock.history) stock.history = ['=', '=', '=', '=', '='];
+                    stock.history.push(trendSymbol);
+                    if (stock.history.length > 5) stock.history.shift();
+                });
+                renderStocks();
+            }
+        }
+    }
+    setInterval(updateStockMarketRealtime, 1000);
 
     const myWhatsAppNumber = "201070813027";
 
@@ -982,7 +1085,7 @@
                 document.getElementById('renewalButtonsContainer').style.display = 'none';
             }
         } else if (window.isLocked) {
-            document.getElementById('renewalSubText').innerText = "قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة[cite: 3].";
+            document.getElementById('renewalSubText').innerText = "قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.";
             document.getElementById('renewalButtonsContainer').style.display = 'flex';
         }
     }
@@ -1075,20 +1178,6 @@
 
         window.money += finalDailyProfit;
 
-        window.stocks.forEach(stock => {
-            let oldPrice = stock.price;
-            let change = (Math.random() * (stock.volatility * 2)) - stock.volatility;
-            stock.price = Math.max(10, Math.floor(stock.price * (1 + change)));
-
-            let trendSymbol = "➡️";
-            if (stock.price > oldPrice) trendSymbol = "📈";
-            else if (stock.price < oldPrice) trendSymbol = "📉";
-
-            if (!stock.history) stock.history = ['=', '=', '=', '=', '='];
-            stock.history.push(trendSymbol);
-            if (stock.history.length > 5) stock.history.shift();
-        });
-
         window.activeQuests.forEach(q => {
             if (!q.completed) {
                 if (q.type === 'stocks') {
@@ -1104,7 +1193,7 @@
             }
         });
 
-        logMessage(`نتائج اليوم ${window.day}: تحديث الأسواق المالية وأعمار الحيوانات.`);
+        logMessage(`نتائج اليوم ${window.day}: تحديث الأصول وأعمار الحيوانات.`);
         renderAll(); updateUI();
         if (window.saveGameOnline) window.saveGameOnline();
     };
@@ -1250,7 +1339,7 @@
                 <div class="item-info">
                     <span class="item-title">${stock.name} (المحفظة: ${stock.owned})</span>
                     <span class="item-meta">السعر الحالي: ${formatMoney(stock.price)}</span>
-                    <div class="mini-chart" title="آخر 5 حركات للسهم">حركات السهم: <span style="color: var(--yellow);">${chartStr}</span></div>
+                    <div class="mini-chart" title="حركة السعر التلقائية">حركات السهم: <span style="color: var(--yellow);">${chartStr}</span></div>
                 </div>
                 <div class="btn-group">
                     <button class="action-btn" onclick="tradeStock('${stock.id}', 'buy')">شراء</button>
@@ -1382,6 +1471,8 @@
         renderQuests();
         renderLeaderboard();
         renderStore();
+        if (window.loadMarketList) window.loadMarketList();
+        if (window.loadChatMessages) window.loadChatMessages();
     }
 
     function updateUI() {
@@ -1427,10 +1518,10 @@
     setInterval(updateUI, 1000);
 </script>
 
-<!-- ربط Firebase المصادقة وحفظ واسترجاع البيانات -->
+<!-- ربط Firebase وتوابع الشات وسوق اللاعبين -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, addEx, addDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDjmtuNuQf6zQwiHeRbbIWI19XdVJzyuU",
@@ -1449,6 +1540,170 @@
     function sanitizeKey(emailOrUser) {
         return emailOrUser.trim().toLowerCase().replace(/[@\.]/g, '_');
     }
+
+    // وظائف سوق اللاعبين الحر
+    window.createMarketListing = async function() {
+        const prodKey = document.getElementById('marketProductSelect').value;
+        const amount = parseInt(document.getElementById('marketAmountInput').value);
+        const totalPrice = parseInt(document.getElementById('marketPriceInput').value);
+
+        if (!amount || amount <= 0 || !totalPrice || totalPrice <= 0) {
+            alert("❌ الرجاء إدخال كمية وسعر صالحين!");
+            return;
+        }
+
+        if (window.inventory[prodKey].count < amount) {
+            alert("❌ لا تملك هذه الكمية في المخزن!");
+            return;
+        }
+
+        window.inventory[prodKey].count -= amount;
+
+        try {
+            await addDoc(collection(db, "marketplace"), {
+                seller: window.currentUsername,
+                productKey: prodKey,
+                productName: window.inventory[prodKey].name,
+                amount: amount,
+                totalPrice: totalPrice,
+                timestamp: Date.now()
+            });
+            alert("🛒 تم عرض المنتج في السوق بنجاح!");
+            document.getElementById('marketAmountInput').value = '';
+            document.getElementById('marketPriceInput').value = '';
+            renderInventory();
+            window.loadMarketList();
+        } catch (e) {
+            console.error(e);
+            alert("❌ فشل عرض المنتج بالسوق.");
+        }
+    };
+
+    window.loadMarketList = async function() {
+        const container = document.getElementById('marketList');
+        if (!container) return;
+        try {
+            const querySnapshot = await getDocs(collection(db, "marketplace"));
+            container.innerHTML = '';
+            if (querySnapshot.empty) {
+                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.75rem;">لا توجد منتجات معروضة حالياً بالسوق.</div>';
+                return;
+            }
+            querySnapshot.forEach((docSnap) => {
+                let item = docSnap.data();
+                let docId = docSnap.id;
+                let isOwn = item.seller === window.currentUsername;
+
+                container.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <span class="item-title">${item.productName} (الكمية: ${item.amount})</span>
+                            <span class="item-desc">البائع: ${item.seller} | السعر الإجمالي: ${formatMoney(item.totalPrice)}</span>
+                        </div>
+                        <div>
+                            ${isOwn ? `<button class="action-btn sell-btn" onclick="cancelMarketListing('${docId}', '${item.productKey}',${item.amount})">إلغاء</button>` : 
+                                      `<button class="action-btn" style="background-color:var(--green); color:#060911;" onclick="buyMarketListing('${docId}', '${item.productKey}',${item.amount}, ${item.totalPrice}, '${item.seller}')">شراء 💰</button>`}
+                        </div>
+                    </div>
+                `;
+            });
+        } catch (e) {
+            container.innerHTML = '<div style="text-align:center; color:var(--red);">تعذر جلب بيانات السوق.</div>';
+        }
+    };
+
+    window.buyMarketListing = async function(docId, productKey, amount, totalPrice, seller) {
+        if (window.money < totalPrice) {
+            alert("❌ لا توجد سيولة كافية لشراء هذا المنتج!");
+            return;
+        }
+        try {
+            window.money -= totalPrice;
+            window.inventory[productKey].count += amount;
+
+            // حذف الإعلان من السوق
+            await deleteDoc(doc(db, "marketplace", docId));
+            alert(`✅ تم شراء المنتجات بنجاح وتم إضافتها لمخزونك!`);
+            logMessage(`شراء ${amount} من السوق مقابل ${formatMoney(totalPrice)} من البائع ${seller}`);
+            renderInventory();
+            updateUI();
+            window.loadMarketList();
+        } catch (e) {
+            console.error(e);
+            alert("❌ حدث خطأ أثناء إتمام عملية الشراء.");
+        }
+    };
+
+    window.cancelMarketListing = async function(docId, productKey, amount) {
+        try {
+            window.inventory[productKey].count += amount;
+            await deleteDoc(doc(db, "marketplace", docId));
+            alert("🔄 تم إلغاء العرض وإرجاع المنتجات لمخزونك.");
+            renderInventory();
+            window.loadMarketList();
+        } catch (e) {
+            console.error(e);
+            alert("❌ فشل إلغاء العرض.");
+        }
+    };
+
+    // وظائف الشات العام
+    window.sendChatMessage = async function() {
+        const input = document.getElementById('chatInput');
+        if (!input) return;
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        try {
+            await addDoc(collection(db, "global_chat"), {
+                username: window.currentUsername,
+                message: msg,
+                timestamp: Date.now()
+            });
+            input.value = '';
+            window.loadChatMessages();
+        } catch (e) {
+            console.error(e);
+            alert("❌ فشل إرسال الرسالة.");
+        }
+    };
+
+    window.loadChatMessages = async function() {
+        const chatBox = document.getElementById('chatBox');
+        if (!chatBox) return;
+        try {
+            const querySnapshot = await getDocs(collection(db, "global_chat"));
+            let messages = [];
+            querySnapshot.forEach((docSnap) => {
+                messages.push(docSnap.data());
+            });
+            messages.sort((a, b) => a.timestamp - b.timestamp);
+
+            chatBox.innerHTML = '';
+            if (messages.length === 0) {
+                chatBox.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.75rem;">لا توجد رسائل سابقة. كن أول المتحدثين!</div>';
+                return;
+            }
+            messages.forEach(m => {
+                chatBox.innerHTML += `
+                    <div class="chat-msg">
+                        <div class="chat-user">${m.username}</div>
+                        <div style="color:var(--text-main);">${m.message}</div>
+                    </div>
+                `;
+            });
+            chatBox.scrollTop = chatBox.scrollHeight;
+        } catch (e) {
+            // صامت لتجنب إزعاج الشات عند عدم الاتصال اللحظي
+        }
+    };
+
+    // تحديث الشات تلقائياً كل 10 ثواني
+    setInterval(() => {
+        if (window.currentUsername) {
+            window.loadChatMessages();
+        }
+    }, 10000);
 
     function mergeSavedData(data) {
         window.money = data.money !== undefined ? data.money : window.money;
