@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محاكي الإمبراطورية المالية والزراعية الاحترافي</title>
+    <title>محاكي الإمبراطورية المالية والاستيراد والتصدير</title>
     <style>
         :root {
             --bg-color: #060911;
@@ -175,7 +175,7 @@
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 0.45rem;
+            font-size: 0.44rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
@@ -476,7 +476,7 @@
         <button class="tab-btn active" onclick="switchTab('farms')">🌾 المزرعة</button>
         <button class="tab-btn" onclick="switchTab('inventory')">📦 المخزن</button>
         <button class="tab-btn" onclick="switchTab('factories')">🏭 المصانع</button>
-        <button class="tab-btn" onclick="switchTab('export_company')">🏢 الشحن B2B</button>
+        <button class="tab-btn" onclick="switchTab('export_company')">🏢 الأراضي والشركات</button>
         <button class="tab-btn" onclick="switchTab('stocks')">📊 البورصة</button>
         <button class="tab-btn" onclick="switchTab('market')">🛒 السوق الحر</button>
         <button class="tab-btn" onclick="switchTab('chat')">💬 الشات</button>
@@ -512,28 +512,32 @@
         </div>
     </div>
 
-    <!-- تبويب نظام الاستيراد والتصدير B2B المتقدم والمستودعات والموظفين -->
+    <!-- تبويب الأراضي والشركات والمستودعات وعقود B2B والموظفين المدمج بالكامل -->
     <div id="tab-export_company" class="tab-content">
         <div class="card">
+            <div class="section-title">🌍 شراء الأراضي وبناء شركة الاستيراد والتصدير</div>
+            <div class="item-list" id="exportLandsList"></div>
+        </div>
+        <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
-                <span>📦 مستودعات الشحن والاستيراد</span>
+                <span>📦 مستودعات الشحن والاستيراد التابعة للشركة</span>
                 <span id="warehouseStatusDisplay" style="font-size:0.68rem; color:var(--gem);">مستودع غير متاح</span>
             </div>
             <div class="item-list" id="warehousesList"></div>
         </div>
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
-                <span>🌐 عروض شحنات الاستيراد العالمية (B2B)</span>
+                <span>🌐 عروض شحنات الاستيراد العالمية (عقود B2B)</span>
                 <span id="b2bTimerDisplay" style="font-size:0.68rem; color:var(--yellow);">تجدد بعد: 12س</span>
             </div>
             <div class="item-list" id="b2bShipmentsList"></div>
         </div>
         <div class="card">
-            <div class="section-title">🚛 الشحنات الواصلة للمستودع (جاهزة للتصدير والبيع)</div>
+            <div class="section-title">🚛 الشحنات الجارية والواصلة للمستودع (جاهزة للتصدير والبيع)</div>
             <div class="item-list" id="warehouseInventoryList"></div>
         </div>
         <div class="card">
-            <div class="section-title">👥 تعيين الموظفين والخبراء (برواتب يومية)</div>
+            <div class="section-title">👥 تعيين الموظفين والخبراء (برواتب يومية وبناءً على سعة الأراضي)</div>
             <div class="item-list" id="employeesList"></div>
         </div>
     </div>
@@ -625,7 +629,7 @@
         <div class="card">
             <div class="section-title">📋 سجل الحسابات والأحداث اليومية</div>
             <div class="ledger-box" id="ledgerBox">
-                <div>[اليوم 1] أهلاً بك في النسخة الواقعية لشحن وعقود B2B!</div>
+                <div>[اليوم 1] أهلاً بك في نظام الشركات المدمج مع المستودعات وعقود B2B!</div>
             </div>
         </div>
     </div>
@@ -694,20 +698,27 @@
         { id: 'fact_mill', name: 'مطحنة الحبوب', cost: 8000, owned: 0, inputType: 'crops', inputAmt: 15, outputType: 'flour', outputAmt: 5, desc: 'يحول 15 محصول إلى 5 أكياس دقيق.' }
     ];
 
-    // مستودعات اللاعب
+    // أراضي شركات الاستيراد والتصدير (تحدد سعة الموظفين)
+    window.exportLands = [
+        { id: 'land_small', name: 'قطعة أرض شركة صغرى', cost: 25000, owned: 0, capacity: 2, desc: 'تتيح تأسيس مقر شركة استيراد وتصدير وسعة لموظفين.' },
+        { id: 'land_port', name: 'أرض مميزة بجوار الميناء البحري', cost: 90000, owned: 0, capacity: 5, desc: 'أرض تجارية واسعة لتوظيف الخبراء وإدارة أضخم الشحنات.' },
+        { id: 'land_hub', name: 'مجمع اللوجستيات والعقود الدولي', cost: 300000, owned: 0, capacity: 10, desc: 'المركز التجاري الأضخم لإدارة الإمبراطورية.' }
+    ];
+
+    // مستودعات الشركة للاستيراد والتخزين
     window.warehouses = [
         { id: 'wh_small', name: 'مستودع تجاري صغير', cost: 20000, capacity: 50, owned: 0, desc: 'يستوعب حتى 50 وحدة بضائع مستوردة.' },
         { id: 'wh_large', name: 'مستودع لوجستي ضخم', cost: 75000, capacity: 200, owned: 0, desc: 'يستوعب حتى 200 وحدة بضائع مستوردة.' }
     ];
 
-    // مستودع البضائع الواصلة (الاستيراد والتصدير)
+    // محتوى مخزون المستودع المستورد
     window.warehouseInventory = {
         importedCrops: { name: 'محاصيل مستوردة بالجملة', count: 0, sellPrice: 180 },
         importedCheese: { name: 'أجبان أوروبية فاخرة مستوردة', count: 0, sellPrice: 2200 },
         importedTech: { name: 'إلكترونيات ومعدات متطورة', count: 0, sellPrice: 4500 }
     };
 
-    // شحنات B2B المتاحة التي تتجدد كل 12 ساعة
+    // عروض شحنات B2B تتجدد كل 12 ساعة
     window.b2bShipments = [];
     window.b2bNextRefreshTimestamp = 0;
     const twelveHoursMs = 12 * 60 * 60 * 1000;
@@ -718,7 +729,6 @@
         { id: 'sh_3', name: 'شحنة إلكترونيات ومعدات صناعية', productKey: 'importedTech', amount: 5, cost: 18000, daysToArrival: 6 }
     ];
 
-    // الشحنات التي طلبها اللاعب وفي طريقها للمستودع
     window.incomingShipments = [];
 
     function generateB2BShipments() {
@@ -730,7 +740,7 @@
         let now = Date.now();
         if (!window.b2bNextRefreshTimestamp || now >= window.b2bNextRefreshTimestamp || window.b2bShipments.length === 0) {
             generateB2BShipments();
-            logMessage("🌐 تم تحديث عروض شحنات الاستيراد العالمية (B2B) بأسواق جديدة!");
+            logMessage("🌐 تم تحديث عروض شحنات الاستيراد العالمية (B2B)!");
         }
     }
 
@@ -927,31 +937,48 @@
         }
     };
 
-    // وظائف المستودعات
+    // وظائف شراء أراضي الشركات
+    window.modifyExportLand = function(id, action) {
+        const land = window.exportLands.find(l => l.id === id);
+        if (action === 'buy' && window.money >= land.cost) {
+            window.money -= land.cost;
+            land.owned++;
+            land.cost = Math.floor(land.cost * 1.3);
+            logMessage(`🏢 تم شراء أرض شركة استيراد وتصدير: ${land.name}`);
+        } else if (action === 'sell' && land.owned > 0) {
+            let refund = Math.floor((land.cost / 1.3) * 0.6);
+            window.money += refund;
+            land.owned--;
+            logMessage(`بيع أرض شركة: ${land.name}`);
+        }
+        renderExportCompanyTab(); updateUI();
+    };
+
+    // وظائف شراء مستودعات الشركة
     window.modifyWarehouse = function(id, action) {
         const wh = window.warehouses.find(w => w.id === id);
         if (action === 'buy' && window.money >= wh.cost) {
             window.money -= wh.cost;
             wh.owned++;
             wh.cost = Math.floor(wh.cost * 1.3);
-            logMessage(`📦 تم شراء مستودع جديد: ${wh.name}`);
+            logMessage(`📦 تم شراء مستودع شركة جديد: ${wh.name}`);
         } else if (action === 'sell' && wh.owned > 0) {
             let refund = Math.floor((wh.cost / 1.3) * 0.6);
             window.money += refund;
             wh.owned--;
-            logMessage(`بيع مستودع: ${wh.name}`);
+            logMessage(`بيع مستودع شركة: ${wh.name}`);
         }
-        renderExportTab(); updateUI();
+        renderExportCompanyTab(); updateUI();
     };
 
-    // شراء شحنة استيراد (عقد B2B)
+    // شراء شحنة B2B للاستيراد
     window.buyB2BShipment = function(shipmentUniqueId) {
         let totalWhCap = window.warehouses.reduce((sum, w) => sum + (w.owned * w.capacity), 0);
         let currentStored = Object.values(window.warehouseInventory).reduce((sum, item) => sum + item.count, 0);
         let incomingCount = window.incomingShipments.reduce((sum, inc) => sum + inc.amount, 0);
 
         if (totalWhCap === 0) {
-            alert("❌ يجب شراء مستودع تخزين أولاً لتتمكن من استيراد الشحنات!");
+            alert("❌ يجب شراء مستودع شركة أولاً لتتمكن من استقبال واستيراد الشحنات!");
             return;
         }
 
@@ -964,7 +991,7 @@
 
         if (window.money >= finalCost) {
             if ((currentStored + incomingCount + shipment.amount) > totalWhCap) {
-                alert("❌ سعة المستودعات غير كافية لاستيعاب هذه الشحنة!");
+                alert("❌ سعة المستودعات الحالية غير كافية لاستيعاب هذه الشحنة!");
                 return;
             }
 
@@ -981,11 +1008,10 @@
                 daysRemaining: arrivalDays
             });
 
-            // إزالة الشحنة من العروض المتاحة
             window.b2bShipments = window.b2bShipments.filter(s => s.uniqueId !== shipmentUniqueId);
 
             logMessage(`🌐 تم التعاقد واستيراد الشحنة (${shipment.name}) بتكلفة ${formatMoney(finalCost)}. تصل خلال ${arrivalDays} يوم.`);
-            renderExportTab();
+            renderExportCompanyTab();
             updateUI();
         } else {
             alert("❌ لا توجد سيولة كافية لشراء هذه الشحنة!");
@@ -1000,21 +1026,25 @@
             window.money += revenue;
             logMessage(`💰 تم تصدير وبيع ${prod.count} وحدة من (${prod.name}) مقابل ${formatMoney(revenue)}!`);
             prod.count = 0;
-            renderExportTab();
+            renderExportCompanyTab();
             updateUI();
         } else {
-            alert("لا توجد كميات بالمستودع للتصدير!");
+            alert("لا توجد كميات جاهزة بالمستودع للتصدير!");
         }
     };
 
-    // وظائف الموظفين
+    // تعيين موظفي الشركة (مرتبط بسعة الأراضي المملوكة)
     window.hireEmployee = function(empId) {
         let emp = window.employeesPool.find(e => e.id === empId);
-        let totalWhCap = window.warehouses.reduce((sum, w) => sum + (w.owned * w.capacity), 0);
+        let totalLandCap = window.exportLands.reduce((sum, l) => sum + (l.owned * l.capacity), 0);
         let totalCurrentHired = window.employeesPool.reduce((sum, e) => sum + e.hiredCount, 0);
 
-        if (totalWhCap === 0) {
-            alert("❌ يجب شراء مستودع أولاً لتعيين موظفين وإداريين!");
+        if (totalLandCap === 0) {
+            alert("❌ يجب شراء أرض شركة استيراد وتصدير أولاً لتوفير مكاتب وسعة لتعيين الموظفين!");
+            return;
+        }
+        if (totalCurrentHired >= totalLandCap) {
+            alert("❌ مكاتب الشركة ممتلئة بالكامل! قم بشراء أراضي جديدة لزيادة السعة.");
             return;
         }
 
@@ -1023,7 +1053,7 @@
                 window.gems -= emp.costGem;
                 emp.hiredCount++;
                 logMessage(`🌟 تم تعيين الموظف المثالي الخارق (${emp.name}) مقابل ${emp.costGem} جوهرة!`);
-                renderExportTab(); updateUI();
+                renderExportCompanyTab(); updateUI();
             } else {
                 alert("❌ لا توجد جواهر كافية لتعيين هذا الموظف!");
             }
@@ -1032,7 +1062,7 @@
                 window.money -= emp.costMoney;
                 emp.hiredCount++;
                 logMessage(`👥 تم تعيين الموظف: ${emp.name}`);
-                renderExportTab(); updateUI();
+                renderExportCompanyTab(); updateUI();
             } else {
                 alert("❌ لا توجد سيولة كافية لتعيين هذا الموظف!");
             }
@@ -1044,7 +1074,7 @@
         if (emp.hiredCount > 0) {
             emp.hiredCount--;
             logMessage(`تم الاستغناء عن الموظف: ${emp.name}`);
-            renderExportTab(); updateUI();
+            renderExportCompanyTab(); updateUI();
         }
     };
 
@@ -1300,7 +1330,7 @@
                 if (inc.daysRemaining <= 0) {
                     if (window.warehouseInventory[inc.productKey]) {
                         window.warehouseInventory[inc.productKey].count += inc.amount;
-                        logMessage(`📦 وصلت الشحنة (${inc.name}) المكونة من ${inc.amount} وحدة إلى مستودعك بنجاح!`);
+                        logMessage(`📦 وصلت الشحنة (${inc.name}) المكونة من ${inc.amount} وحدة إلى مستودع الشركة بنجاح!`);
                     }
                 }
             });
@@ -1376,7 +1406,7 @@
             }
         });
 
-        logMessage(`نتائج اليوم ${window.day}: تحديث المستودعات وعقود B2B.`);
+        logMessage(`نتائج اليوم ${window.day}: تحديث الأراضي، المستودعات، وعقود الاستيراد والتصدير.`);
         renderAll(); updateUI();
         if (window.saveGameOnline) window.saveGameOnline();
     };
@@ -1488,8 +1518,28 @@
         });
     }
 
-    // رندر تبويب الشحن و B2B والمستودعات
-    function renderExportTab() {
+    // رندر تبويب الأراضي والشركات والمستودعات و B2B والموظفين المدمج بالكامل
+    function renderExportCompanyTab() {
+        const landsContainer = document.getElementById('exportLandsList');
+        if (landsContainer) {
+            landsContainer.innerHTML = '';
+            window.exportLands.forEach(land => {
+                landsContainer.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <span class="item-title">${land.name} (المملوك: ${land.owned})</span>
+                            <span class="item-desc">${land.desc} | سعة المكاتب: ${land.capacity} موظف</span>
+                            <span class="item-meta">التكلفة: ${formatMoney(land.cost)}</span>
+                        </div>
+                        <div class="btn-group">
+                            <button class="action-btn farm-btn" onclick="modifyExportLand('${land.id}', 'buy')">شراء</button>
+                            <button class="action-btn sell-btn" onclick="modifyExportLand('${land.id}', 'sell')" ${land.owned === 0 ? 'disabled' : ''}>بيع</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
         const whContainer = document.getElementById('warehousesList');
         if (whContainer) {
             whContainer.innerHTML = '';
@@ -1513,7 +1563,7 @@
                     </div>
                 `;
             });
-            document.getElementById('warehouseStatusDisplay').innerText = `المساحة المستخدمة: ${currentStored + incomingCount} / ${totalCap} وحدة`;
+            document.getElementById('warehouseStatusDisplay').innerText = `المساحة المستخدمة بالمستودعات: ${currentStored + incomingCount} / ${totalCap} وحدة`;
         }
 
         const b2bContainer = document.getElementById('b2bShipmentsList');
@@ -1536,14 +1586,13 @@
                         <div class="item-info">
                             <span class="item-title">${ship.name} (${ship.amount} وحدة)</span>
                             <span class="item-desc">مدة وصول الشحنة للمستودع: ${arrivalDays} أيام</span>
-                            <span class="item-meta">التكلفة بعد الخصم: ${formatMoney(finalCost)}</span>
+                            <span class="item-meta">تكلفة الاستيراد: ${formatMoney(finalCost)}</span>
                         </div>
                         <button class="action-btn" style="background-color: var(--green); color:#060911;" onclick="buyB2BShipment('${ship.uniqueId}')">استيراد وتعاقد 🚢</button>
                     </div>
                 `;
             });
 
-            // مؤقت تجديد الـ 12 ساعة
             let now = Date.now();
             let diffMs = window.b2bNextRefreshTimestamp - now;
             let b2bTimerDisplay = document.getElementById('b2bTimerDisplay');
@@ -1563,28 +1612,26 @@
         if (whInvContainer) {
             whInvContainer.innerHTML = '';
             
-            // عرض الشحنات في الطريق
             if (window.incomingShipments && window.incomingShipments.length > 0) {
                 window.incomingShipments.forEach(inc => {
                     whInvContainer.innerHTML += `
                         <div class="item-row" style="background: rgba(59, 130, 246, 0.05);">
                             <div class="item-info">
                                 <span class="item-title" style="color: var(--blue);">⏳ شحنة في الطريق: ${inc.name}</span>
-                                <span class="item-desc">الكمية: ${inc.amount} وحدة | متبقي لتعبر الجمارك وتصل: ${inc.daysRemaining} أيام</span>
+                                <span class="item-desc">الكمية: ${inc.amount} وحدة | متبقي لتصل وتدخل مستودعك: ${inc.daysRemaining} أيام</span>
                             </div>
                         </div>
                     `;
                 });
             }
 
-            // عرض المنتجات الواصلة بالمستودع
             Object.keys(window.warehouseInventory).forEach(key => {
                 let prod = window.warehouseInventory[key];
                 whInvContainer.innerHTML += `
                     <div class="item-row">
                         <div class="item-info">
                             <span class="item-title">${prod.name}</span>
-                            <span class="item-meta">الكمية الجاهزة بالمستودع: ${prod.count} وحدة | سعر بيع التصدير: ${formatMoney(prod.sellPrice)} للوحدة</span>
+                            <span class="item-meta">الكمية بالمستودع: ${prod.count} وحدة | سعر بيع التصدير: ${formatMoney(prod.sellPrice)} للوحدة</span>
                         </div>
                         <button class="action-btn" style="background-color: var(--gold); color: #060911;" onclick="exportWarehouseProduct('${key}')" ${prod.count === 0 ? 'disabled' : ''}>تصدير وبيع 🛄</button>
                     </div>
@@ -1595,6 +1642,11 @@
         const empContainer = document.getElementById('employeesList');
         if (empContainer) {
             empContainer.innerHTML = '';
+            let totalLandCap = window.exportLands.reduce((sum, l) => sum + (l.owned * l.capacity), 0);
+            let totalCurrentHired = window.employeesPool.reduce((sum, e) => sum + e.hiredCount, 0);
+
+            empContainer.innerHTML += `<div style="font-size:0.72rem; color:var(--gem); margin-bottom:4px;">مكاتب الشركة المشغولة: ${totalCurrentHired} / ${totalLandCap} موظف</div>`;
+
             window.employeesPool.forEach(emp => {
                 let salaryStr = emp.isPerfect ? 'بدون راتب (مجاني)' : `${formatMoney(emp.dailySalary)} يومياً`;
                 let costStr = emp.isPerfect ? `${emp.costGem} 💎` : formatMoney(emp.costMoney);
@@ -1776,7 +1828,7 @@
         renderAnimals();
         renderInventory();
         renderFactories();
-        renderExportTab();
+        renderExportCompanyTab();
         renderLogistics();
         renderStocks();
         renderQuests();
@@ -2037,6 +2089,15 @@
                 if (window.warehouseInventory[k]) window.warehouseInventory[k].count = data.warehouseInventory[k].count;
             });
         }
+        if (data.exportLands && Array.isArray(data.exportLands)) {
+            data.exportLands.forEach(savedLand => {
+                let localLand = window.exportLands.find(l => l.id === savedLand.id);
+                if (localLand) {
+                    localLand.owned = savedLand.owned !== undefined ? savedLand.owned : localLand.owned;
+                    if (savedLand.cost) localLand.cost = savedLand.cost;
+                }
+            });
+        }
         if (data.warehouses && Array.isArray(data.warehouses)) {
             data.warehouses.forEach(savedWh => {
                 let localWh = window.warehouses.find(w => w.id === savedWh.id);
@@ -2098,6 +2159,7 @@
                     incomingShipments: window.incomingShipments,
                     inventory: window.inventory,
                     warehouseInventory: window.warehouseInventory,
+                    exportLands: window.exportLands,
                     warehouses: window.warehouses,
                     employeesPool: window.employeesPool,
                     animals: window.animals,
@@ -2141,6 +2203,7 @@
                 incomingShipments: window.incomingShipments,
                 inventory: window.inventory,
                 warehouseInventory: window.warehouseInventory,
+                exportLands: window.exportLands,
                 warehouses: window.warehouses,
                 employeesPool: window.employeesPool,
                 animals: window.animals,
