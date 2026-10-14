@@ -175,7 +175,7 @@
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 0.44rem;
+            font-size: 0.42rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
@@ -467,8 +467,8 @@
             <div class="metric-val" id="netWorthDisplay">$1,000</div>
         </div>
         <div class="metric-box">
-            <div class="metric-label">كفاءة التوصيل</div>
-            <div class="metric-val" id="logisticsScoreDisplay" style="color: var(--purple);">100%</div>
+            <div class="metric-label">الربح اليومي</div>
+            <div class="metric-val" id="dailyProfitDisplay" style="color: var(--green);">$0</div>
         </div>
     </div>
 
@@ -477,12 +477,12 @@
         <button class="tab-btn" onclick="switchTab('inventory')">📦 المخزن</button>
         <button class="tab-btn" onclick="switchTab('factories')">🏭 المصانع</button>
         <button class="tab-btn" onclick="switchTab('export_company')">🏢 الأراضي والشركات</button>
+        <button class="tab-btn" onclick="switchTab('finance')">🏦 البنوك والخزنة</button>
         <button class="tab-btn" onclick="switchTab('stocks')">📊 البورصة</button>
         <button class="tab-btn" onclick="switchTab('market')">🛒 السوق الحر</button>
         <button class="tab-btn" onclick="switchTab('chat')">💬 الشات</button>
         <button class="tab-btn" onclick="switchTab('quests')">🎯 المهام</button>
         <button class="tab-btn" onclick="switchTab('leaderboard')">🏆 المتصدرين</button>
-        <button class="tab-btn" onclick="switchTab('finance')">🏦 البنوك</button>
         <button class="tab-btn" onclick="switchTab('ledger')">📋 السجل</button>
         <button class="tab-btn" onclick="switchTab('store')" style="color: var(--gold);">🛒 المتجر</button>
     </div>
@@ -512,7 +512,6 @@
         </div>
     </div>
 
-    <!-- تبويب الأراضي والشركات والمستودعات وعقود B2B والموظفين المدمج بالكامل -->
     <div id="tab-export_company" class="tab-content">
         <div class="card">
             <div class="section-title">🌍 شراء الأراضي وبناء شركة الاستيراد والتصدير</div>
@@ -539,6 +538,56 @@
         <div class="card">
             <div class="section-title">👥 تعيين الموظفين والخبراء (برواتب يومية وبناءً على سعة الأراضي)</div>
             <div class="item-list" id="employeesList"></div>
+        </div>
+    </div>
+
+    <!-- تبويب البنوك والخزنة الاستثمارية والضرائب -->
+    <div id="tab-finance" class="tab-content">
+        <div class="card">
+            <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
+                <span>🏦 خزنة البنك الاستثمارية (تدر أرباحاً يومية)</span>
+                <span id="vaultLevelDisplay" style="font-size:0.68rem; color:var(--gold);">المستوى: 1 (العائد 3% يومياً)</span>
+            </div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 4px;">الرصيد المودع بالخزنة: <span id="vaultBalanceDisplay" style="color:var(--green); font-weight:bold;">$0</span></div>
+            <div style="display: flex; gap: 6px; margin-bottom: 6px;">
+                <input type="number" id="vaultAmountInput" class="auth-input" placeholder="البلغ..." min="1" style="flex:2;">
+                <button class="action-btn" style="background-color: var(--green); color:#060911; flex:1;" onclick="depositVault()">إيداع 📥</button>
+                <button class="action-btn sell-btn" style="flex:1;" onclick="withdrawVault()">سحب 📤</button>
+            </div>
+            <div class="item-row" style="background: rgba(251, 191, 36, 0.05); border-color: var(--gold);">
+                <div class="item-info">
+                    <span class="item-title" style="color: var(--gold);" id="vaultUpgradeTitle">ترقية الخزنة إلى المستوى 2</span>
+                    <span class="item-desc" id="vaultUpgradeDesc">تكلفة الترقية الحالية: $10,000 (تزيد نسبة العائد اليومي)</span>
+                </div>
+                <button class="action-btn" style="background-color: var(--gold); color:#060911;" onclick="upgradeVault()">ترقية الخزنة ⚡</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-title">🏛️ نظام الضرائب الحكومية على الثروات</div>
+            <div class="item-row">
+                <div class="item-info">
+                    <span class="item-title">قانون الضرائب التصاعدية اليومية</span>
+                    <span class="item-desc">يتم خصم نسبة ضريبية يومية بسيطة بناءً على إجمالي صافي الثروة والنقد لتطوير الدولة.</span>
+                </div>
+                <span id="taxRateDisplay" class="item-meta" style="color: var(--red);">النسبة الحالية: 2%</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-title">🏦 التمويل والسندات البنكية</div>
+            <div class="item-row">
+                <div class="item-info"><span class="item-title">قرض استثماري موسع ($30,000)</span></div>
+                <button class="action-btn" onclick="takeLoan()">اقتراض</button>
+            </div>
+            <div class="item-row">
+                <div class="item-info"><span class="item-title">سداد المديونية</span><span class="item-meta" id="loanStatusDisplay">الدين: $0</span></div>
+                <button class="action-btn" onclick="repayLoan()">سداد الكامل</button>
+            </div>
+            <div class="item-row">
+                <div class="item-info"><span class="item-title">شراء سندات حكومية ($15,000)</span></div>
+                <button class="action-btn" onclick="buyBonds()">شراء سند</button>
+            </div>
         </div>
     </div>
 
@@ -607,29 +656,11 @@
         </div>
     </div>
 
-    <div id="tab-finance" class="tab-content">
-        <div class="card">
-            <div class="section-title">🏦 التمويل والسندات</div>
-            <div class="item-row">
-                <div class="item-info"><span class="item-title">قرض استثماري موسع ($30,000)</span></div>
-                <button class="action-btn" onclick="takeLoan()">اقتراض</button>
-            </div>
-            <div class="item-row">
-                <div class="item-info"><span class="item-title">سداد المديونية</span><span class="item-meta" id="loanStatusDisplay">الدين: $0</span></div>
-                <button class="action-btn" onclick="repayLoan()">سداد الكامل</button>
-            </div>
-            <div class="item-row">
-                <div class="item-info"><span class="item-title">شراء سندات حكومية ($15,000)</span></div>
-                <button class="action-btn" onclick="buyBonds()">شراء سند</button>
-            </div>
-        </div>
-    </div>
-
     <div id="tab-ledger" class="tab-content">
         <div class="card">
             <div class="section-title">📋 سجل الحسابات والأحداث اليومية</div>
             <div class="ledger-box" id="ledgerBox">
-                <div>[اليوم 1] أهلاً بك في نظام الشركات المدمج مع المستودعات وعقود B2B!</div>
+                <div>[اليوم 1] أهلاً بك في النسخة المحدثة مع الخزنة الاستثمارية والضرائب!</div>
             </div>
         </div>
     </div>
@@ -675,6 +706,12 @@
     window.currentWeather = { name: "عادي ☀️", effect: 1.0 };
     window.currentEvent = { name: "سوق مستقر 📊", type: "none" };
 
+    // نظام الخزنة الاستثمارية في البنك
+    window.bankVault = {
+        balance: 0,
+        level: 1, // المستوى 1 إلى 11 (الأساسي + 10 تطويرات بالجواهر)
+    };
+
     window.activeBoosts = { fastGrowth: false, financialShield: false, emperorLicense: false };
 
     window.inventory = {
@@ -698,27 +735,23 @@
         { id: 'fact_mill', name: 'مطحنة الحبوب', cost: 8000, owned: 0, inputType: 'crops', inputAmt: 15, outputType: 'flour', outputAmt: 5, desc: 'يحول 15 محصول إلى 5 أكياس دقيق.' }
     ];
 
-    // أراضي شركات الاستيراد والتصدير (تحدد سعة الموظفين)
     window.exportLands = [
         { id: 'land_small', name: 'قطعة أرض شركة صغرى', cost: 25000, owned: 0, capacity: 2, desc: 'تتيح تأسيس مقر شركة استيراد وتصدير وسعة لموظفين.' },
         { id: 'land_port', name: 'أرض مميزة بجوار الميناء البحري', cost: 90000, owned: 0, capacity: 5, desc: 'أرض تجارية واسعة لتوظيف الخبراء وإدارة أضخم الشحنات.' },
         { id: 'land_hub', name: 'مجمع اللوجستيات والعقود الدولي', cost: 300000, owned: 0, capacity: 10, desc: 'المركز التجاري الأضخم لإدارة الإمبراطورية.' }
     ];
 
-    // مستودعات الشركة للاستيراد والتخزين
     window.warehouses = [
         { id: 'wh_small', name: 'مستودع تجاري صغير', cost: 20000, capacity: 50, owned: 0, desc: 'يستوعب حتى 50 وحدة بضائع مستوردة.' },
         { id: 'wh_large', name: 'مستودع لوجستي ضخم', cost: 75000, capacity: 200, owned: 0, desc: 'يستوعب حتى 200 وحدة بضائع مستوردة.' }
     ];
 
-    // محتوى مخزون المستودع المستورد
     window.warehouseInventory = {
         importedCrops: { name: 'محاصيل مستوردة بالجملة', count: 0, sellPrice: 180 },
         importedCheese: { name: 'أجبان أوروبية فاخرة مستوردة', count: 0, sellPrice: 2200 },
         importedTech: { name: 'إلكترونيات ومعدات متطورة', count: 0, sellPrice: 4500 }
     };
 
-    // عروض شحنات B2B تتجدد كل 12 ساعة
     window.b2bShipments = [];
     window.b2bNextRefreshTimestamp = 0;
     const twelveHoursMs = 12 * 60 * 60 * 1000;
@@ -744,7 +777,6 @@
         }
     }
 
-    // نظام الموظفين برواتب يومية
     window.employeesPool = [
         { id: 'emp_mgr', name: 'مدير عقود B2B (أحمد)', position: 'manager', dailySalary: 400, costMoney: 5000, costGem: 0, benefit: 'يقلل أيام وصول الشحنات يوماً واحداً', hiredCount: 0 },
         { id: 'emp_mgr_perf', name: 'مدير العقود المثالي الخارق 🌟', position: 'manager', dailySalary: 0, costMoney: 0, costGem: 50, benefit: 'وصول فوري للشحنات + أرباح مضاعفة', hiredCount: 0, isPerfect: true },
@@ -788,7 +820,6 @@
         }
     }
 
-    // تحديث البورصة كل 60 ثانية حقيقية
     window.stockNextUpdateTimestamp = Date.now() + 60000;
     function updateStockMarketRealtime() {
         let now = Date.now();
@@ -937,7 +968,66 @@
         }
     };
 
-    // وظائف شراء أراضي الشركات
+    // إدارة عمليات البنك والخزنة الاستثمارية
+    window.depositVault = function() {
+        let amt = parseInt(document.getElementById('vaultAmountInput').value);
+        if (!amt || amt <= 0) { alert("أدخل مبلغاً صالحاً للإيداع!"); return; }
+        if (window.money >= amt) {
+            window.money -= amt;
+            window.bankVault.balance += amt;
+            logMessage(`🏦 إيداع مبلغ ${formatMoney(amt)} في خزنة البنك الاستثمارية.`);
+            document.getElementById('vaultAmountInput').value = '';
+            renderFinanceTab(); updateUI();
+        } else {
+            alert("❌ لا تملك سيولة نقدية كافية للإيداع!");
+        }
+    };
+
+    window.withdrawVault = function() {
+        let amt = parseInt(document.getElementById('vaultAmountInput').value);
+        if (!amt || amt <= 0) { alert("أدخل مبلغاً صالحاً للسحب!"); return; }
+        if (window.bankVault.balance >= amt) {
+            window.bankVault.balance -= amt;
+            window.money += amt;
+            logMessage(`🏦 سحب مبلغ ${formatMoney(amt)} من خزنة البنك.`);
+            document.getElementById('vaultAmountInput').value = '';
+            renderFinanceTab(); updateUI();
+        } else {
+            alert("❌ الرصيد بالخزنة لا يكفي!");
+        }
+    };
+
+    window.upgradeVault = function() {
+        let lvl = window.bankVault.level;
+        if (lvl >= 11) {
+            alert("⭐ خزنة البنك وصلت للحد الأقصى من التطوير (المستوى 11)!");
+            return;
+        }
+
+        let costMoney = lvl === 1 ? 10000 : 0;
+        let costGem = lvl > 1 ? (lvl * 15) : 0;
+
+        if (lvl === 1) {
+            if (window.money >= costMoney) {
+                window.money -= costMoney;
+                window.bankVault.level++;
+                logMessage(`⚡ تم ترقية خزنة البنك إلى المستوى ${window.bankVault.level}!`);
+                renderFinanceTab(); updateUI();
+            } else {
+                alert(`❌ تحتاج إلى ${formatMoney(costMoney)} لترقية الخزنة!`);
+            }
+        } else {
+            if (window.gems >= costGem) {
+                window.gems -= costGem;
+                window.bankVault.level++;
+                logMessage(`⚡ تم ترقية خزنة البنك إلى المستوى ${window.bankVault.level} مقابل ${costGem} 💎!`);
+                renderFinanceTab(); updateUI();
+            } else {
+                alert(`❌ تحتاج إلى ${costGem} جوهرة 💎 لترقية الخزنة!`);
+            }
+        }
+    };
+
     window.modifyExportLand = function(id, action) {
         const land = window.exportLands.find(l => l.id === id);
         if (action === 'buy' && window.money >= land.cost) {
@@ -954,7 +1044,6 @@
         renderExportCompanyTab(); updateUI();
     };
 
-    // وظائف شراء مستودعات الشركة
     window.modifyWarehouse = function(id, action) {
         const wh = window.warehouses.find(w => w.id === id);
         if (action === 'buy' && window.money >= wh.cost) {
@@ -971,7 +1060,6 @@
         renderExportCompanyTab(); updateUI();
     };
 
-    // شراء شحنة B2B للاستيراد
     window.buyB2BShipment = function(shipmentUniqueId) {
         let totalWhCap = window.warehouses.reduce((sum, w) => sum + (w.owned * w.capacity), 0);
         let currentStored = Object.values(window.warehouseInventory).reduce((sum, item) => sum + item.count, 0);
@@ -1018,7 +1106,6 @@
         }
     };
 
-    // تصدير وبيع البضائع من المستودع
     window.exportWarehouseProduct = function(prodKey) {
         let prod = window.warehouseInventory[prodKey];
         if (prod.count > 0) {
@@ -1033,7 +1120,6 @@
         }
     };
 
-    // تعيين موظفي الشركة (مرتبط بسعة الأراضي المملوكة)
     window.hireEmployee = function(empId) {
         let emp = window.employeesPool.find(e => e.id === empId);
         let totalLandCap = window.exportLands.reduce((sum, l) => sum + (l.owned * l.capacity), 0);
@@ -1185,22 +1271,6 @@
         }
     };
 
-    window.modifyLogistics = function(id, action) {
-        const logItem = window.logistics.find(l => l.id === id);
-        if (action === 'buy' && window.money >= logItem.cost) {
-            window.money -= logItem.cost;
-            logItem.count++;
-            logItem.cost = Math.floor(logItem.cost * 1.18);
-            logMessage(`شراء أسطول شحن محلي: ${logItem.name}`);
-        } else if (action === 'sell' && logItem.count > 0) {
-            let refund = Math.floor((logItem.cost / 1.18) * 0.7);
-            window.money += refund;
-            logItem.count--;
-            logMessage(`بيع وحدة شحن: ${logItem.name}`);
-        }
-        renderLogistics(); updateUI();
-    };
-
     window.tradeStock = function(id, action) {
         const stock = window.stocks.find(s => s.id === id);
         if (action === 'buy' && window.money >= stock.price) {
@@ -1311,7 +1381,7 @@
         checkB2BRefresh();
         randomizeDayEvents();
 
-        // خصم رواتب الموظفين يومياً
+        // رواتب الموظفين
         let totalDailySalaries = 0;
         window.employeesPool.forEach(emp => {
             if (emp.hiredCount > 0 && !emp.isPerfect) {
@@ -1320,10 +1390,19 @@
         });
         if (totalDailySalaries > 0) {
             window.money -= totalDailySalaries;
-            logMessage(`👥 دفع رواتب الموظفين والخبراء اليومية بإجمالي ${formatMoney(totalDailySalaries)}.`);
+            logMessage(`👥 دفع رواتب الموظفين اليومية بإجمالي ${formatMoney(totalDailySalaries)}.`);
         }
 
-        // معالجة وصول الشحنات القادمة للمستودع
+        // أرباح وخزنة البنك
+        let vaultInterestRates = [0, 0.03, 0.045, 0.06, 0.08, 0.10, 0.13, 0.16, 0.20, 0.25, 0.32, 0.40];
+        let currentRate = vaultInterestRates[window.bankVault.level] || 0.03;
+        let vaultProfit = Math.floor(window.bankVault.balance * currentRate);
+        if (vaultProfit > 0) {
+            window.bankVault.balance += vaultProfit;
+            logMessage(`🏦 أرباح الخزنة البنكية (عائد ${Math.round(currentRate*100)}%): أضافت ${formatMoney(vaultProfit)} للرصيد المودع.`);
+        }
+
+        // شحنات B2B
         if (window.incomingShipments && window.incomingShipments.length > 0) {
             window.incomingShipments.forEach(inc => {
                 inc.daysRemaining--;
@@ -1374,12 +1453,17 @@
             }
         }
 
-        let logisticsIncome = window.logistics.reduce((sum, l) => sum + (Math.floor(l.income * window.globalMultiplier) * l.count), 0);
         let assetIncome = window.assets.reduce((sum, ast) => sum + (Math.floor(ast.income * window.globalMultiplier) * ast.count), 0);
         let bondsIncome = window.bondsOwned * 250;
+        let finalDailyProfit = assetIncome + bondsIncome;
 
-        let finalDailyProfit = assetIncome + logisticsIncome + bondsIncome;
-        
+        // نظام الضرائب على الثروات
+        let totalNetWealth = window.money + window.bankVault.balance + (window.bondsOwned * 15000);
+        let taxRate = totalNetWealth > 500000 ? 0.04 : (totalNetWealth > 100000 ? 0.025 : 0.015);
+        let taxDeduction = Math.floor(totalNetWealth * taxRate);
+        window.money = Math.max(0, window.money - taxDeduction);
+        logMessage(`🏛️ خصم ضريبة الثروة اليومية بنسبة ${Math.round(taxRate*100)}% بإجمالي ${formatMoney(taxDeduction)}.`);
+
         let loanInterestRate = 0.02;
         let accountantHired = window.employeesPool.find(e => e.position === 'accountant' && e.hiredCount > 0);
         if (accountantHired) loanInterestRate = accountantHired.isPerfect ? 0.0 : 0.01;
@@ -1406,7 +1490,7 @@
             }
         });
 
-        logMessage(`نتائج اليوم ${window.day}: تحديث الأراضي، المستودعات، وعقود الاستيراد والتصدير.`);
+        logMessage(`نتائج اليوم ${window.day}: الأرباح الصافية بلغت ${formatMoney(finalDailyProfit)}.`);
         renderAll(); updateUI();
         if (window.saveGameOnline) window.saveGameOnline();
     };
@@ -1518,7 +1602,6 @@
         });
     }
 
-    // رندر تبويب الأراضي والشركات والمستودعات و B2B والموظفين المدمج بالكامل
     function renderExportCompanyTab() {
         const landsContainer = document.getElementById('exportLandsList');
         if (landsContainer) {
@@ -1667,26 +1750,31 @@
         }
     }
 
-    function renderLogistics() {
-        const container = document.getElementById('logisticsList');
-        if (!container) return;
-        container.innerHTML = '';
-        window.logistics.forEach(logItem => {
-            const row = document.createElement('div');
-            row.className = 'item-row';
-            row.innerHTML = `
-                <div class="item-info">
-                    <span class="item-title">${logItem.name} (الأسطول: ${logItem.count})</span>
-                    <span class="item-desc">${logItem.desc}</span>
-                    <span class="item-meta">العائد: +${formatMoney(Math.floor(logItem.income * window.globalMultiplier))} | السعر: ${formatMoney(logItem.cost)}</span>
-                </div>
-                <div class="btn-group">
-                    <button class="action-btn logistics-btn" onclick="modifyLogistics('${logItem.id}', 'buy')">شراء</button>
-                    <button class="action-btn sell-btn" onclick="modifyLogistics('${logItem.id}', 'sell')" ${logItem.count === 0 ? 'disabled' : ''}>بيع</button>
-                </div>
-            `;
-            container.appendChild(row);
-        });
+    function renderFinanceTab() {
+        const vaultBalanceDisplay = document.getElementById('vaultBalanceDisplay');
+        const vaultLevelDisplay = document.getElementById('vaultLevelDisplay');
+        const vaultUpgradeTitle = document.getElementById('vaultUpgradeTitle');
+        const vaultUpgradeDesc = document.getElementById('vaultUpgradeDesc');
+        const taxRateDisplay = document.getElementById('taxRateDisplay');
+
+        if (vaultBalanceDisplay) vaultBalanceDisplay.innerText = formatMoney(window.bankVault.balance);
+
+        let vaultRates = [0, 3, 4.5, 6, 8, 10, 13, 16, 20, 25, 32, 40];
+        let currentLevel = window.bankVault.level;
+        if (vaultLevelDisplay) vaultLevelDisplay.innerText = `المستوى: ${currentLevel} (العائد ${vaultRates[currentLevel]}% يومياً)`;
+
+        if (currentLevel >= 11) {
+            if (vaultUpgradeTitle) vaultUpgradeTitle.innerText = "الخزنة في الحد الأقصى للمستوى (11)";
+            if (vaultUpgradeDesc) vaultUpgradeDesc.innerText = "تم بلوغ أعلى عائد استثماري بنجاح.";
+        } else {
+            let upgradeCostStr = currentLevel === 1 ? "$10,000" : `${(currentLevel * 15)} 💎`;
+            if (vaultUpgradeTitle) vaultUpgradeTitle.innerText = `ترقية الخزنة إلى المستوى ${currentLevel + 1}`;
+            if (vaultUpgradeDesc) vaultUpgradeDesc.innerText = `تكلفة الترقية: ${upgradeCostStr} (ترفع العائد اليومي)`;
+        }
+
+        let totalNetWealth = window.money + window.bankVault.balance + (window.bondsOwned * 15000);
+        let taxRate = totalNetWealth > 500000 ? 4 : (totalNetWealth > 100000 ? 2.5 : 1.5);
+        if (taxRateDisplay) taxRateDisplay.innerText = `النسبة الحالية: ${taxRate}%`;
     }
 
     function renderStocks() {
@@ -1745,7 +1833,7 @@
             let players = [];
             querySnapshot.forEach((doc) => {
                 let d = doc.data();
-                let net = (d.money || 1000) + ((d.gems || 20) * 100);
+                let net = (d.money || 1000) + (d.bankVault?.balance || 0) + ((d.gems || 20) * 100);
                 players.push({ name: d.username || "مستثمر", netWorth: net });
             });
             players.sort((a, b) => b.netWorth - a.netWorth);
@@ -1829,7 +1917,7 @@
         renderInventory();
         renderFactories();
         renderExportCompanyTab();
-        renderLogistics();
+        renderFinanceTab();
         renderStocks();
         renderQuests();
         renderLeaderboard();
@@ -1860,12 +1948,18 @@
 
         let animalsVal = window.animals.reduce((sum, a) => sum + (Math.floor(a.cost / 1.15) * a.count), 0);
         let stocksVal = window.stocks.reduce((sum, s) => sum + (s.price * s.owned), 0);
-        let netWorth = window.money + animalsVal + stocksVal + (window.bondsOwned * 15000) - window.loan;
+        let netWorth = window.money + window.bankVault.balance + animalsVal + stocksVal + (window.bondsOwned * 15000) - window.loan;
+
+        let assetIncome = window.assets.reduce((sum, ast) => sum + (Math.floor(ast.income * window.globalMultiplier) * ast.count), 0);
+        let bondsIncome = window.bondsOwned * 250;
+        let vaultRates = [0, 0.03, 0.045, 0.06, 0.08, 0.10, 0.13, 0.16, 0.20, 0.25, 0.32, 0.40];
+        let vaultDailyProfit = Math.floor(window.bankVault.balance * (vaultRates[window.bankVault.level] || 0.03));
+        let totalDailyProfit = assetIncome + bondsIncome + vaultDailyProfit;
 
         if (document.getElementById('moneyDisplay')) document.getElementById('moneyDisplay').innerText = formatMoney(window.money);
         if (document.getElementById('gemsDisplay')) document.getElementById('gemsDisplay').innerText = window.gems;
         if (document.getElementById('netWorthDisplay')) document.getElementById('netWorthDisplay').innerText = formatMoney(netWorth);
-        if (document.getElementById('logisticsScoreDisplay')) document.getElementById('logisticsScoreDisplay').innerText = '100%';
+        if (document.getElementById('dailyProfitDisplay')) document.getElementById('dailyProfitDisplay').innerText = formatMoney(totalDailyProfit);
         if (document.getElementById('loanStatusDisplay')) document.getElementById('loanStatusDisplay').innerText = `الدين المستحق: ${formatMoney(window.loan)}`;
 
         if (window.isLocked) {
@@ -2070,6 +2164,7 @@
         window.isLocked = data.isLocked !== undefined ? data.isLocked : window.isLocked;
         window.lockUntilTimestamp = data.lockUntilTimestamp !== undefined ? data.lockUntilTimestamp : 0;
 
+        if (data.bankVault) window.bankVault = data.bankVault;
         if (data.questResetTimestamp) window.questResetTimestamp = data.questResetTimestamp;
         if (data.activeQuests && Array.isArray(data.activeQuests)) window.activeQuests = data.activeQuests;
         if (data.b2bNextRefreshTimestamp) window.b2bNextRefreshTimestamp = data.b2bNextRefreshTimestamp;
@@ -2152,6 +2247,7 @@
                     daysPlayedInCycle: window.daysPlayedInCycle,
                     isLocked: window.isLocked,
                     lockUntilTimestamp: window.lockUntilTimestamp,
+                    bankVault: window.bankVault,
                     activeQuests: window.activeQuests,
                     questResetTimestamp: window.questResetTimestamp,
                     b2bNextRefreshTimestamp: window.b2bNextRefreshTimestamp,
@@ -2196,6 +2292,7 @@
                 daysPlayedInCycle: window.daysPlayedInCycle,
                 isLocked: window.isLocked,
                 lockUntilTimestamp: window.lockUntilTimestamp,
+                bankVault: window.bankVault,
                 activeQuests: window.activeQuests,
                 questResetTimestamp: window.questResetTimestamp,
                 b2bNextRefreshTimestamp: window.b2bNextRefreshTimestamp,
