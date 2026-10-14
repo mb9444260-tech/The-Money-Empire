@@ -175,7 +175,7 @@
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 0.5rem;
+            font-size: 0.48rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
@@ -381,7 +381,7 @@
         </svg>
 
         <h2 style="color: var(--yellow); font-size: 1.05rem;">🔐 تسجيل الدخول للإمبراطورية</h2>
-        <div style="font-size: 0.72rem; color: var(--text-muted);">ادخل اسم الحساب وكلمة المرور الخاصة بك للبدء أو استرجاع حفظك[cite: 3]:</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted);">ادخل اسم الحساب وكلمة المرور الخاصة بك للبدء أو استرجاع حفظك:</div>
         
         <input type="text" id="authUsername" class="auth-input" placeholder="اسم المستخدم أو البريد الإلكتروني...">
         <input type="password" id="authPassword" class="auth-input" placeholder="كلمة المرور...">
@@ -439,7 +439,7 @@
     <!-- لوحة التجديد -->
     <div id="renewalPanel" class="card" style="display: none; background: rgba(6, 182, 212, 0.1); border-color: var(--gem); text-align: center; padding: 12px;">
         <div style="font-size: 0.85rem; font-weight: bold; color: var(--gem);">⚠️ انتهت محاولات الأيام الـ 25 المتاحة!</div>
-        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;" id="renewalSubText">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة[cite: 3].</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;" id="renewalSubText">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.</div>
         <div style="display: flex; gap: 8px; margin-top: 8px; justify-content: center;" id="renewalButtonsContainer">
             <button class="action-btn gem-btn" onclick="renewWithGems()">تجديد بـ 100 جوهرة 💎</button>
             <button class="action-btn" style="background-color: var(--orange);" onclick="startWaitTimer()">انتظار 12 ساعة ⏳</button>
@@ -476,10 +476,10 @@
         <button class="tab-btn active" onclick="switchTab('farms')">🌾 المزرعة</button>
         <button class="tab-btn" onclick="switchTab('inventory')">📦 المخزن</button>
         <button class="tab-btn" onclick="switchTab('factories')">🏭 المصانع</button>
-        <button class="tab-btn" onclick="switchTab('logistics')">🚚 الشحن</button>
+        <button class="tab-btn" onclick="switchTab('export_company')">🏢 شركات التصدير</button>
         <button class="tab-btn" onclick="switchTab('stocks')">📊 البورصة</button>
         <button class="tab-btn" onclick="switchTab('market')">🛒 السوق الحر</button>
-        <button class="tab-btn" onclick="switchTab('chat')">💬 الشات العام</button>
+        <button class="tab-btn" onclick="switchTab('chat')">💬 الشات</button>
         <button class="tab-btn" onclick="switchTab('quests')">🎯 المهام</button>
         <button class="tab-btn" onclick="switchTab('leaderboard')">🏆 المتصدرين</button>
         <button class="tab-btn" onclick="switchTab('finance')">🏦 البنوك</button>
@@ -512,10 +512,19 @@
         </div>
     </div>
 
-    <div id="tab-logistics" class="tab-content">
+    <!-- تبويب شركات الاستيراد والتصدير والموظفين وأسطول الشحن -->
+    <div id="tab-export_company" class="tab-content">
         <div class="card">
-            <div class="section-title">🚚 شبكة النقل والشحن</div>
-            <div class="item-list" id="logisticsList"></div>
+            <div class="section-title">🌍 أراضي شركات الاستيراد والتصدير</div>
+            <div class="item-list" id="exportLandsList"></div>
+        </div>
+        <div class="card">
+            <div class="section-title">👥 تعيين الموظفين والخبراء للشركات</div>
+            <div class="item-list" id="employeesList"></div>
+        </div>
+        <div class="card">
+            <div class="section-title">🚚 أسطول الشحن الدولي (سيارات، شاحنات، طائرات)</div>
+            <div class="item-list" id="exportFleetList"></div>
         </div>
     </div>
 
@@ -529,7 +538,6 @@
         </div>
     </div>
 
-    <!-- تبويب سوق اللاعبين الحر -->
     <div id="tab-market" class="tab-content">
         <div class="card">
             <div class="section-title">📦 عرض منتج جديد للبيع للاعبين الآخرين</div>
@@ -555,12 +563,11 @@
         </div>
     </div>
 
-    <!-- تبويب الشات العام -->
     <div id="tab-chat" class="tab-content">
         <div class="card">
             <div class="section-title">💬 الدردشة الجماعية بين الأباطرة</div>
             <div class="chat-box" id="chatBox">
-                <div class="chat-msg"><div class="chat-user">النظام</div>أهلاً بك في الشات العام للإمبراطورية! تحدث مع باقي اللاعبين بحرية.</div>
+                <div class="chat-msg"><div class="chat-user">النظام</div>أهلاً بك في الشات العام للإمبراطورية!</div>
             </div>
             <div style="display: flex; gap: 6px; margin-top: 4px;">
                 <input type="text" id="chatInput" class="gift-input" placeholder="اكتب رسالتك هنا..." onkeydown="if(event.key==='Enter') sendChatMessage()">
@@ -608,7 +615,7 @@
         <div class="card">
             <div class="section-title">📋 سجل الحسابات والأحداث اليومية</div>
             <div class="ledger-box" id="ledgerBox">
-                <div>[اليوم 1] أهلاً بك في النسخة المطورة والمدمجة بنجاح[cite: 3]!</div>
+                <div>[اليوم 1] أهلاً بك في النسخة المحدثة لشركات الاستيراد والتصدير!</div>
             </div>
         </div>
     </div>
@@ -673,8 +680,32 @@
     };
 
     window.factories = [
-        { id: 'fact_cheese', name: 'مصنع الأجبان والألبان', cost: 15000, owned: 0, inputType: 'milk', inputAmt: 10, outputType: 'cheese', outputAmt: 2, desc: 'يحول 10 لتر حليب إلى 2 جبن فاخر ($1,400)[cite: 3].' },
-        { id: 'fact_mill', name: 'مطحنة الحبوب', cost: 8000, owned: 0, inputType: 'crops', inputAmt: 15, outputType: 'flour', outputAmt: 5, desc: 'يحول 15 محصول إلى 5 أكياس دقيق ($320)[cite: 3].' }
+        { id: 'fact_cheese', name: 'مصنع الأجبان والألبان', cost: 15000, owned: 0, inputType: 'milk', inputAmt: 10, outputType: 'cheese', outputAmt: 2, desc: 'يحول 10 لتر حليب إلى 2 جبن فاخر.' },
+        { id: 'fact_mill', name: 'مطحنة الحبوب', cost: 8000, owned: 0, inputType: 'crops', inputAmt: 15, outputType: 'flour', outputAmt: 5, desc: 'يحول 15 محصول إلى 5 أكياس دقيق.' }
+    ];
+
+    // نظام أراضي وشركات الاستيراد والتصدير والموظفين
+    window.exportLands = [
+        { id: 'land_small', name: 'قطعة أرض تجارية صغرى', cost: 25000, owned: 0, capacity: 1, desc: 'تتيح تأسيس مقر شركة تصدير محلية.' },
+        { id: 'land_port', name: 'أرض مميزة بجوار الميناء', cost: 90000, owned: 0, capacity: 3, desc: 'تتيح تأسيس شركة استيراد وتصدير واسعة.' },
+        { id: 'land_hub', name: 'مجمع اللوجستيات العالمي', cost: 300000, owned: 0, capacity: 6, desc: 'أضخم مركز تجاري دولي للاستيراد والتصدير.' }
+    ];
+
+    window.employeesPool = [
+        { id: 'emp_manager_1', name: 'أحمد (مدير عمليات مبتدئ)', position: 'manager', costMoney: 3000, costGem: 0, benefit: '+10% أرباح تصدير', drawback: 'يأخذ رواتب دورية مرتفعة نسبياً', hiredCount: 0 },
+        { id: 'emp_manager_perfect', name: 'المدير المثالي الخارق 🌟', position: 'manager', costMoney: 0, costGem: 45, benefit: '+50% أرباح تصدير + استقرار تام', drawback: 'بدون أي عيوب!', hiredCount: 0, isPerfect: true },
+        
+        { id: 'emp_log_1', name: 'سعيد (منسق لوجستيات)', position: 'logistics', costMoney: 2000, costGem: 0, benefit: 'يقلل تكاليف الشحن 15%', drawback: 'بطيء أحياناً في المتابعة', hiredCount: 0 },
+        { id: 'emp_log_perfect', name: 'الخبير اللوجستي المثالي 🌟', position: 'logistics', costMoney: 0, costGem: 35, benefit: 'كفاءة نقل 100% بدون أعطال', drawback: 'بدون أي عيوب!', hiredCount: 0, isPerfect: true },
+
+        { id: 'emp_acc_1', name: 'محمود (محاسب مالي)', position: 'accountant', costMoney: 2500, costGem: 0, benefit: 'يقلل فوائد الديون والبنوك 20%', drawback: 'حذر مبالغ فيه في الاستثمارات', hiredCount: 0 },
+        { id: 'emp_acc_perfect', name: 'المحاسب المالي المثالي 🌟', position: 'accountant', costMoney: 0, costGem: 40, benefit: 'صفر خسائر مالية + أرباح إضافية', drawback: 'بدون أي عيوب!', hiredCount: 0, isPerfect: true }
+    ];
+
+    window.exportFleet = [
+        { id: 'fleet_car', name: 'سيارة نقل بضائع خفيفة 🚗', cost: 5000, capacityBonus: 10, count: 0, desc: 'تزيد سعة الشحن اليومي قليلاً.' },
+        { id: 'fleet_truck', name: 'شاحنة نقل دولية ثقيلة 🚛', cost: 25000, capacityBonus: 50, count: 0, desc: 'شاحنة قوية لتصدير كميات ضخمة.' },
+        { id: 'fleet_plane', name: 'طائرة شحن جوي تجارية ✈️', cost: 150000, capacityBonus: 300, count: 0, desc: 'شحن جوي فائق السرعة والأرباح.' }
     ];
 
     window.activeQuests = [];
@@ -710,7 +741,7 @@
         let now = Date.now();
         if (!window.questResetTimestamp || now >= window.questResetTimestamp || !window.activeQuests || window.activeQuests.length === 0) {
             generateDailyQuests();
-            logMessage("🎯 تم تحديث المهام اليومية بمهام وهدايا جديدة (دورة الـ 24 ساعة الحقيقية)!");
+            logMessage("🎯 تم تحديث المهام اليومية بمهام وهدايا جديدة!");
         }
     }
 
@@ -781,46 +812,13 @@
     ];
 
     window.animals = [
-        { 
-            id: 'anim_chick', 
-            barnId: 'barn_chick', 
-            name: 'دجاج بياض', 
-            cost: 120, 
-            productType: 'chickenEggs', 
-            prodAmount: 3, 
-            maxAge: 20, 
-            age: 0, 
-            count: 0, 
-            desc: 'تنتج 3 بيضات كل يوم. أقصى عمر: 20 يوم.' 
-        },
-        { 
-            id: 'anim_duck', 
-            barnId: 'barn_chick', 
-            name: 'بط فاخر', 
-            cost: 280, 
-            productType: 'duckEggs', 
-            prodAmount: 5, 
-            maxAge: 22, 
-            age: 0, 
-            count: 0, 
-            desc: 'تنتج 5 بيضات كل يوم. أقصى عمر: 22 يوم.' 
-        },
-        { 
-            id: 'anim_cow', 
-            barnId: 'barn_cow', 
-            name: 'بقرة حلب', 
-            cost: 1400, 
-            productType: 'milk', 
-            prodAmount: 1, 
-            maxAge: 30, 
-            age: 0, 
-            count: 0, 
-            desc: 'تنتج 1 لتر حليب كل يوم. أقصى عمر: 30 يوم.' 
-        }
+        { id: 'anim_chick', barnId: 'barn_chick', name: 'دجاج بياض', cost: 120, productType: 'chickenEggs', prodAmount: 3, maxAge: 20, age: 0, count: 0, desc: 'تنتج 3 بيضات كل يوم.' },
+        { id: 'anim_duck', barnId: 'barn_chick', name: 'بط فاخر', cost: 280, productType: 'duckEggs', prodAmount: 5, maxAge: 22, age: 0, count: 0, desc: 'تنتج 5 بيضات كل يوم.' },
+        { id: 'anim_cow', barnId: 'barn_cow', name: 'بقرة حلب', cost: 1400, productType: 'milk', prodAmount: 1, maxAge: 30, age: 0, count: 0, desc: 'تنتج 1 لتر حليب كل يوم.' }
     ];
 
     window.logistics = [
-        { id: 'log_van', name: 'شاحنة توزيع محلية', cost: 1800, income: 25, power: 15, count: 0, desc: 'توزيع محلي بعوائد مخفضة.' },
+        { id: 'log_van', name: 'شاحنة توزيع محلية', cost: 1800, income: 25, power: 15, count: 0, desc: 'توزيع محلي.' },
         { id: 'log_truck', name: 'أسطول شاحنات ثقيلة', cost: 12000, income: 180, power: 80, count: 0, desc: 'نقل ثقيل.' },
         { id: 'log_cargo', name: 'طائرة شحن تجارية', cost: 60000, income: 950, power: 450, count: 0, desc: 'شحن دولي.' }
     ];
@@ -894,6 +892,85 @@
         } else {
             alert("❌ لا توجد جواهر كافية لشراء هذا العنصر!");
         }
+    };
+
+    // وظائف شراء أراضي الشركات
+    window.modifyExportLand = function(id, action) {
+        const land = window.exportLands.find(l => l.id === id);
+        if (action === 'buy' && window.money >= land.cost) {
+            window.money -= land.cost;
+            land.owned++;
+            land.cost = Math.floor(land.cost * 1.3);
+            logMessage(`🏢 تم شراء أرض شركة استيراد وتصدير: ${land.name}`);
+        } else if (action === 'sell' && land.owned > 0) {
+            let refund = Math.floor((land.cost / 1.3) * 0.6);
+            window.money += refund;
+            land.owned--;
+            logMessage(`بيع أرض شركة: ${land.name}`);
+        }
+        renderExportCompanyTab(); updateUI();
+    };
+
+    // وظائف تعيين الموظفين
+    window.hireEmployee = function(empId) {
+        const emp = window.employeesPool.find(e => e.id === empId);
+        let totalLandCap = window.exportLands.reduce((sum, l) => sum + (l.owned * l.capacity), 0);
+        let totalCurrentHired = window.employeesPool.reduce((sum, e) => sum + e.hiredCount, 0);
+
+        if (totalLandCap === 0) {
+            alert("❌ يجب شراء أرض شركة استيراد وتصدير أولاً لتعيين موظفين!");
+            return;
+        }
+        if (totalCurrentHired >= totalLandCap) {
+            alert("❌ سعة مكاتب الشركات ممتلئة! قم بشراء أراضي جديدة لزيادة السعة.");
+            return;
+        }
+
+        if (emp.isPerfect) {
+            if (window.gems >= emp.costGem) {
+                window.gems -= emp.costGem;
+                emp.hiredCount++;
+                logMessage(`🌟 تم تعيين الموظف المثالي الخارق (${emp.name}) مقابل ${emp.costGem} جوهرة!`);
+                renderExportCompanyTab(); updateUI();
+            } else {
+                alert("❌ لا توجد جواهر كافية لتعيين هذا الموظف المثالي!");
+            }
+        } else {
+            if (window.money >= emp.costMoney) {
+                window.money -= emp.costMoney;
+                emp.hiredCount++;
+                logMessage(`👥 تم تعيين موظف جديد: ${emp.name}`);
+                renderExportCompanyTab(); updateUI();
+            } else {
+                alert("❌ لا توجد سيولة كافية لتعيين هذا الموظف!");
+            }
+        }
+    };
+
+    window.fireEmployee = function(empId) {
+        const emp = window.employeesPool.find(e => e.id === empId);
+        if (emp.hiredCount > 0) {
+            emp.hiredCount--;
+            logMessage(`تم الاستغناء عن موظف: ${emp.name}`);
+            renderExportCompanyTab(); updateUI();
+        }
+    };
+
+    // وظائف شراء أسطول الشحن للشركات
+    window.modifyExportFleet = function(id, action) {
+        const fleet = window.exportFleet.find(f => f.id === id);
+        if (action === 'buy' && window.money >= fleet.cost) {
+            window.money -= fleet.cost;
+            fleet.count++;
+            fleet.cost = Math.floor(fleet.cost * 1.2);
+            logMessage(`🚚 تم شراء أسطول شحن دولي: ${fleet.name}`);
+        } else if (action === 'sell' && fleet.count > 0) {
+            let refund = Math.floor((fleet.cost / 1.2) * 0.7);
+            window.money += refund;
+            fleet.count--;
+            logMessage(`بيع وحدة شحن: ${fleet.name}`);
+        }
+        renderExportCompanyTab(); updateUI();
     };
 
     window.modifyBarn = function(id, action) {
@@ -1009,7 +1086,7 @@
             window.money -= logItem.cost;
             logItem.count++;
             logItem.cost = Math.floor(logItem.cost * 1.18);
-            logMessage(`شراء أسطول شحن: ${logItem.name}`);
+            logMessage(`شراء أسطول شحن محلي: ${logItem.name}`);
         } else if (action === 'sell' && logItem.count > 0) {
             let refund = Math.floor((logItem.cost / 1.18) * 0.7);
             window.money += refund;
@@ -1085,7 +1162,7 @@
                 document.getElementById('renewalButtonsContainer').style.display = 'none';
             }
         } else if (window.isLocked) {
-            document.getElementById('renewalSubText').innerText = "قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة[cite: 3].";
+            document.getElementById('renewalSubText').innerText = "قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.";
             document.getElementById('renewalButtonsContainer').style.display = 'flex';
         }
     }
@@ -1165,14 +1242,27 @@
             }
         }
 
+        // حساب أرباح أسطول الشحن والشركات والموظفين
+        let fleetIncome = window.exportFleet.reduce((sum, f) => sum + (f.count * f.capacityBonus * 15), 0);
+        let landBonusMultiplier = window.exportLands.reduce((sum, l) => sum + (l.owned * 0.15), 1.0);
+        
+        // تأثير الموظفين
+        let managerBonus = window.employeesPool.filter(e => e.position === 'manager').reduce((sum, e) => sum + (e.hiredCount * (e.isPerfect ? 0.5 : 0.1)), 0);
+        
+        let exportCompanyProfit = Math.floor((fleetIncome * landBonusMultiplier) * (1 + managerBonus) * window.globalMultiplier);
+        
         let logisticsIncome = window.logistics.reduce((sum, l) => sum + (Math.floor(l.income * window.globalMultiplier) * l.count), 0);
         let assetIncome = window.assets.reduce((sum, ast) => sum + (Math.floor(ast.income * window.globalMultiplier) * ast.count), 0);
         let bondsIncome = window.bondsOwned * 250;
 
-        let finalDailyProfit = assetIncome + logisticsIncome + bondsIncome;
+        let finalDailyProfit = assetIncome + logisticsIncome + bondsIncome + exportCompanyProfit;
         
+        let loanInterestRate = 0.02;
+        let accountantHired = window.employeesPool.find(e => e.position === 'accountant' && e.hiredCount > 0);
+        if (accountantHired) loanInterestRate = accountantHired.isPerfect ? 0.0 : 0.01;
+
         if (window.loan > 0 && !window.activeBoosts.financialShield) {
-            let dailyInterest = Math.floor(window.loan * 0.02);
+            let dailyInterest = Math.floor(window.loan * loanInterestRate);
             window.money -= dailyInterest;
         }
 
@@ -1193,7 +1283,7 @@
             }
         });
 
-        logMessage(`نتائج اليوم ${window.day}: تحديث الأصول وأعمار الحيوانات.`);
+        logMessage(`نتائج اليوم ${window.day}: أرباح شركات الاستيراد والتصدير والأصول بلغت ${formatMoney(exportCompanyProfit)}.`);
         renderAll(); updateUI();
         if (window.saveGameOnline) window.saveGameOnline();
     };
@@ -1253,7 +1343,7 @@
                 <div class="item-info">
                     <span class="item-title">${animal.name} (العدد: ${animal.count})</span>
                     <span class="item-desc">${animal.desc}</span>
-                    <span class="item-meta">سعر الشراء: ${formatMoney(animal.cost)} | العمر الحالي: ${animal.age || 0}/${animal.maxAge} يوم</span>
+                    <span class="item-meta">سعر الشراء: ${formatMoney(animal.cost)} | العمر: ${animal.age || 0}/${animal.maxAge} يوم</span>
                 </div>
                 <div class="btn-group">
                     <button class="action-btn" onclick="modifyAnimal('${animal.id}', 'buy')">شراء</button>
@@ -1303,6 +1393,77 @@
                 </div>
             `;
         });
+    }
+
+    // رندر تبويب شركات الاستيراد والتصدير والموظفين والأساطيل
+    function renderExportCompanyTab() {
+        const landsContainer = document.getElementById('exportLandsList');
+        if (landsContainer) {
+            landsContainer.innerHTML = '';
+            let totalCap = 0;
+            window.exportLands.forEach(land => {
+                totalCap += land.owned * land.capacity;
+                landsContainer.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <span class="item-title">${land.name} (المملوك: ${land.owned})</span>
+                            <span class="item-desc">${land.desc} | سعة الموظفين: ${land.capacity} موظف لكل أرض</span>
+                            <span class="item-meta">التكلفة: ${formatMoney(land.cost)}</span>
+                        </div>
+                        <div class="btn-group">
+                            <button class="action-btn farm-btn" onclick="modifyExportLand('${land.id}', 'buy')">شراء</button>
+                            <button class="action-btn sell-btn" onclick="modifyExportLand('${land.id}', 'sell')" ${land.owned === 0 ? 'disabled' : ''}>بيع</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        const empContainer = document.getElementById('employeesList');
+        if (empContainer) {
+            empContainer.innerHTML = '';
+            let totalLandCap = window.exportLands.reduce((sum, l) => sum + (l.owned * l.capacity), 0);
+            let totalCurrentHired = window.employeesPool.reduce((sum, e) => sum + e.hiredCount, 0);
+
+            empContainer.innerHTML += `<div style="font-size:0.72rem; color:var(--gem); margin-bottom:4px;">مكاتب الموظفين المشغولة: ${totalCurrentHired} / ${totalLandCap}</div>`;
+
+            window.employeesPool.forEach(emp => {
+                let costStr = emp.isPerfect ? `${emp.costGem} 💎` : formatMoney(emp.costMoney);
+                empContainer.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <span class="item-title" style="${emp.isPerfect ? 'color: var(--gold);' : ''}">${emp.name} (المعينين: ${emp.hiredCount})</span>
+                            <span class="item-desc">✨ الميزة: ${emp.benefit} | ⚠️ العيب: ${emp.drawback}</span>
+                            <span class="item-meta">التكلفة: ${costStr}</span>
+                        </div>
+                        <div class="btn-group">
+                            <button class="action-btn" style="${emp.isPerfect ? 'background-color: var(--gem); color:#060911;' : ''}" onclick="hireEmployee('${emp.id}')">تعيين</button>
+                            <button class="action-btn sell-btn" onclick="fireEmployee('${emp.id}')" ${emp.hiredCount === 0 ? 'disabled' : ''}>فصل</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        const fleetContainer = document.getElementById('exportFleetList');
+        if (fleetContainer) {
+            fleetContainer.innerHTML = '';
+            window.exportFleet.forEach(fleet => {
+                fleetContainer.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <span class="item-title">${fleet.name} (الأسطول: ${fleet.count})</span>
+                            <span class="item-desc">${fleet.desc} | يضيف +${fleet.capacityBonus} قوة تصدير</span>
+                            <span class="item-meta">التكلفة: ${formatMoney(fleet.cost)}</span>
+                        </div>
+                        <div class="btn-group">
+                            <button class="action-btn logistics-btn" onclick="modifyExportFleet('${fleet.id}', 'buy')">شراء</button>
+                            <button class="action-btn sell-btn" onclick="modifyExportFleet('${fleet.id}', 'sell')" ${fleet.count === 0 ? 'disabled' : ''}>بيع</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
     }
 
     function renderLogistics() {
@@ -1466,6 +1627,7 @@
         renderAnimals();
         renderInventory();
         renderFactories();
+        renderExportCompanyTab();
         renderLogistics();
         renderStocks();
         renderQuests();
@@ -1496,9 +1658,8 @@
         }
 
         let animalsVal = window.animals.reduce((sum, a) => sum + (Math.floor(a.cost / 1.15) * a.count), 0);
-        let logisticsVal = window.logistics.reduce((sum, l) => sum + (Math.floor(l.cost / 1.18) * l.count), 0);
         let stocksVal = window.stocks.reduce((sum, s) => sum + (s.price * s.owned), 0);
-        let netWorth = window.money + animalsVal + logisticsVal + stocksVal + (window.bondsOwned * 15000) - window.loan;
+        let netWorth = window.money + animalsVal + stocksVal + (window.bondsOwned * 15000) - window.loan;
 
         if (document.getElementById('moneyDisplay')) document.getElementById('moneyDisplay').innerText = formatMoney(window.money);
         if (document.getElementById('gemsDisplay')) document.getElementById('gemsDisplay').innerText = window.gems;
@@ -1541,7 +1702,6 @@
         return emailOrUser.trim().toLowerCase().replace(/[@\.]/g, '_');
     }
 
-    // وظائف سوق اللاعبين الحر
     window.createMarketListing = async function() {
         const prodKey = document.getElementById('marketProductSelect').value;
         const amount = parseInt(document.getElementById('marketAmountInput').value);
@@ -1598,7 +1758,7 @@
                     <div class="item-row">
                         <div class="item-info">
                             <span class="item-title">${item.productName} (الكمية: ${item.amount})</span>
-                            <span class="item-desc">البائع: ${item.seller} | السعر الإجمالي: ${formatMoney(item.totalPrice)}</span>
+                            <span class="item-desc">البائع: ${item.seller} | السعر: ${formatMoney(item.totalPrice)}</span>
                         </div>
                         <div>
                             ${isOwn ? `<button class="action-btn sell-btn" onclick="cancelMarketListing('${docId}', '${item.productKey}',${item.amount})">إلغاء</button>` : 
@@ -1646,7 +1806,6 @@
         }
     };
 
-    // وظائف الشات العام
     window.sendChatMessage = async function() {
         const input = document.getElementById('chatInput');
         if (!input) return;
@@ -1680,7 +1839,7 @@
 
             chatBox.innerHTML = '';
             if (messages.length === 0) {
-                chatBox.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.75rem;">لا توجد رسائل سابقة. كن أول المتحدثين!</div>';
+                chatBox.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.75rem;">لا توجد رسائل سابقة.</div>';
                 return;
             }
             messages.forEach(m => {
@@ -1710,12 +1869,8 @@
         window.isLocked = data.isLocked !== undefined ? data.isLocked : window.isLocked;
         window.lockUntilTimestamp = data.lockUntilTimestamp !== undefined ? data.lockUntilTimestamp : 0;
 
-        if (data.questResetTimestamp) {
-            window.questResetTimestamp = data.questResetTimestamp;
-        }
-        if (data.activeQuests && Array.isArray(data.activeQuests)) {
-            window.activeQuests = data.activeQuests;
-        }
+        if (data.questResetTimestamp) window.questResetTimestamp = data.questResetTimestamp;
+        if (data.activeQuests && Array.isArray(data.activeQuests)) window.activeQuests = data.activeQuests;
 
         checkRealtimeQuestReset();
 
@@ -1724,47 +1879,27 @@
                 if (window.inventory[k]) window.inventory[k].count = data.inventory[k].count;
             });
         }
-        if (data.animals && Array.isArray(data.animals)) {
-            data.animals.forEach(savedAnim => {
-                let localAnim = window.animals.find(a => a.id === savedAnim.id);
-                if (localAnim) {
-                    localAnim.count = savedAnim.count !== undefined ? savedAnim.count : localAnim.count;
-                    localAnim.age = savedAnim.age !== undefined ? savedAnim.age : localAnim.age;
-                    if (savedAnim.cost) localAnim.cost = savedAnim.cost;
+        if (data.exportLands && Array.isArray(data.exportLands)) {
+            data.exportLands.forEach(savedLand => {
+                let localLand = window.exportLands.find(l => l.id === savedLand.id);
+                if (localLand) {
+                    localLand.owned = savedLand.owned !== undefined ? savedLand.owned : localLand.owned;
+                    if (savedLand.cost) localLand.cost = savedLand.cost;
                 }
             });
         }
-        if (data.barns && Array.isArray(data.barns)) {
-            data.barns.forEach(savedBarn => {
-                let localBarn = window.barns.find(b => b.id === savedBarn.id);
-                if (localBarn) {
-                    localBarn.owned = savedBarn.owned !== undefined ? savedBarn.owned : localBarn.owned;
-                    if (savedBarn.cost) localBarn.cost = savedBarn.cost;
-                }
+        if (data.employeesPool && Array.isArray(data.employeesPool)) {
+            data.employeesPool.forEach(savedEmp => {
+                let localEmp = window.employeesPool.find(e => e.id === savedEmp.id);
+                if (localEmp) localEmp.hiredCount = savedEmp.hiredCount !== undefined ? savedEmp.hiredCount : localEmp.hiredCount;
             });
         }
-        if (data.stocks && Array.isArray(data.stocks)) {
-            data.stocks.forEach(savedStock => {
-                let localStock = window.stocks.find(s => s.id === savedStock.id);
-                if (localStock) {
-                    localStock.owned = savedStock.owned !== undefined ? savedStock.owned : localStock.owned;
-                    localStock.price = savedStock.price !== undefined ? savedStock.price : localStock.price;
-                    if (savedStock.history) localStock.history = savedStock.history;
-                }
-            });
-        }
-        if (data.cropFields) {
-            window.cropFields.growthDaysNeeded = data.cropFields.growthDaysNeeded ?? window.cropFields.growthDaysNeeded;
-            window.cropFields.currentDaysGrown = data.cropFields.currentDaysGrown ?? window.cropFields.currentDaysGrown;
-            window.cropFields.isReady = data.cropFields.isReady ?? window.cropFields.isReady;
-            window.cropFields.activePlots = data.cropFields.activePlots ?? window.cropFields.activePlots;
-        }
-        if (data.factories && Array.isArray(data.factories)) {
-            data.factories.forEach(savedFact => {
-                let localFact = window.factories.find(f => f.id === savedFact.id);
-                if (localFact) {
-                    localFact.owned = savedFact.owned !== undefined ? savedFact.owned : localFact.owned;
-                    if (savedFact.cost) localFact.cost = savedFact.cost;
+        if (data.exportFleet && Array.isArray(data.exportFleet)) {
+            data.exportFleet.forEach(savedFleet => {
+                let localFleet = window.exportFleet.find(f => f.id === savedFleet.id);
+                if (localFleet) {
+                    localFleet.count = savedFleet.count !== undefined ? savedFleet.count : localFleet.count;
+                    if (savedFleet.cost) localFleet.cost = savedFleet.cost;
                 }
             });
         }
@@ -1809,6 +1944,9 @@
                     activeQuests: window.activeQuests,
                     questResetTimestamp: window.questResetTimestamp,
                     inventory: window.inventory,
+                    exportLands: window.exportLands,
+                    employeesPool: window.employeesPool,
+                    exportFleet: window.exportFleet,
                     animals: window.animals,
                     barns: window.barns,
                     stocks: window.stocks,
@@ -1846,6 +1984,9 @@
                 activeQuests: window.activeQuests,
                 questResetTimestamp: window.questResetTimestamp,
                 inventory: window.inventory,
+                exportLands: window.exportLands,
+                employeesPool: window.employeesPool,
+                exportFleet: window.exportFleet,
                 animals: window.animals,
                 barns: window.barns,
                 stocks: window.stocks,
