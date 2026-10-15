@@ -763,8 +763,8 @@
     <div id="tab-finance" class="tab-content">
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
-                <span>🏦 خزنة البنك الاستثمارية (تدر أرباحاً يومية)</span>
-                <span id="vaultLevelDisplay" style="font-size:0.72rem; color:var(--gold);">المستوى: 1 (العائد 3% يومياً)</span>
+                <span>🏦 خزنة البنك الاستثمارية (أقصى ربح يومي 500ألف وأقصى سعة 10 مليون)</span>
+                <span id="vaultLevelDisplay" style="font-size:0.72rem; color:var(--gold);">المستوى: 1 (السعة: 500,000)</span>
             </div>
             <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px;">الرصيد المودع بالخزنة: <span id="vaultBalanceDisplay" style="color:var(--green); font-weight:bold;">$0</span></div>
             <div style="display: flex; gap: 8px; margin-bottom: 8px;">
@@ -774,10 +774,10 @@
             </div>
             <div class="item-row" style="background: rgba(251, 191, 36, 0.05); border-color: var(--gold);">
                 <div class="item-info">
-                    <span class="item-title" style="color: var(--gold);" id="vaultUpgradeTitle">ترقية الخزنة إلى المستوى 2</span>
-                    <span class="item-desc" id="vaultUpgradeDesc">تكلفة الترقية الحالية: $10,000 (تزيد نسبة العائد اليومي)</span>
+                    <span class="item-title" style="color: var(--gold);" id="vaultUpgradeTitle">ترقية سعة الخزنة</span>
+                    <span class="item-desc" id="vaultUpgradeDesc">تكلفة الترقية الحالية: $10,000 (زيادة السعة التخزينية)</span>
                 </div>
-                <button class="action-btn" style="background-color: var(--gold); color:#060911;" onclick="upgradeVault()">ترقية الخزنة ⚡</button>
+                <button class="action-btn" style="background-color: var(--gold); color:#060911;" onclick="upgradeVault()">ترقية السعة ⚡</button>
             </div>
         </div>
 
@@ -793,10 +793,13 @@
         </div>
 
         <div class="card">
-            <div class="section-title">🏦 التمويل والسندات البنكية (فائدة القرض تتزايد 20% يومياً)</div>
+            <div class="section-title">🏦 التمويل والسندات البنكية (أقصى قرض 150 ألف - عقوبة التأخير 30 يوم خصم الضعف)</div>
             <div class="item-row">
-                <div class="item-info"><span class="item-title">قرض استثماري موسع ($30,000)</span></div>
-                <button class="action-btn" onclick="takeLoan()">اقتراض</button>
+                <div class="item-info">
+                    <span class="item-title">قرض استثماري موسع (الحد الأقصى $150,000)</span>
+                    <span class="item-desc" id="loanDaysDesc">أيام التأخير الحالية: 0 / 30 يوم</span>
+                </div>
+                <button class="action-btn" onclick="takeLoan()">اقتراض $150,000</button>
             </div>
             <div class="item-row">
                 <div class="item-info"><span class="item-title">سداد المديونية</span><span class="item-meta" id="loanStatusDisplay">الدين: $0</span></div>
@@ -886,7 +889,7 @@
 
     <div id="tab-store" class="tab-content">
         <div class="card">
-            <div class="section-title" style="color: var(--yellow);">🎁 قسم أكواد الهدايا</div>
+            <div class="section-title" style="color: var(--gold);">🎁 قسم أكواد الهدايا</div>
             <div style="display: flex; gap: 8px; margin-top: 6px;">
                 <input type="text" id="giftCodeInput" class="gift-input" placeholder="اكتب الكود هنا...">
                 <button class="action-btn" style="background-color: var(--green); color: #060911;" onclick="redeemGiftCode()">تفعيل 🎁</button>
@@ -914,6 +917,7 @@
     window.money = 1000;
     window.gems = 20;
     window.loan = 0;
+    window.loanDaysDelayed = 0;
     window.bondsOwned = 0;
     window.day = 1;
     window.daysPlayedInCycle = 0;
@@ -925,7 +929,12 @@
     window.currentWeather = { name: "عادي ☀️", effect: 1.0 };
     window.currentEvent = { name: "سوق مستقر 📊", type: "none" };
 
-    window.bankVault = { balance: 0, level: 1 };
+    // تحديث مستويات الخزنة بسعة تتدرج حتى 10,000,000 وربح أقصى يومي 500,000
+    window.bankVault = { 
+        balance: 0, 
+        level: 1, 
+        capacities: [0, 500000, 1500000, 3000000, 5000000, 7500000, 10000000] 
+    };
     window.activeBoosts = { fastGrowth: false, financialShield: false, emperorLicense: false };
 
     window.inventory = {
@@ -1099,7 +1108,7 @@
 
     const specialItems = [
         { id: 'boost_growth', name: '⚡ جرعة النمو السريع', costGem: 50, desc: 'تقليص أيام نمو المحاصيل إلى النصف.', effect: () => { window.activeBoosts.fastGrowth = true; } },
-        { id: 'boost_shield', name: '🛡️ درع الحماية المالية', costGem: 80, desc: 'إيقاف تضاعف القروض والفوائد لمدة 5 أيام.', effect: () => { window.activeBoosts.financialShield = true; } },
+        { id: 'boost_shield', name: '🛡️ درع الحماية المالية', costGem: 80, desc: 'إيقاف عداد عقوبات القروض لمدة 5 أيام.', effect: () => { window.activeBoosts.financialShield = true; } },
         { id: 'boost_license', name: '🌟 رخصة الإمبراطور الذهبية', costGem: 200, desc: 'زيادة أرباح الأصول والعقارات بنسبة 50%.', effect: () => { window.activeBoosts.emperorLicense = true; window.globalMultiplier *= 1.5; } }
     ];
 
@@ -1198,6 +1207,11 @@
     window.depositVault = function() {
         let amt = parseInt(document.getElementById('vaultAmountInput').value);
         if (!amt || amt <= 0) { alert("أدخل مبلغاً صالحاً للإيداع!"); return; }
+        let currentCap = window.bankVault.capacities[window.bankVault.level] || 10000000;
+        if (window.bankVault.balance + amt > currentCap) {
+            alert(`❌ سعة الخزنة الحالية لا تتسع لهذا المبلغ! الحد الأقصى لسعة المستوى الحالي هو ${currentCap.toLocaleString()}`);
+            return;
+        }
         if (window.money >= amt) {
             window.money -= amt;
             window.bankVault.balance += amt;
@@ -1225,25 +1239,19 @@
 
     window.upgradeVault = function() {
         let lvl = window.bankVault.level;
-        if (lvl >= 11) { alert("⭐ خزنة البنك وصلت للحد الأقصى من التطوير!"); return; }
+        if (lvl >= 6) { alert("⭐ خزنة البنك وصلت للحد الأقصى (السعة 10,000,000)!"); return; }
 
-        let costMoney = lvl === 1 ? 10000 : 0;
-        let costGem = lvl > 1 ? (lvl * 15) : 0;
+        let costMoney = lvl === 1 ? 25000 : (lvl * 60000);
+        let costGem = lvl > 3 ? (lvl * 10) : 0;
 
-        if (lvl === 1) {
-            if (window.money >= costMoney) {
-                window.money -= costMoney;
-                window.bankVault.level++;
-                logMessage(`⚡ تم ترقية خزنة البنك إلى المستوى ${window.bankVault.level}!`);
-                renderFinanceTab(); updateUI();
-            } else { alert(`❌ تحتاج إلى ${formatMoney(costMoney)} لترقية الخزنة!`); }
+        if (window.money >= costMoney && window.gems >= costGem) {
+            window.money -= costMoney;
+            if (costGem > 0) window.gems -= costGem;
+            window.bankVault.level++;
+            logMessage(`⚡ تم ترقية سعة خزنة البنك إلى المستوى ${window.bankVault.level} (السعة الجديدة: ${window.bankVault.capacities[window.bankVault.level].toLocaleString()})!`);
+            renderFinanceTab(); updateUI();
         } else {
-            if (window.gems >= costGem) {
-                window.gems -= costGem;
-                window.bankVault.level++;
-                logMessage(`⚡ تم ترقية خزنة البنك إلى المستوى ${window.bankVault.level}!`);
-                renderFinanceTab(); updateUI();
-            } else { alert(`❌ تحتاج إلى ${costGem} جوهرة 💎 لترقية الخزنة!`); }
+            alert(`❌ تحتاج إلى سيولة ${formatMoney(costMoney)} ${costGem > 0 ? `و ${costGem} 💎` : ''} لترقية السعة!`);
         }
     };
 
@@ -1521,8 +1529,27 @@
         updateUI();
     };
 
-    window.takeLoan = function() { window.money += 30000; window.loan += 30000; logMessage("اقتراض بنكي بقيمة $30,000"); updateUI(); };
-    window.repayLoan = function() { if (window.loan > 0 && window.money >= window.loan) { window.money -= window.loan; window.loan = 0; logMessage("سداد القرض بالكامل."); updateUI(); } };
+    window.takeLoan = function() { 
+        if (window.loan > 0) { alert("لديك قرض قائم بالفعل، يجب سداده أولاً!"); return; }
+        window.money += 150000; 
+        window.loan = 150000; 
+        window.loanDaysDelayed = 0;
+        logMessage("اقتراض بنكي بقيمة $150,000"); 
+        updateUI(); 
+    };
+
+    window.repayLoan = function() { 
+        if (window.loan > 0 && window.money >= window.loan) { 
+            window.money -= window.loan; 
+            window.loan = 0; 
+            window.loanDaysDelayed = 0;
+            logMessage("سداد القرض بالكامل."); 
+            updateUI(); 
+        } else {
+            alert("❌ السيولة النقدية غير كافية لسداد القرض!");
+        }
+    };
+
     window.buyBonds = function() { if (window.money >= 15000) { window.money -= 15000; window.bondsOwned++; logMessage("شراء سندات حكومية."); updateUI(); } };
 
     window.renewWithGems = function() {
@@ -1607,10 +1634,13 @@
         });
         if (totalDailySalaries > 0) window.money -= totalDailySalaries;
 
-        let vaultInterestRates = [0, 0.03, 0.045, 0.06, 0.08, 0.10, 0.13, 0.16, 0.20, 0.25, 0.32, 0.40];
-        let currentRate = vaultInterestRates[window.bankVault.level] || 0.03;
-        let vaultProfit = Math.floor(window.bankVault.balance * currentRate);
-        if (vaultProfit > 0) window.bankVault.balance += vaultProfit;
+        // ربح الخزنة بمعدل ثابت 5% يومياً بحد أقصى للربح 500,000 وبحد أقصى للسعة حسب المستوى
+        let currentCap = window.bankVault.capacities[window.bankVault.level] || 10000000;
+        let vaultProfit = Math.floor(window.bankVault.balance * 0.05);
+        if (vaultProfit > 500000) vaultProfit = 500000;
+        if (window.bankVault.balance > 0) {
+            window.bankVault.balance = Math.min(currentCap, window.bankVault.balance + vaultProfit);
+        }
 
         if (window.incomingShipments && window.incomingShipments.length > 0) {
             window.incomingShipments.forEach(inc => {
@@ -1662,8 +1692,15 @@
         let taxDeduction = Math.floor(totalNetWealth * taxRate);
         window.money = Math.max(0, window.money - taxDeduction);
 
+        // نظام القرض وتأخير السداد لمدة 30 يوم لخصم الضعف من الأصول والثروة والفلوس
         if (window.loan > 0 && !window.activeBoosts.financialShield) {
-            window.loan = Math.floor(window.loan * 1.20);
+            window.loanDaysDelayed = (window.loanDaysDelayed || 0) + 1;
+            if (window.loanDaysDelayed >= 30) {
+                let penaltyAmount = window.loan * 2;
+                window.money = Math.max(0, window.money - penaltyAmount);
+                logMessage(`⚠️ تمر 30 يوماً على القرض دون سداد! تم تطبيق عقوبة خصم الضعف بقيمة ${formatMoney(penaltyAmount)}.`);
+                window.loanDaysDelayed = 0;
+            }
         }
 
         window.money += finalDailyProfit;
@@ -1896,13 +1933,18 @@
         const taxRateDisplay = document.getElementById('taxRateDisplay');
 
         if (vaultBalanceDisplay) vaultBalanceDisplay.innerText = formatMoney(window.bankVault.balance);
-        let vaultRates = [0, 3, 4.5, 6, 8, 10, 13, 16, 20, 25, 32, 40];
         let currentLevel = window.bankVault.level;
-        if (vaultLevelDisplay) vaultLevelDisplay.innerText = `المستوى: ${currentLevel} (العائد ${vaultRates[currentLevel]}% يومياً)`;
+        let currentCap = window.bankVault.capacities[currentLevel] || 10000000;
+        if (vaultLevelDisplay) vaultLevelDisplay.innerText = `المستوى: ${currentLevel} (السعة: ${currentCap.toLocaleString()})`;
 
         let totalNetWealth = window.money + window.bankVault.balance + (window.bondsOwned * 15000);
         let taxRate = totalNetWealth > 500000 ? 4 : (totalNetWealth > 100000 ? 2.5 : 1.5);
         if (taxRateDisplay) taxRateDisplay.innerText = `النسبة الحالية: ${taxRate}%`;
+
+        const loanDaysDesc = document.getElementById('loanDaysDesc');
+        if (loanDaysDesc) {
+            loanDaysDesc.innerText = `أيام التأخير الحالية: ${window.loanDaysDelayed || 0} / 30 يوم`;
+        }
     }
 
     function renderStocks() {
@@ -2167,8 +2209,9 @@
 
         let assetIncome = window.assets.reduce((sum, ast) => sum + (Math.floor(ast.income * window.globalMultiplier) * ast.count), 0);
         let bondsIncome = window.bondsOwned * 250;
-        let vaultRates = [0, 0.03, 0.045, 0.06, 0.08, 0.10, 0.13, 0.16, 0.20, 0.25, 0.32, 0.40];
-        let vaultDailyProfit = Math.floor(window.bankVault.balance * (vaultRates[window.bankVault.level] || 0.03));
+        let vaultDailyProfit = Math.floor(window.bankVault.balance * 0.05);
+        if (vaultDailyProfit > 500000) vaultDailyProfit = 500000;
+
         let totalDailySalaries = 0;
         window.employeesPool.forEach(emp => { if (emp.hiredCount > 0 && !emp.isPerfect) totalDailySalaries += emp.hiredCount * emp.dailySalary; });
 
@@ -2328,6 +2371,7 @@
         window.money = data.money !== undefined ? data.money : window.money;
         window.gems = data.gems !== undefined ? data.gems : window.gems;
         window.loan = data.loan !== undefined ? data.loan : window.loan;
+        window.loanDaysDelayed = data.loanDaysDelayed !== undefined ? data.loanDaysDelayed : 0;
         window.day = data.day !== undefined ? data.day : window.day;
         window.daysPlayedInCycle = data.daysPlayedInCycle !== undefined ? data.daysPlayedInCycle : window.daysPlayedInCycle;
         window.isLocked = data.isLocked !== undefined ? data.isLocked : window.isLocked;
@@ -2335,7 +2379,12 @@
         window.b2bNextRefreshTimestamp = data.b2bNextRefreshTimestamp !== undefined ? data.b2bNextRefreshTimestamp : (Date.now() + twelveHoursMs);
         window.questResetTimestamp = data.questResetTimestamp !== undefined ? data.questResetTimestamp : (Date.now() + twentyFourHoursMs);
 
-        if (data.bankVault) window.bankVault = data.bankVault;
+        if (data.bankVault) {
+            window.bankVault = data.bankVault;
+            if (!window.bankVault.capacities) {
+                window.bankVault.capacities = [0, 500000, 1500000, 3000000, 5000000, 7500000, 10000000];
+            }
+        }
         if (data.inventory) {
             Object.keys(data.inventory).forEach(k => { if (window.inventory[k]) window.inventory[k].count = data.inventory[k].count; });
         }
@@ -2373,6 +2422,7 @@
                 window.generateDailyQuests(); window.generateB2BShipments();
                 await setDoc(docRef, {
                     username: uInput, password: pInput, money: window.money, gems: window.gems, loan: window.loan,
+                    loanDaysDelayed: window.loanDaysDelayed,
                     day: window.day, daysPlayedInCycle: window.daysPlayedInCycle, isLocked: window.isLocked,
                     bankVault: window.bankVault, inventory: window.inventory, stocks: window.stocks,
                     b2bNextRefreshTimestamp: window.b2bNextRefreshTimestamp,
@@ -2397,6 +2447,7 @@
         try {
             await setDoc(doc(db, "players_accounts", userKey), {
                 username: window.currentUsername, money: window.money, gems: window.gems, loan: window.loan,
+                loanDaysDelayed: window.loanDaysDelayed,
                 day: window.day, daysPlayedInCycle: window.daysPlayedInCycle, isLocked: window.isLocked,
                 bankVault: window.bankVault, inventory: window.inventory, stocks: window.stocks,
                 b2bNextRefreshTimestamp: window.b2bNextRefreshTimestamp,
