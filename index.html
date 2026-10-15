@@ -762,18 +762,18 @@
 
     window.incomingShipments = [];
 
-    function generateB2BShipments() {
+    window.generateB2BShipments = function() {
         window.b2bShipments = [...b2bPool].map(s => ({ ...s, uniqueId: Math.random().toString(36).substring(7) }));
         window.b2bNextRefreshTimestamp = Date.now() + twelveHoursMs;
-    }
+    };
 
-    function checkB2BRefresh() {
+    window.checkB2BRefresh = function() {
         let now = Date.now();
         if (!window.b2bNextRefreshTimestamp || now >= window.b2bNextRefreshTimestamp || window.b2bShipments.length === 0) {
-            generateB2BShipments();
+            window.generateB2BShipments();
             logMessage("🌐 تم تحديث عروض شحنات الاستيراد العالمية (B2B)!");
         }
-    }
+    };
 
     window.employeesPool = [
         { id: 'emp_mgr', name: 'مدير عقود B2B (أحمد)', position: 'manager', dailySalary: 400, costMoney: 5000, costGem: 0, benefit: 'يقلل أيام وصول الشحنات يوماً واحداً', hiredCount: 0 },
@@ -794,7 +794,7 @@
         { id: 'q_stocks', title: 'مستثمر البورصة', desc: 'امتلك 3 أسهم في المحفظة', target: 3, rewardGem: 15, type: 'stocks' }
     ];
 
-    function generateDailyQuests() {
+    window.generateDailyQuests = function() {
         let shuffled = [...possibleQuestsPool].sort(() => 0.5 - Math.random());
         window.activeQuests = shuffled.slice(0, 3).map((q, idx) => ({
             index: idx,
@@ -808,15 +808,15 @@
             completed: false
         }));
         window.questResetTimestamp = Date.now() + twentyFourHoursMs;
-    }
+    };
 
-    function checkRealtimeQuestReset() {
+    window.checkRealtimeQuestReset = function() {
         let now = Date.now();
         if (!window.questResetTimestamp || now >= window.questResetTimestamp || !window.activeQuests || window.activeQuests.length === 0) {
-            generateDailyQuests();
+            window.generateDailyQuests();
             logMessage("🎯 تم تحديث المهام اليومية بمهام وهدايا جديدة!");
         }
-    }
+    };
 
     window.stockNextUpdateTimestamp = Date.now() + 60000;
     function updateStockMarketRealtime() {
@@ -1368,8 +1368,8 @@
             alert("⚠️ لقد أنهيت 25 يوماً! يجب تجديد الأيام.");
         }
 
-        checkRealtimeQuestReset();
-        checkB2BRefresh();
+        window.checkRealtimeQuestReset();
+        window.checkB2BRefresh();
         randomizeDayEvents();
 
         let totalDailySalaries = 0;
@@ -1404,10 +1404,9 @@
             window.incomingShipments = window.incomingShipments.filter(inc => inc.daysRemaining > 0);
         }
 
-      // --- التعديل هنا: تشغيل العمال الآليين للحصاد والبذر تلقائياً ---
+        // تشغيل العمال الآليين للحصاد والبذر تلقائياً
         const huts = window.barns.find(b => b.id === 'worker_hut').owned;
         if (huts > 0 && window.money >= 450) {
-            // إذا كانت المحاصيل ناضجة بالفعل، يقوم العمال بحصادها أولاً
             if (window.cropFields.activePlots > 0 && window.cropFields.isReady) {
                 let harvestedAmount = window.cropFields.activePlots;
                 window.inventory.crops.count += harvestedAmount;
@@ -1416,7 +1415,6 @@
                 logMessage(`👷 العمال الآليون قاموا بحصاد ${harvestedAmount} وحدة من المحاصيل وإضافتها للمخزن!`);
             }
 
-            // إذا أصبحت الأراضي فارغة بعد الحصاد (أو كانت فارغة أصلاً)، يقوم العمال ببذر محاصيل جديدة
             if (window.cropFields.activePlots === 0) {
                 window.money -= 450;
                 window.cropFields.activePlots = 10 * huts;
@@ -1424,8 +1422,6 @@
                 window.cropFields.isReady = false;
                 logMessage(`👷 العمال الآليون قاموا ببذر محاصيل جديدة بتكلفة $450.`);
             }
-        }
-        // -----------------------------------------------------------------
         }
 
         window.animals.forEach(animal => {
@@ -1656,7 +1652,7 @@
         if (b2bContainer) {
             b2bContainer.innerHTML = '';
             if (!window.b2bShipments || window.b2bShipments.length === 0) {
-                checkB2BRefresh();
+                window.checkB2BRefresh();
             }
             window.b2bShipments.forEach(ship => {
                 let accountantHired = window.employeesPool.find(e => e.position === 'accountant' && e.hiredCount > 0);
@@ -1689,7 +1685,7 @@
                     b2bTimerDisplay.innerText = `تجدد بعد: ${hours}س و ${minutes}د`;
                 } else {
                     b2bTimerDisplay.innerText = `جاري التجديد...`;
-                    checkB2BRefresh();
+                    window.checkB2BRefresh();
                 }
             }
         }
@@ -1809,7 +1805,7 @@
         if (!container) return;
         container.innerHTML = '';
         if (!window.activeQuests || window.activeQuests.length === 0) {
-            checkRealtimeQuestReset();
+            window.checkRealtimeQuestReset();
         }
         window.activeQuests.forEach(q => {
             container.innerHTML += `
@@ -1945,7 +1941,7 @@
                 questTimerDisplay.innerText = `تجدد بعد: ${hours} س و ${minutes} د`;
             } else {
                 questTimerDisplay.innerText = `جاري التجديد...`;
-                checkRealtimeQuestReset();
+                window.checkRealtimeQuestReset();
             }
         }
 
@@ -2201,8 +2197,8 @@
         if (data.b2bShipments && Array.isArray(data.b2bShipments)) window.b2bShipments = data.b2bShipments;
         if (data.incomingShipments && Array.isArray(data.incomingShipments)) window.incomingShipments = data.incomingShipments;
 
-        checkRealtimeQuestReset();
-        checkB2BRefresh();
+        window.checkRealtimeQuestReset();
+        window.checkB2BRefresh();
 
         if (data.inventory) {
             Object.keys(data.inventory).forEach(k => {
@@ -2265,8 +2261,8 @@
                 mergeSavedData(data);
                 alert(`✅ أهلاً بك مجدداً يا ${uInput}!`);
             } else {
-                generateDailyQuests();
-                generateB2BShipments();
+                window.generateDailyQuests();
+                window.generateB2BShipments();
                 await setDoc(docRef, {
                     username: uInput,
                     password: pInput,
