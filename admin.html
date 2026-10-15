@@ -36,7 +36,7 @@
 
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -111,8 +111,8 @@
         .players-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            max-height: 500px;
+            gap: 10px;
+            max-height: 600px;
             overflow-y: auto;
         }
 
@@ -120,7 +120,7 @@
             background-color: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 10px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
             gap: 8px;
@@ -134,7 +134,7 @@
 
         .player-name {
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--blue);
         }
 
@@ -149,11 +149,22 @@
             border-radius: 4px;
         }
 
-        .control-inputs {
-            display: flex;
+        .control-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 6px;
             align-items: center;
-            flex-wrap: wrap;
+        }
+
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .input-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
         }
 
         .admin-input {
@@ -163,7 +174,19 @@
             padding: 6px;
             color: var(--text-main);
             font-size: 0.75rem;
-            width: 100px;
+            width: 100%;
+            outline: none;
+        }
+
+        .admin-input:focus {
+            border-color: var(--yellow);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -174,8 +197,10 @@
             font-weight: bold;
             cursor: pointer;
             color: white;
+            transition: opacity 0.2s;
         }
 
+        .btn:hover { opacity: 0.9; }
         .btn-green { background-color: var(--green); color: #060911; }
         .btn-blue { background-color: var(--blue); }
         .btn-red { background-color: var(--red); }
@@ -195,13 +220,13 @@
     <div id="loginSection" class="card">
         <h2 style="color: var(--yellow); font-size: 1.1rem;">👑 تسجيل دخول لوحة الإدارة</h2>
         <input type="password" id="adminPassInput" class="search-box" placeholder="كلمة سر الأدمن...">
-        <button class="btn btn-green" style="padding: 10px;" onclick="checkAdminAuth()">دخول اللوحة 🔑</button>
+        <button class="btn btn-green" style="padding: 10px; width: 100%; margin-top: 5px;" onclick="checkAdminAuth()">دخول اللوحة 🔑</button>
     </div>
 
     <!-- المحتوى الرئيسي للوحة الأدمن -->
     <div id="adminMainContent" style="display: none; flex-direction: column; gap: 12px;">
         <header>
-            <h1>⚙️ لوحة مراقبة وإدارة اللاعبين المتقدمة</h1>
+            <h1>⚙️ لوحة مراقبة وإدارة اللاعبين الشاملة</h1>
         </header>
 
         <div class="stats-grid">
@@ -220,12 +245,12 @@
         </div>
 
         <div class="card">
-            <div class="section-title">🔍 البحث عن لاعب وتشغيل المراقبة</div>
+            <div class="section-title">🔍 البحث عن لاعب</div>
             <input type="text" id="searchInput" class="search-box" placeholder="ابحث باسم المستخدم..." oninput="filterPlayers()">
         </div>
 
         <div class="card">
-            <div class="section-title">👥 قائمة حسابات اللاعبين والتعديل المباشر</div>
+            <div class="section-title">👥 قائمة حسابات اللاعبين والتحكم الكامل</div>
             <div class="players-list" id="playersList">
                 <div style="text-align: center; color: var(--text-muted); padding: 10px;">جاري تحميل البيانات...</div>
             </div>
@@ -251,9 +276,7 @@
     const db = getFirestore(app);
 
     let allPlayers = [];
-
-    // كلمة سر دخول لوحة الأدمن (يمكنك تغييرها من هنا)
-    const ADMIN_PASSWORD = "admin123456";
+    const ADMIN_PASSWORD = "admin1"; // يمكنك تعديل كلمة سر الأدمن من هنا
 
     window.checkAdminAuth = function() {
         const inputPass = document.getElementById('adminPassInput').value.trim();
@@ -309,7 +332,7 @@
                 <div class="player-row">
                     <div class="player-header">
                         <span class="player-name">👤 ${p.username || p.id}</span>
-                        <span style="font-size: 0.7rem; color: var(--text-muted);">كلمة المرور: ${p.password || 'غير معروفة'}</span>
+                        <span style="font-size: 0.7rem; color: var(--text-muted);">معرف المستند: ${p.id}</span>
                     </div>
 
                     <div class="player-info-grid">
@@ -319,14 +342,36 @@
                         <div>📅 اليوم: ${p.day || 1}</div>
                     </div>
 
-                    <div class="control-inputs">
-                        <input type="number" id="money_${p.id}" class="admin-input" placeholder="الأموال الجديدة...">
-                        <button class="btn btn-green" onclick="updatePlayerField('${p.id}', 'money')">تعديل النقد 💰</button>
+                    <div class="control-group">
+                        <div class="input-wrapper">
+                            <span class="input-label">اسم المستخدم</span>
+                            <input type="text" id="username_${p.id}" class="admin-input" value="${p.username || ''}">
+                        </div>
+                        <div class="input-wrapper">
+                            <span class="input-label">كلمة المرور</span>
+                            <input type="text" id="password_${p.id}" class="admin-input" value="${p.password || ''}">
+                        </div>
+                        <div class="input-wrapper">
+                            <span class="input-label">النقد السائل ($)</span>
+                            <input type="number" id="money_${p.id}" class="admin-input" value="${p.money || 0}">
+                        </div>
+                        <div class="input-wrapper">
+                            <span class="input-label">الجواهر (💎)</span>
+                            <input type="number" id="gems_${p.id}" class="admin-input" value="${p.gems || 0}">
+                        </div>
+                        <div class="input-wrapper">
+                            <span class="input-label">اليوم التكتيكي</span>
+                            <input type="number" id="day_${p.id}" class="admin-input" value="${p.day || 1}">
+                        </div>
+                        <div class="input-wrapper">
+                            <span class="input-label">قيمة الدين ($)</span>
+                            <input type="number" id="loan_${p.id}" class="admin-input" value="${p.loan || 0}">
+                        </div>
+                    </div>
 
-                        <input type="number" id="gems_${p.id}" class="admin-input" placeholder="الجواهر...">
-                        <button class="btn btn-gem" onclick="updatePlayerField('${p.id}', 'gems')">تعديل الجواهر 💎</button>
-
-                        <button class="btn btn-blue" onclick="resetLockAndCycle('${p.id}')">إلغاء القفل/الانتظار 🔓</button>
+                    <div class="btn-row">
+                        <button class="btn btn-green" onclick="savePlayerFullData('${p.id}')">حفظ كافة التعديلات 💾</button>
+                        <button class="btn btn-gem" onclick="resetLockAndCycle('${p.id}')">فك القفل والانتظار 🔓</button>
                         <button class="btn btn-red" onclick="deletePlayerAccount('${p.id}')">حذف الحساب 🗑️</button>
                     </div>
                 </div>
@@ -340,22 +385,29 @@
         renderPlayers(filtered);
     };
 
-    window.updatePlayerField = async function(docId, field) {
-        const input = document.getElementById(`${field}_${docId}`);
-        const val = parseInt(input.value);
-        if (isNaN(val)) { alert("❌ يرجى إدخال رقم صحيح!"); return; }
+    window.savePlayerFullData = async function(docId) {
+        const newUsername = document.getElementById(`username_${docId}`).value.trim();
+        const newPassword = document.getElementById(`password_${docId}`).value.trim();
+        const newMoney = parseInt(document.getElementById(`money_${docId}`).value) || 0;
+        const newGems = parseInt(document.getElementById(`gems_${docId}`).value) || 0;
+        const newDay = parseInt(document.getElementById(`day_${docId}`).value) || 1;
+        const newLoan = parseInt(document.getElementById(`loan_${docId}`).value) || 0;
 
         try {
             const playerRef = doc(db, "players_accounts", docId);
-            let updateData = {};
-            updateData[field] = val;
-
-            await updateDoc(playerRef, updateData);
-            alert(`✅ تم تعديل ${field === 'money' ? 'الأموال' : 'الجواهر'} بنجاح!`);
+            await updateDoc(playerRef, {
+                username: newUsername,
+                password: newPassword,
+                money: newMoney,
+                gems: newGems,
+                day: newDay,
+                loan: newLoan
+            });
+            alert(`✅ تم تحديث بيانات اللاعب وحفظها بنجاح!`);
             loadAllPlayers();
         } catch (e) {
             console.error(e);
-            alert("❌ حدث خطأ أثناء التحديث.");
+            alert("❌ حدث خطأ أثناء الحفظ.");
         }
     };
 
@@ -375,7 +427,7 @@
     };
 
     window.deletePlayerAccount = async function(docId) {
-        if (confirm(`⚠️ هل أنت تأكد تماماً من حذف حساب اللاعب (${docId})؟ لا يمكن التراجع!`)) {
+        if (confirm(`⚠️ هل أنت متأكد تماماً من حذف حساب اللاعب (${docId})؟ لا يمكن التراجع!`)) {
             try {
                 await deleteDoc(doc(db, "players_accounts", docId));
                 alert("🗑️ تم حذف الحساب بنجاح.");
