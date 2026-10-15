@@ -580,6 +580,7 @@
 <!-- شاشة تسجيل الدخول أو إنشاء الحساب -->
 <div id="authScreen">
     <div class="auth-card">
+        <!-- تم إصلاح خاصية الـ height لتفادي تحذير الكونسول -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160" style="width: 100%; height: auto; margin-bottom: 5px;">
             <defs>
                 <linearGradient id="goldGradAuth" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -806,7 +807,7 @@
         </div>
     </div>
 
-    <!-- تبويب البورصة (الشركات الست الأصلية مع الشارت والأزرار التفاعلية) -->
+    <!-- تبويب البورصة (6 شركات مدرجة) -->
     <div id="tab-stocks" class="tab-content">
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
@@ -1017,9 +1018,11 @@
         }
     };
 
+    // ---------------- تحديث المؤشرات التنازلية للشحنات والمهام حيّاً ----------------
     function updateCountdownsRealtime() {
         let now = Date.now();
 
+        // 1. العد التنازلي لشحنات B2B
         const b2bTimerDisplay = document.getElementById('b2bTimerDisplay');
         if (b2bTimerDisplay) {
             if (!window.b2bNextRefreshTimestamp || window.b2bNextRefreshTimestamp <= now) {
@@ -1032,6 +1035,7 @@
             b2bTimerDisplay.innerText = `تجدد بعد: ${hoursB2B}س و ${minsB2B}د و ${secsB2B}ث`;
         }
 
+        // 2. العد التنازلي للمهام اليومية Quests
         const questTimerDisplay = document.getElementById('questTimerDisplay');
         if (questTimerDisplay) {
             if (!window.questResetTimestamp || window.questResetTimestamp <= now) {
@@ -1046,7 +1050,7 @@
     }
     setInterval(updateCountdownsRealtime, 1000);
 
-    // الـ 6 شركات الأصلية للبورصة
+    // ---------------- 6 أسهم ثابتة في البورصة ----------------
     const defaultStocks = [
         { id: 's1', name: 'المصرية للاتصالات', symbol: 'ETEL', price: 45, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 40000, volatility: 0.08, changePct: -2.17, history: [52, 50, 54, 51, 48, 43, 46, 45] },
         { id: 's2', name: 'الشرقية للدخان', symbol: 'EAST', price: 77, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 30000, volatility: 0.06, changePct: 2.67, history: [70, 72, 76, 73, 77, 78, 75, 77] },
@@ -1421,7 +1425,7 @@
         }
     };
 
-    // دوال التداول والأزرار التفاعلية للبورصة
+    // ------------------ دوال تداول البورصة والنسب ------------------
     window.setStockPercentage = function(stockId, pct) {
         const stock = window.stocks.find(s => s.id === stockId);
         const buyInput = document.getElementById(`buy_input_${stockId}`);
@@ -2322,6 +2326,7 @@
         } catch (e) {}
     };
 
+    // إصلاح دالة الدمج لتجنب مسح قائمة الأسهم الستة الحالية عند جلب الحساب القديم
     function mergeSavedData(data) {
         window.money = data.money !== undefined ? data.money : window.money;
         window.gems = data.gems !== undefined ? data.gems : window.gems;
@@ -2338,6 +2343,7 @@
             Object.keys(data.inventory).forEach(k => { if (window.inventory[k]) window.inventory[k].count = data.inventory[k].count; });
         }
 
+        // إبقاء قائمة الأسهم الستة بالكامل وتحديث الأسهم المملوكة فقط
         if (data.stocks && Array.isArray(data.stocks)) {
             data.stocks.forEach(savedStk => {
                 let localStk = window.stocks.find(s => s.id === savedStk.id);
@@ -2385,7 +2391,7 @@
             renderAll(); updateUI();
         } catch (e) { 
             console.error(e);
-            alert("❌ حدث خطأ بالاتصال بالخادم. يرجى التحقق من اتصال الإنترنت."); 
+            alert("❌ حدث خطأ بالاتصال بالخادم. يرجى التحقق من اتصال الإنترنت أو إعدادات القاعدة."); 
         }
     };
 
