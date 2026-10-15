@@ -32,7 +32,7 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding: 8px;
+            padding: 12px;
             display: flex;
             justify-content: center;
             min-height: 100vh;
@@ -40,10 +40,10 @@
 
         .container {
             width: 100%;
-            max-width: 720px;
+            max-width: 760px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         #authScreen {
@@ -58,26 +58,28 @@
         .auth-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 16px;
+            padding: 24px;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
             text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
         }
 
         .auth-input {
             background: #162032;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 10px;
+            border-radius: 8px;
+            padding: 12px;
             color: var(--text-main);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             width: 100%;
             outline: none;
             text-align: right;
+            transition: border-color 0.2s;
         }
 
         .auth-input:focus { border-color: var(--yellow); }
@@ -92,27 +94,28 @@
         .turn-panel {
             background: linear-gradient(135deg, #1e1b4b, #0f172a);
             border: 1px solid #4338ca;
-            border-radius: 8px;
-            padding: 10px;
+            border-radius: 12px;
+            padding: 14px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         .turn-info {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 3px;
         }
 
         .turn-title {
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             font-weight: bold;
             color: #c7d2fe;
         }
 
         .turn-sub {
-            font-size: 0.68rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
         }
 
@@ -120,12 +123,13 @@
             background-color: var(--green);
             color: #060911;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 0.8rem;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.85rem;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: transform 0.1s, opacity 0.2s;
+            box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3);
         }
 
         .btn-next-turn:active {
@@ -135,63 +139,72 @@
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
+            gap: 8px;
         }
 
         .metric-box {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 6px;
+            border-radius: 10px;
+            padding: 10px 6px;
             text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
 
         .metric-label {
-            font-size: 0.62rem;
+            font-size: 0.68rem;
             color: var(--text-muted);
         }
 
         .metric-val {
-            font-size: 0.82rem;
+            font-size: 0.9rem;
             font-weight: bold;
-            margin-top: 2px;
+            margin-top: 4px;
         }
 
         .gem-color { color: var(--gem); }
 
+        /* تعديل تصميم التبويبات لتكون مريحة وبدون تزاحم */
         .tabs {
-            display: flex;
-            gap: 2px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
             background-color: var(--card-bg);
-            padding: 3px;
-            border-radius: 6px;
+            padding: 8px;
+            border-radius: 12px;
             border: 1px solid var(--border-color);
-            overflow-x: auto;
         }
 
         .tab-btn {
-            flex: 1;
-            padding: 6px 2px;
-            background: none;
-            border: none;
+            padding: 8px 4px;
+            background: #162032;
+            border: 1px solid var(--border-color);
             color: var(--text-muted);
-            font-size: 0.42rem;
+            font-size: 0.72rem;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 8px;
             white-space: nowrap;
-            transition: 0.2s;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            border-color: var(--blue);
         }
 
         .tab-btn.active {
             background-color: var(--blue);
             color: white;
+            border-color: var(--blue);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
         }
 
         .tab-content {
             display: none;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .tab-content.active {
@@ -201,27 +214,32 @@
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 10px;
+            border-radius: 12px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .section-title {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: bold;
             color: var(--yellow);
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 4px;
+            padding-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .item-list {
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            max-height: 280px;
+            gap: 8px;
+            max-height: 320px;
             overflow-y: auto;
+            padding-left: 4px;
         }
 
         .item-row {
@@ -230,54 +248,70 @@
             align-items: center;
             background-color: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border-color);
-            padding: 8px;
-            border-radius: 6px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .item-row:hover {
+            background-color: rgba(255, 255, 255, 0.04);
         }
 
         .item-info {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 3px;
         }
 
         .item-title {
-            font-size: 0.78rem;
+            font-size: 0.85rem;
             font-weight: bold;
         }
 
         .item-desc {
-            font-size: 0.65rem;
+            font-size: 0.72rem;
             color: var(--text-muted);
         }
 
         .item-meta {
-            font-size: 0.68rem;
+            font-size: 0.72rem;
             color: var(--green);
+            font-weight: 500;
         }
 
         .btn-group {
             display: flex;
-            gap: 4px;
+            gap: 6px;
         }
 
         button.action-btn {
             background-color: var(--blue);
             color: white;
             border: none;
-            padding: 5px 8px;
-            border-radius: 4px;
-            font-size: 0.68rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
             font-weight: bold;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
             text-align: center;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        button.action-btn:hover {
+            opacity: 0.9;
+        }
+
+        button.action-btn:active {
+            transform: scale(0.96);
         }
 
         button.action-btn:disabled {
             background-color: var(--border-color);
             color: var(--text-muted);
             cursor: not-allowed;
+            transform: none;
         }
 
         button.sell-btn { background-color: var(--red); }
@@ -299,58 +333,63 @@
         .gift-input {
             background-color: #060911;
             border: 1px solid var(--border-color);
-            border-radius: 4px;
-            padding: 6px 10px;
+            border-radius: 6px;
+            padding: 8px 12px;
             color: var(--text-main);
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             flex: 1;
+            outline: none;
         }
 
+        .gift-input:focus { border-color: var(--blue); }
+
         .ledger-box {
-            background-color: rgba(0,0,0,0.4);
-            border-radius: 6px;
-            padding: 8px;
-            height: 220px;
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            padding: 10px;
+            height: 240px;
             overflow-y: auto;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-family: monospace;
             color: #cbd5e1;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
+            border: 1px solid var(--border-color);
         }
 
         .chat-box {
-            background-color: rgba(0,0,0,0.4);
-            border-radius: 6px;
-            padding: 8px;
-            height: 220px;
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            padding: 10px;
+            height: 240px;
             overflow-y: auto;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
+            border: 1px solid var(--border-color);
         }
 
         .chat-msg {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 6px 8px;
-            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 8px 10px;
+            border-radius: 8px;
             border: 1px solid var(--border-color);
         }
 
         .chat-user {
             font-weight: bold;
             color: var(--yellow);
-            font-size: 0.7rem;
-            margin-bottom: 2px;
+            font-size: 0.75rem;
+            margin-bottom: 3px;
         }
 
         .mini-chart {
             font-family: monospace;
             font-size: 0.75rem;
             letter-spacing: 2px;
-            margin-top: 2px;
+            margin-top: 3px;
         }
     </style>
 </head>
@@ -380,13 +419,13 @@
             <text x="300" y="130" font-family="system-ui, sans-serif" font-weight="700" font-size="16" fill="#38bdf8" text-anchor="middle" letter-spacing="2">🌾 والتجارة العالمية 💰</text>
         </svg>
 
-        <h2 style="color: var(--yellow); font-size: 1.05rem;">🔐 تسجيل الدخول للإمبراطورية</h2>
-        <div style="font-size: 0.72rem; color: var(--text-muted);">ادخل اسم الحساب وكلمة المرور الخاصة بك للبدء أو استرجاع حفظك:</div>
+        <h2 style="color: var(--yellow); font-size: 1.1rem;">🔐 تسجيل الدخول للإمبراطورية</h2>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">ادخل اسم الحساب وكلمة المرور الخاصة بك للبدء أو استرجاع حفظك:</div>
         
         <input type="text" id="authUsername" class="auth-input" placeholder="اسم المستخدم أو البريد الإلكتروني...">
         <input type="password" id="authPassword" class="auth-input" placeholder="كلمة المرور...">
         
-        <button class="action-btn" style="background-color: var(--green); color: #060911; padding: 10px; font-size: 0.85rem;" onclick="handleLoginRegister()">دخول / تسجيل حساب جديد 🚀</button>
+        <button class="action-btn" style="background-color: var(--green); color: #060911; padding: 12px; font-size: 0.9rem;" onclick="handleLoginRegister()">دخول / تسجيل حساب جديد 🚀</button>
     </div>
 </div>
 
@@ -423,9 +462,9 @@
     </header>
 
     <!-- شريط معلومات الطقس والأحداث الاقتصادية -->
-    <div class="card" style="padding: 6px 10px; flex-direction: row; justify-content: space-between; align-items: center; background: rgba(59, 130, 246, 0.08);">
-        <div style="font-size: 0.72rem; color: var(--gem);" id="weatherDisplay">🌤️ الطقس: عادي</div>
-        <div style="font-size: 0.72rem; color: var(--yellow);" id="eventDisplay">📰 السوق: مستقر</div>
+    <div class="card" style="padding: 8px 12px; flex-direction: row; justify-content: space-between; align-items: center; background: rgba(59, 130, 246, 0.08);">
+        <div style="font-size: 0.78rem; color: var(--gem);" id="weatherDisplay">🌤️ الطقس: عادي</div>
+        <div style="font-size: 0.78rem; color: var(--yellow);" id="eventDisplay">📰 السوق: مستقر</div>
     </div>
 
     <div class="turn-panel">
@@ -437,20 +476,20 @@
     </div>
 
     <!-- لوحة التجديد -->
-    <div id="renewalPanel" class="card" style="display: none; background: rgba(6, 182, 212, 0.1); border-color: var(--gem); text-align: center; padding: 12px;">
-        <div style="font-size: 0.85rem; font-weight: bold; color: var(--gem);">⚠️ انتهت محاولات الأيام الـ 25 المتاحة!</div>
-        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;" id="renewalSubText">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.</div>
-        <div style="display: flex; gap: 8px; margin-top: 8px; justify-content: center;" id="renewalButtonsContainer">
+    <div id="renewalPanel" class="card" style="display: none; background: rgba(6, 182, 212, 0.1); border-color: var(--gem); text-align: center; padding: 14px;">
+        <div style="font-size: 0.9rem; font-weight: bold; color: var(--gem);">⚠️ انتهت محاولات الأيام الـ 25 المتاحة!</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;" id="renewalSubText">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.</div>
+        <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: center;" id="renewalButtonsContainer">
             <button class="action-btn gem-btn" onclick="renewWithGems()">تجديد بـ 100 جوهرة 💎</button>
             <button class="action-btn" style="background-color: var(--orange);" onclick="startWaitTimer()">انتظار 12 ساعة ⏳</button>
         </div>
     </div>
 
     <!-- أزرار الحفظ والاسترجاع السحابي وتسجيل الخروج -->
-    <div style="display: flex; gap: 6px;">
-        <button class="action-btn" style="flex:1; background-color: var(--blue); padding: 8px;" onclick="saveGameOnline()">حفظ سحابي ☁️</button>
-        <button class="action-btn" style="flex:1; background-color: var(--green); color:#060911; padding: 8px;" onclick="loadGameOnline()">استرجاع سحابي 🔄</button>
-        <button class="action-btn" style="flex:1; background-color: var(--red); padding: 8px;" onclick="logoutGame()">تسجيل خروج 🚪</button>
+    <div style="display: flex; gap: 8px;">
+        <button class="action-btn" style="flex:1; background-color: var(--blue); padding: 10px;" onclick="saveGameOnline()">حفظ سحابي ☁️</button>
+        <button class="action-btn" style="flex:1; background-color: var(--green); color:#060911; padding: 10px;" onclick="loadGameOnline()">استرجاع سحابي 🔄</button>
+        <button class="action-btn" style="flex:1; background-color: var(--red); padding: 10px;" onclick="logoutGame()">تسجيل خروج 🚪</button>
     </div>
 
     <div class="metrics-grid">
@@ -472,14 +511,15 @@
         </div>
     </div>
 
+    <!-- قائمة التبويبات المنسقة -->
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('farms')">🌾 المزرعة</button>
         <button class="tab-btn" onclick="switchTab('inventory')">📦 المخزن</button>
         <button class="tab-btn" onclick="switchTab('factories')">🏭 المصانع</button>
-        <button class="tab-btn" onclick="switchTab('export_company')">🏢 الأراضي والشركات</button>
-        <button class="tab-btn" onclick="switchTab('finance')">🏦 البنوك والخزنة</button>
+        <button class="tab-btn" onclick="switchTab('export_company')">🏢 الشركات</button>
+        <button class="tab-btn" onclick="switchTab('finance')">🏦 البنوك</button>
         <button class="tab-btn" onclick="switchTab('stocks')">📊 البورصة</button>
-        <button class="tab-btn" onclick="switchTab('market')">🛒 السوق الحر</button>
+        <button class="tab-btn" onclick="switchTab('market')">🛒 السوق</button>
         <button class="tab-btn" onclick="switchTab('chat')">💬 الشات</button>
         <button class="tab-btn" onclick="switchTab('quests')">🎯 المهام</button>
         <button class="tab-btn" onclick="switchTab('leaderboard')">🏆 المتصدرين</button>
@@ -520,14 +560,14 @@
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
                 <span>📦 مستودعات الشحن والاستيراد التابعة للشركة</span>
-                <span id="warehouseStatusDisplay" style="font-size:0.68rem; color:var(--gem);">مستودع غير متاح</span>
+                <span id="warehouseStatusDisplay" style="font-size:0.72rem; color:var(--gem);">مستودع غير متاح</span>
             </div>
             <div class="item-list" id="warehousesList"></div>
         </div>
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
                 <span>🌐 عروض شحنات الاستيراد العالمية (عقود B2B)</span>
-                <span id="b2bTimerDisplay" style="font-size:0.68rem; color:var(--yellow);">تجدد بعد: 12س</span>
+                <span id="b2bTimerDisplay" style="font-size:0.72rem; color:var(--yellow);">تجدد بعد: 12س</span>
             </div>
             <div class="item-list" id="b2bShipmentsList"></div>
         </div>
@@ -545,11 +585,11 @@
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
                 <span>🏦 خزنة البنك الاستثمارية (تدر أرباحاً يومية)</span>
-                <span id="vaultLevelDisplay" style="font-size:0.68rem; color:var(--gold);">المستوى: 1 (العائد 3% يومياً)</span>
+                <span id="vaultLevelDisplay" style="font-size:0.72rem; color:var(--gold);">المستوى: 1 (العائد 3% يومياً)</span>
             </div>
-            <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 4px;">الرصيد المودع بالخزنة: <span id="vaultBalanceDisplay" style="color:var(--green); font-weight:bold;">$0</span></div>
-            <div style="display: flex; gap: 6px; margin-bottom: 6px;">
-                <input type="number" id="vaultAmountInput" class="auth-input" placeholder="البلغ..." min="1" style="flex:2;">
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px;">الرصيد المودع بالخزنة: <span id="vaultBalanceDisplay" style="color:var(--green); font-weight:bold;">$0</span></div>
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <input type="number" id="vaultAmountInput" class="auth-input" placeholder="المبلغ..." min="1" style="flex:2;">
                 <button class="action-btn" style="background-color: var(--green); color:#060911; flex:1;" onclick="depositVault()">إيداع 📥</button>
                 <button class="action-btn sell-btn" style="flex:1;" onclick="withdrawVault()">سحب 📤</button>
             </div>
@@ -594,7 +634,7 @@
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
                 <span>📈 سوق الأسهم والبورصة العالمية</span>
-                <span id="stockTimerDisplay" style="font-size:0.68rem; color:var(--gem);">تحديث الأسعار بعد: 60ث</span>
+                <span id="stockTimerDisplay" style="font-size:0.72rem; color:var(--gem);">تحديث الأسعار بعد: 60ث</span>
             </div>
             <div class="item-list" id="stocksList"></div>
         </div>
@@ -603,7 +643,7 @@
     <div id="tab-market" class="tab-content">
         <div class="card">
             <div class="section-title">📦 عرض منتج جديد للبيع للاعبين الآخرين</div>
-            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px;">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;">
                 <select id="marketProductSelect" class="auth-input" style="flex: 2;">
                     <option value="chickenEggs">بيض دجاج طازج</option>
                     <option value="duckEggs">بيض بط فاخر</option>
@@ -614,7 +654,7 @@
                 </select>
                 <input type="number" id="marketAmountInput" class="auth-input" placeholder="الكمية..." style="flex: 1;" min="1">
                 <input type="number" id="marketPriceInput" class="auth-input" placeholder="السعر الإجمالي ($)..." style="flex: 1;" min="1">
-                <button class="action-btn" style="background-color: var(--green); color: #060911; flex: 1;" onclick="createMarketListing()">عرض بالسوق 🛒</button>
+                <button class="action-btn" style="background-color: var(--green); color: #060911; flex: 1; padding: 10px;" onclick="createMarketListing()">عرض بالسوق 🛒</button>
             </div>
         </div>
         <div class="card">
@@ -631,7 +671,7 @@
             <div class="chat-box" id="chatBox">
                 <div class="chat-msg"><div class="chat-user">النظام</div>أهلاً بك في الشات العام للإمبراطورية!</div>
             </div>
-            <div style="display: flex; gap: 6px; margin-top: 4px;">
+            <div style="display: flex; gap: 8px; margin-top: 6px;">
                 <input type="text" id="chatInput" class="gift-input" placeholder="اكتب رسالتك هنا..." onkeydown="if(event.key==='Enter') sendChatMessage()">
                 <button class="action-btn" style="background-color: var(--blue);" onclick="sendChatMessage()">إرسال ✉️</button>
             </div>
@@ -642,7 +682,7 @@
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
                 <span>🎯 المهام اليومية المتجددة</span>
-                <span id="questTimerDisplay" style="font-size:0.68rem; color:var(--gem);">جاري الحساب...</span>
+                <span id="questTimerDisplay" style="font-size:0.72rem; color:var(--gem);">جاري الحساب...</span>
             </div>
             <div class="item-list" id="questsList"></div>
         </div>
@@ -659,7 +699,7 @@
         <div class="card">
             <div class="section-title">📋 سجل الحسابات والأحداث اليومية</div>
             <div class="ledger-box" id="ledgerBox">
-                <div>[اليوم 1] أهلاً بك في النسخة المحدثة مع خنة البنك والربح اللوني المطور!</div>
+                <div>[اليوم 1] أهلاً بك في النسخة المحدثة مع خزنة البنك والربح اللوني المطور!</div>
             </div>
         </div>
     </div>
@@ -667,7 +707,7 @@
     <div id="tab-store" class="tab-content">
         <div class="card">
             <div class="section-title" style="color: var(--yellow);">🎁 قسم أكواد الهدايا</div>
-            <div style="display: flex; gap: 6px; margin-top: 4px;">
+            <div style="display: flex; gap: 8px; margin-top: 6px;">
                 <input type="text" id="giftCodeInput" class="gift-input" placeholder="اكتب الكود هنا...">
                 <button class="action-btn" style="background-color: var(--green); color: #060911;" onclick="redeemGiftCode()">تفعيل 🎁</button>
             </div>
@@ -1508,11 +1548,11 @@
                                  (window.cropFields.isReady ? "✨ ناضجة وجاهزة للحصاد!" : `تنمو (${window.cropFields.currentDaysGrown}/${window.cropFields.growthDaysNeeded} أيام)`);
                 
                 extraHtml = `
-                    <div style="margin-top: 6px; display: flex; gap: 4px;">
+                    <div style="margin-top: 8px; display: flex; gap: 6px;">
                         <button class="action-btn farm-btn" onclick="plantCrops()" ${barn.owned === 0 ? 'disabled' : ''}>بزر محاصيل 🌿</button>
                         <button class="action-btn" style="background-color: var(--green); color:#060911;" onclick="harvestCrops()" ${!window.cropFields.isReady ? 'disabled' : ''}>حصاد المحصول 🌾</button>
                     </div>
-                    <div class="item-meta" style="margin-top: 2px;">حالة الصوبة: ${statusText}</div>
+                    <div class="item-meta" style="margin-top: 4px;">حالة الصوبة: ${statusText}</div>
                 `;
             }
 
@@ -1727,7 +1767,7 @@
             let totalLandCap = window.exportLands.reduce((sum, l) => sum + (l.owned * l.capacity), 0);
             let totalCurrentHired = window.employeesPool.reduce((sum, e) => sum + e.hiredCount, 0);
 
-            empContainer.innerHTML += `<div style="font-size:0.72rem; color:var(--gem); margin-bottom:4px;">مكاتب الشركة المشغولة: ${totalCurrentHired} / ${totalLandCap} موظف</div>`;
+            empContainer.innerHTML += `<div style="font-size:0.75rem; color:var(--gem); margin-bottom:6px;">مكاتب الشركة المشغولة: ${totalCurrentHired} / ${totalLandCap} موظف</div>`;
 
             window.employeesPool.forEach(emp => {
                 let salaryStr = emp.isPerfect ? 'بدون راتب (مجاني)' : `${formatMoney(emp.dailySalary)} يومياً`;
