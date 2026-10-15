@@ -384,7 +384,7 @@
             margin-bottom: 3px;
         }
 
-        /* تنسيق بطاقة السهم الجديدة المطابقة للصورة */
+        /* تنسيق بطاقة السهم والتصميم الداخلي للمربع الأسود والسهم التفاعلي */
         .stock-card {
             background-color: #0b1120;
             border: 1px solid var(--border-color);
@@ -428,24 +428,29 @@
         .stock-price {
             font-size: 1.25rem;
             font-weight: 900;
-            color: var(--green);
         }
 
         .stock-change {
             font-size: 0.8rem;
             font-weight: bold;
-            color: var(--green);
         }
 
         .stock-chart-container {
-            background: #060911;
+            background: #000000;
             border: 1px solid var(--border-color);
             border-radius: 10px;
-            padding: 12px;
-            height: 90px;
+            padding: 14px;
+            height: 95px;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 12px;
+        }
+
+        .interactive-arrow {
+            font-size: 1.8rem;
+            font-weight: bold;
+            transition: transform 0.3s ease;
         }
 
         .stock-stats-grid {
@@ -472,16 +477,6 @@
         .stat-val {
             font-weight: bold;
             color: #ffffff;
-        }
-
-        .brokerage-badge {
-            background: rgba(251, 191, 36, 0.08);
-            border: 1px solid rgba(251, 191, 36, 0.2);
-            border-radius: 10px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
         }
 
         .percentage-buttons {
@@ -757,7 +752,7 @@
         </div>
     </div>
 
-    <!-- تبويب البورصة المحدث بالتصميم الجديد -->
+    <!-- تبويب البورصة المحدث بالسهم التفاعلي -->
     <div id="tab-stocks" class="tab-content">
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
@@ -1433,7 +1428,6 @@
         }
     };
 
-    // دوال نظام البورصة الجديد المطابق للصورة
     window.setStockPercentage = function(stockId, pct) {
         const stock = window.stocks.find(s => s.id === stockId);
         const buyInput = document.getElementById(`buy_input_${stockId}`);
@@ -1485,10 +1479,7 @@
         let qty = parseInt(sellInput.value);
         if (!qty || qty <= 0 || qty > stock.owned) { alert("الكمية غير صالحة أو أكبر من الأسهم المملوكة!"); return; }
 
-        let grossRevenue = qty * stock.price;
-        let commission = Math.floor(grossRevenue * 0.01); // 1% عمولة سمسرة
-        let netRevenue = grossRevenue - commission;
-
+        let netRevenue = qty * stock.price;
         window.money += netRevenue;
         stock.owned -= qty;
         if (stock.owned === 0) {
@@ -1498,7 +1489,7 @@
             stock.totalInvested -= (qty * stock.avgBuyPrice);
         }
 
-        logMessage(`📊 بيع ${qty} سهم من (${stock.name}) بصافي كاش ${formatMoney(netRevenue)} (بعد خصم عمولة السمسرة 1%).`);
+        logMessage(`📊 بيع ${qty} سهم من (${stock.name}) بصافي كاش ${formatMoney(netRevenue)}.`);
         sellInput.value = '';
         renderStocks();
         updateUI();
@@ -1508,10 +1499,7 @@
         const stock = window.stocks.find(s => s.id === stockId);
         if (!stock || stock.owned <= 0) return;
 
-        let grossRevenue = stock.owned * stock.price;
-        let commission = Math.floor(grossRevenue * 0.01);
-        let netRevenue = grossRevenue - commission;
-
+        let netRevenue = stock.owned * stock.price;
         window.money += netRevenue;
         let soldQty = stock.owned;
         stock.owned = 0;
@@ -2020,7 +2008,7 @@
         if (taxRateDisplay) taxRateDisplay.innerText = `النسبة الحالية: ${taxRate}%`;
     }
 
-    // عرض البورصة بالتصميم الجديد المماثل للصورة تماماً
+    // عرض البورصة مع السهم التفاعلي داخل المربع الأسود وبدون صندوق العمولة الأصفر
     function renderStocks() {
         const container = document.getElementById('stocksList');
         if (!container) return;
@@ -2033,6 +2021,11 @@
             let changeSign = stock.changePct >= 0 ? '+' : '';
             let profitSign = profitLoss >= 0 ? '+' : '';
 
+            // السهم التفاعلي بناءً على التغير (أعلى/أخضر أو أسفل/أحمر)
+            let isUp = stock.changePct >= 0;
+            let arrowSymbol = isUp ? '↗' : '↘';
+            let arrowColor = isUp ? 'var(--green)' : 'var(--red)';
+
             const card = document.createElement('div');
             card.className = 'stock-card';
             card.innerHTML = `
@@ -2042,13 +2035,17 @@
                         <span class="stock-symbol">${stock.symbol}</span>
                     </div>
                     <div class="stock-price-box">
-                        <div class="stock-price">EGP ${stock.price}</div>
-                        <div class="stock-change">${changeSign}${stock.changePct}%+</div>
+                        <div class="stock-price" style="color: ${arrowColor};">EGP ${stock.price}</div>
+                        <div class="stock-change" style="color: ${arrowColor};">${changeSign}${stock.changePct}%+</div>
                     </div>
                 </div>
 
                 <div class="stock-chart-container">
-                    <div class="mini-chart" style="color: var(--green); font-size: 1rem; letter-spacing: 4px;">📈 〰️ ↗️ 📈</div>
+                    <span style="font-size: 1.2rem; color: var(--text-muted);">📊</span>
+                    <div class="interactive-arrow" style="color: ${arrowColor}; transform: ${isUp ? 'translateY(-4px)' : 'translateY(4px)'};">
+                        ${arrowSymbol}
+                    </div>
+                    <span style="font-size: 1.1rem; color: var(--text-muted); letter-spacing: 2px;">📈 〰️ 📈</span>
                 </div>
 
                 <div class="stock-stats-grid">
@@ -2070,7 +2067,7 @@
                     </div>
                     <div class="stat-row">
                         <span class="stat-label">صافي الكاش عند البيع:</span>
-                        <span class="stat-val" style="color: var(--gem);">EGP ${Math.floor(currentValuation * 0.99).toLocaleString()}</span>
+                        <span class="stat-val" style="color: var(--gem);">EGP ${currentValuation.toLocaleString()}</span>
                     </div>
                     <div class="stat-row">
                         <span class="stat-label">صافي الربح الفعلي كاش:</span>
@@ -2082,13 +2079,6 @@
                         <span class="stat-label">سقف تملك السهم:</span>
                         <span class="stat-val">40,000 سهم</span>
                     </div>
-                </div>
-
-                <div class="brokerage-badge">
-                    <div style="font-size:0.75rem; color: var(--gold); font-weight: bold; display: flex; align-items: center; gap: 4px;">
-                        ⚖️ عمولة سمسرة 1% <span style="font-size:0.7rem; color:var(--text-muted); font-weight: normal;">(حظر بيع 45ث)</span>
-                    </div>
-                    <div style="font-size: 0.68rem; color: var(--text-muted);">القيمة السوقية = رأس المال + الأرباح | الكاش عند البيع يخصم عمولة 1%</div>
                 </div>
 
                 <div class="percentage-buttons">
