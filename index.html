@@ -164,7 +164,6 @@
 
         .gem-color { color: var(--gem); }
 
-        /* تعديل تصميم التبويبات لتكون مريحة وبدون تزاحم */
         .tabs {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -237,7 +236,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            max-height: 320px;
+            max-height: 450px;
             overflow-y: auto;
             padding-left: 4px;
         }
@@ -385,11 +384,139 @@
             margin-bottom: 3px;
         }
 
-        .mini-chart {
-            font-family: monospace;
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            margin-top: 3px;
+        /* تنسيق بطاقة السهم الجديدة المطابقة للصورة */
+        .stock-card {
+            background-color: #0b1120;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .stock-titles {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .stock-name {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .stock-symbol {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .stock-price-box {
+            text-align: left;
+        }
+
+        .stock-price {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: var(--green);
+        }
+
+        .stock-change {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--green);
+        }
+
+        .stock-chart-container {
+            background: #060911;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stock-stats-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: rgba(255,255,255,0.01);
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+        }
+
+        .stat-val {
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .brokerage-badge {
+            background: rgba(251, 191, 36, 0.08);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .percentage-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .pct-btn {
+            background: #162032;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .pct-btn:hover {
+            border-color: var(--blue);
+            color: white;
+        }
+
+        .trade-inputs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .trade-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
         }
     </style>
 </head>
@@ -630,10 +757,11 @@
         </div>
     </div>
 
+    <!-- تبويب البورصة المحدث بالتصميم الجديد -->
     <div id="tab-stocks" class="tab-content">
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
-                <span>📈 سوق الأسهم والبورصة العالمية</span>
+                <span>📊 سوق الأسهم والبورصة العالمية</span>
                 <span id="stockTimerDisplay" style="font-size:0.72rem; color:var(--gem);">تحديث الأسعار بعد: 60ث</span>
             </div>
             <div class="item-list" id="stocksList"></div>
@@ -877,6 +1005,9 @@
                     let change = (Math.random() * (stock.volatility * 2)) - stock.volatility;
                     stock.price = Math.max(10, Math.floor(stock.price * (1 + change)));
 
+                    let pctChange = Number(((stock.price - oldPrice) / oldPrice * 100).toFixed(2));
+                    stock.changePct = pctChange;
+
                     let trendSymbol = "➡️";
                     if (stock.price > oldPrice) trendSymbol = "📈";
                     else if (stock.price < oldPrice) trendSymbol = "📉";
@@ -930,11 +1061,11 @@
     ];
 
     window.stocks = [
-        { id: 's1', name: 'تيك فالي للتقنية (TECH)', price: 75, owned: 0, volatility: 0.22, history: ['=', '=', '=', '=', '='] },
-        { id: 's2', name: 'طاقة البترول العالمية (OIL)', price: 160, owned: 0, volatility: 0.18, history: ['=', '=', '=', '=', '='] },
-        { id: 's3', name: 'صندوق الذهب والمعادن (GLD)', price: 240, owned: 0, volatility: 0.12, history: ['=', '=', '=', '=', '='] },
-        { id: 's4', name: 'عقارات المستقبل (RE)', price: 350, owned: 0, volatility: 0.15, history: ['=', '=', '=', '=', '='] },
-        { id: 's5', name: 'الطاقة الخضراء (GREEN)', price: 110, owned: 0, volatility: 0.28, history: ['=', '=', '=', '=', '='] }
+        { id: 's1', name: 'المصرية للاتصالات', symbol: 'ETEL', price: 52, owned: 0, avgBuyPrice: 0, totalInvested: 0, volatility: 0.22, changePct: 4.00, history: ['=', '=', '=', '=', '='] },
+        { id: 's2', name: 'طاقة البترول العالمية', symbol: 'OIL', price: 160, owned: 0, avgBuyPrice: 0, totalInvested: 0, volatility: 0.18, changePct: 2.50, history: ['=', '=', '=', '=', '='] },
+        { id: 's3', name: 'صندوق الذهب والمعادن', symbol: 'GLD', price: 240, owned: 0, avgBuyPrice: 0, totalInvested: 0, volatility: 0.12, changePct: -1.20, history: ['=', '=', '=', '=', '='] },
+        { id: 's4', name: 'عقارات المستقبل', symbol: 'RE', price: 350, owned: 0, avgBuyPrice: 0, totalInvested: 0, volatility: 0.15, changePct: 1.80, history: ['=', '=', '=', '=', '='] },
+        { id: 's5', name: 'الطاقة الخضراء', symbol: 'GREEN', price: 110, owned: 0, avgBuyPrice: 0, totalInvested: 0, volatility: 0.28, changePct: -0.50, history: ['=', '=', '=', '=', '='] }
     ];
 
     window.assets = [
@@ -942,7 +1073,7 @@
         { id: 't1', name: 'شركة برمجيات وسحابيات', cost: 2500000, income: 16000, count: 0, desc: 'تقنية متقدمة.' }
     ];
 
-    function formatMoney(amount) { return '$' + amount.toLocaleString(); }
+    function formatMoney(amount) { return 'EGP ' + amount.toLocaleString(); }
 
     function logMessage(msg) {
         const ledgerBox = document.getElementById('ledgerBox');
@@ -1302,21 +1433,94 @@
         }
     };
 
-    window.tradeStock = function(id, action) {
-        const stock = window.stocks.find(s => s.id === id);
-        if (action === 'buy' && window.money >= stock.price) {
-            window.money -= stock.price; stock.owned++;
-            logMessage(`شراء سهم ${stock.name}`);
-        } else if (action === 'sell' && stock.owned > 0) {
-            window.money += stock.price; stock.owned--;
-            logMessage(`بيع سهم ${stock.name}`);
-        } else if (action === 'sellAll' && stock.owned > 0) {
-            let val = stock.price * stock.owned;
-            window.money += val;
-            logMessage(`بيع كل أسهم ${stock.name} مقابل ${formatMoney(val)}`);
-            stock.owned = 0;
+    // دوال نظام البورصة الجديد المطابق للصورة
+    window.setStockPercentage = function(stockId, pct) {
+        const stock = window.stocks.find(s => s.id === stockId);
+        const buyInput = document.getElementById(`buy_input_${stockId}`);
+        const sellInput = document.getElementById(`sell_input_${stockId}`);
+        if (!stock) return;
+
+        if (pct === 100 && buyInput) {
+            let maxAffordable = Math.floor(window.money / stock.price);
+            buyInput.value = maxAffordable;
+        } else if (pct === 25 || pct === 50) {
+            if (buyInput) {
+                let maxAffordable = Math.floor(window.money / stock.price);
+                buyInput.value = Math.max(1, Math.floor(maxAffordable * (pct / 100)));
+            }
+            if (sellInput && stock.owned > 0) {
+                sellInput.value = Math.max(1, Math.floor(stock.owned * (pct / 100)));
+            }
         }
-        renderStocks(); updateUI();
+    };
+
+    window.buyStockCustom = function(stockId) {
+        const stock = window.stocks.find(s => s.id === stockId);
+        const buyInput = document.getElementById(`buy_input_${stockId}`);
+        if (!stock || !buyInput) return;
+        let qty = parseInt(buyInput.value);
+        if (!qty || qty <= 0) { alert("الرجاء إدخال كمية صحيحة للشراء!"); return; }
+
+        let cost = qty * stock.price;
+        if (window.money >= cost) {
+            window.money -= cost;
+            let oldTotalVal = stock.owned * stock.avgBuyPrice;
+            stock.owned += qty;
+            stock.totalInvested = oldTotalVal + cost;
+            stock.avgBuyPrice = Math.round(stock.totalInvested / stock.owned);
+
+            logMessage(`📊 شراء ${qty} سهم من (${stock.name}) بقيمة إجمالية ${formatMoney(cost)}.`);
+            buyInput.value = '';
+            renderStocks();
+            updateUI();
+        } else {
+            alert("❌ لا تملك سيولة نقدية كافية لشراء هذه الكمية!");
+        }
+    };
+
+    window.sellStockCustom = function(stockId) {
+        const stock = window.stocks.find(s => s.id === stockId);
+        const sellInput = document.getElementById(`sell_input_${stockId}`);
+        if (!stock || !sellInput) return;
+        let qty = parseInt(sellInput.value);
+        if (!qty || qty <= 0 || qty > stock.owned) { alert("الكمية غير صالحة أو أكبر من الأسهم المملوكة!"); return; }
+
+        let grossRevenue = qty * stock.price;
+        let commission = Math.floor(grossRevenue * 0.01); // 1% عمولة سمسرة
+        let netRevenue = grossRevenue - commission;
+
+        window.money += netRevenue;
+        stock.owned -= qty;
+        if (stock.owned === 0) {
+            stock.avgBuyPrice = 0;
+            stock.totalInvested = 0;
+        } else {
+            stock.totalInvested -= (qty * stock.avgBuyPrice);
+        }
+
+        logMessage(`📊 بيع ${qty} سهم من (${stock.name}) بصافي كاش ${formatMoney(netRevenue)} (بعد خصم عمولة السمسرة 1%).`);
+        sellInput.value = '';
+        renderStocks();
+        updateUI();
+    };
+
+    window.sellAllStock = function(stockId) {
+        const stock = window.stocks.find(s => s.id === stockId);
+        if (!stock || stock.owned <= 0) return;
+
+        let grossRevenue = stock.owned * stock.price;
+        let commission = Math.floor(grossRevenue * 0.01);
+        let netRevenue = grossRevenue - commission;
+
+        window.money += netRevenue;
+        let soldQty = stock.owned;
+        stock.owned = 0;
+        stock.avgBuyPrice = 0;
+        stock.totalInvested = 0;
+
+        logMessage(`📊 بيع كل الأسهم (${soldQty} سهم) لشركة (${stock.name}) بقيمة صافية ${formatMoney(netRevenue)}.`);
+        renderStocks();
+        updateUI();
     };
 
     window.takeLoan = function() { window.money += 30000; window.loan += 36000; logMessage("اقتراض بنكي بقيمة $30,000"); updateUI(); };
@@ -1816,27 +2020,98 @@
         if (taxRateDisplay) taxRateDisplay.innerText = `النسبة الحالية: ${taxRate}%`;
     }
 
+    // عرض البورصة بالتصميم الجديد المماثل للصورة تماماً
     function renderStocks() {
         const container = document.getElementById('stocksList');
         if (!container) return;
         container.innerHTML = '';
+
         window.stocks.forEach(stock => {
-            let chartStr = stock.history ? stock.history.join(' ') : '= = = = =';
-            const row = document.createElement('div');
-            row.className = 'item-row';
-            row.innerHTML = `
-                <div class="item-info">
-                    <span class="item-title">${stock.name} (المحفظة: ${stock.owned})</span>
-                    <span class="item-meta">السعر الحالي: ${formatMoney(stock.price)}</span>
-                    <div class="mini-chart" title="حركة السعر التلقائية">حركات السهم: <span style="color: var(--yellow);">${chartStr}</span></div>
+            let currentValuation = stock.owned * stock.price;
+            let profitLoss = currentValuation - stock.totalInvested;
+            let pctProfit = stock.totalInvested > 0 ? ((profitLoss / stock.totalInvested) * 100).toFixed(2) : 0.0;
+            let changeSign = stock.changePct >= 0 ? '+' : '';
+            let profitSign = profitLoss >= 0 ? '+' : '';
+
+            const card = document.createElement('div');
+            card.className = 'stock-card';
+            card.innerHTML = `
+                <div class="stock-header">
+                    <div class="stock-titles">
+                        <span class="stock-name">${stock.name}</span>
+                        <span class="stock-symbol">${stock.symbol}</span>
+                    </div>
+                    <div class="stock-price-box">
+                        <div class="stock-price">EGP ${stock.price}</div>
+                        <div class="stock-change">${changeSign}${stock.changePct}%+</div>
+                    </div>
                 </div>
-                <div class="btn-group">
-                    <button class="action-btn" onclick="tradeStock('${stock.id}', 'buy')">شراء</button>
-                    <button class="action-btn sell-btn" onclick="tradeStock('${stock.id}', 'sell')" ${stock.owned === 0 ? 'disabled' : ''}>بيع</button>
-                    <button class="action-btn sell-btn" style="background-color: #b91c1c;" onclick="tradeStock('${stock.id}', 'sellAll')" ${stock.owned === 0 ? 'disabled' : ''}>بيع الكل</button>
+
+                <div class="stock-chart-container">
+                    <div class="mini-chart" style="color: var(--green); font-size: 1rem; letter-spacing: 4px;">📈 〰️ ↗️ 📈</div>
+                </div>
+
+                <div class="stock-stats-grid">
+                    <div class="stat-row">
+                        <span class="stat-label">الأسهم المملوكة:</span>
+                        <span class="stat-val">${stock.owned.toLocaleString()} سهم</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">متوسط سعر الشراء:</span>
+                        <span class="stat-val">EGP ${stock.avgBuyPrice}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">رأس المال المستثمر:</span>
+                        <span class="stat-val">EGP ${stock.totalInvested.toLocaleString()}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">القيمة السوقية الحالية:</span>
+                        <span class="stat-val" style="color: var(--gold);">EGP ${currentValuation.toLocaleString()}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">صافي الكاش عند البيع:</span>
+                        <span class="stat-val" style="color: var(--gem);">EGP ${Math.floor(currentValuation * 0.99).toLocaleString()}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">صافي الربح الفعلي كاش:</span>
+                        <span class="stat-val" style="color: ${profitLoss >= 0 ? 'var(--green)' : 'var(--red)'};">
+                            EGP (${profitSign}${pctProfit}%) ${profitSign}${profitLoss.toLocaleString()}
+                        </span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">سقف تملك السهم:</span>
+                        <span class="stat-val">40,000 سهم</span>
+                    </div>
+                </div>
+
+                <div class="brokerage-badge">
+                    <div style="font-size:0.75rem; color: var(--gold); font-weight: bold; display: flex; align-items: center; gap: 4px;">
+                        ⚖️ عمولة سمسرة 1% <span style="font-size:0.7rem; color:var(--text-muted); font-weight: normal;">(حظر بيع 45ث)</span>
+                    </div>
+                    <div style="font-size: 0.68rem; color: var(--text-muted);">القيمة السوقية = رأس المال + الأرباح | الكاش عند البيع يخصم عمولة 1%</div>
+                </div>
+
+                <div class="percentage-buttons">
+                    <button class="pct-btn" onclick="setStockPercentage('${stock.id}', 25)">25%</button>
+                    <button class="pct-btn" onclick="setStockPercentage('${stock.id}', 50)">50%</button>
+                    <button class="pct-btn" onclick="setStockPercentage('${stock.id}', 100)">100%</button>
+                </div>
+
+                <div class="trade-inputs-grid">
+                    <input type="number" id="sell_input_${stock.id}" class="auth-input" placeholder="الكمية للبيع..." min="1">
+                    <input type="number" id="buy_input_${stock.id}" class="auth-input" placeholder="الكمية للشراء..." min="1">
+                </div>
+
+                <div class="trade-actions-grid">
+                    <button class="action-btn sell-btn" style="padding: 10px;" onclick="sellStockCustom('${stock.id}')">بيع الأسهم</button>
+                    <button class="action-btn" style="background-color: var(--green); color: #060911; padding: 10px;" onclick="buyStockCustom('${stock.id}')">شراء الأسهم</button>
+                </div>
+
+                <div style="text-align: center; margin-top: -2px;">
+                    <button class="action-btn sell-btn" style="background-color: #450a0a; width: 100%; border: 1px solid var(--red); padding: 8px;" onclick="sellAllStock('${stock.id}')" ${stock.owned === 0 ? 'disabled' : ''}>بيع كل الأسهم</button>
                 </div>
             `;
-            container.appendChild(row);
+            container.appendChild(card);
         });
     }
 
@@ -2023,7 +2298,7 @@
                 dailyProfitDisplay.innerText = formatMoney(netDailyProfit);
             } else {
                 dailyProfitDisplay.style.color = 'var(--red)';
-                dailyProfitDisplay.innerText = '-$' + Math.abs(netDailyProfit).toLocaleString();
+                dailyProfitDisplay.innerText = '-EGP ' + Math.abs(netDailyProfit).toLocaleString();
             }
         }
 
@@ -2272,6 +2547,17 @@
             data.employeesPool.forEach(savedEmp => {
                 let localEmp = window.employeesPool.find(e => e.id === savedEmp.id);
                 if (localEmp) localEmp.hiredCount = savedEmp.hiredCount !== undefined ? savedEmp.hiredCount : localEmp.hiredCount;
+            });
+        }
+        if (data.stocks && Array.isArray(data.stocks)) {
+            data.stocks.forEach(savedStk => {
+                let localStk = window.stocks.find(s => s.id === savedStk.id);
+                if (localStk) {
+                    localStk.owned = savedStk.owned !== undefined ? savedStk.owned : localStk.owned;
+                    localStk.price = savedStk.price !== undefined ? savedStk.price : localStk.price;
+                    localStk.avgBuyPrice = savedStk.avgBuyPrice !== undefined ? savedStk.avgBuyPrice : localStk.avgBuyPrice;
+                    localStk.totalInvested = savedStk.totalInvested !== undefined ? savedStk.totalInvested : localStk.totalInvested;
+                }
             });
         }
     }
