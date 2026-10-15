@@ -16,6 +16,7 @@
             --blue: #3b82f6;
             --yellow: #eab308;
             --gem: #06b6d4;
+            --gold: #fbbf24;
         }
 
         * {
@@ -144,9 +145,10 @@
             gap: 6px;
             font-size: 0.75rem;
             color: var(--text-muted);
-            background: rgba(0,0,0,0.2);
-            padding: 6px;
-            border-radius: 4px;
+            background: rgba(0,0,0,0.3);
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
         }
 
         .control-group {
@@ -205,6 +207,7 @@
         .btn-blue { background-color: var(--blue); }
         .btn-red { background-color: var(--red); }
         .btn-gem { background-color: var(--gem); color: #060911; }
+        .btn-orange { background-color: #f97316; color: #060911; }
 
         #loginSection {
             max-width: 400px;
@@ -260,7 +263,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDjmtuNuQf6zQwiHeRbbIWI19XdVJzyuU",
@@ -276,7 +279,7 @@
     const db = getFirestore(app);
 
     let allPlayers = [];
-    const ADMIN_PASSWORD = "admin1"; // يمكنك تعديل كلمة سر الأدمن من هنا
+    const ADMIN_PASSWORD = "admin1"; // كلمة سر الأدمن
 
     window.checkAdminAuth = function() {
         const inputPass = document.getElementById('adminPassInput').value.trim();
@@ -318,6 +321,34 @@
         }
     }
 
+    function calculatePlayerStats(p) {
+        // حساب قيمة الأسهم
+        let stocksVal = 0;
+        if (p.stocks && Array.isArray(p.stocks)) {
+            stocksVal = p.stocks.reduce((sum, s) => sum + ((s.price || 0) * (s.owned || 0)), 0);
+        }
+        
+        // حساب رصيد الخزنة
+        let vaultBal = (p.bankVault && p.bankVault.balance) ? p.bankVault.balance : 0;
+        
+        // صافي الثروة = النقد + الخزنة + الأسهم + (الجواهر * 100) - القروض
+        let netWorth = (p.money || 0) + vaultBal + stocksVal + ((p.gems || 0) * 100) - (p.loan || 0);
+
+        // حساب الدخل اليومي التقريبي
+        let vaultLevel = (p.bankVault && p.bankVault.level) ? p.bankVault.level : 1;
+        let vaultRates = [0, 0.03, 0.045, 0.06, 0.08, 0.10, 0.13, 0.16, 0.20, 0.25, 0.32, 0.40];
+        let currentRate = vaultRates[vaultLevel] || 0.03;
+        let vaultDailyProfit = Math.floor(vaultBal * currentRate);
+        
+        let bondsIncome = (p.bondsOwned || 0) * 250;
+        let netDailyProfit = vaultDailyProfit + bondsIncome;
+
+        return {
+            netWorth: netWorth,
+            dailyProfit: netDailyProfit
+        };
+    }
+
     function renderPlayers(players) {
         const container = document.getElementById('playersList');
         container.innerHTML = '';
@@ -328,6 +359,7 @@
         }
 
         players.forEach((p) => {
+            let stats = calculatePlayerStats(p);
             container.innerHTML += `
                 <div class="player-row">
                     <div class="player-header">
@@ -340,6 +372,8 @@
                         <div>💎 الجواهر: ${p.gems || 0}</div>
                         <div>🏦 الدين: $${(p.loan || 0).toLocaleString()}</div>
                         <div>📅 اليوم: ${p.day || 1}</div>
+                        <div style="color: var(--gold); font-weight: bold;">⭐ صافي الثروة: $${stats.netWorth.toLocaleString()}</div>
+                        <div style="color: var(--green); font-weight: bold;">📈 الدخل اليومي: $${stats.dailyProfit.toLocaleString()}</div>
                     </div>
 
                     <div class="control-group">
@@ -370,8 +404,9 @@
                     </div>
 
                     <div class="btn-row">
-                        <button class="btn btn-green" onclick="savePlayerFullData('${p.id}')">حفظ كافة التعديلات 💾</button>
-                        <button class="btn btn-gem" onclick="resetLockAndCycle('${p.id}')">فك القفل والانتظار 🔓</button>
+                        <button class="btn btn-green" onclick="savePlayerFullData('${p.id}')">حفظ التعديلات 💾</button>
+                        <button class="btn btn-gem" onclick="resetLockAndCycle('${p.id}')">فك القفل 🔓</button>
+                        <button class="btn btn-orange" onclick="resetPlayerAccountCompletely('${p.id}', '${p.username || p.id}', '${p.password || ''}')">تصفير الحساب تماماً 🔄</button>
                         <button class="btn btn-red" onclick="deletePlayerAccount('${p.id}')">حذف الحساب 🗑️</button>
                     </div>
                 </div>
@@ -403,7 +438,7 @@
                 day: newDay,
                 loan: newLoan
             });
-            alert(`✅ تم تحديث بيانات اللاعب وحفظها بنجاح!`);
+            alert(`✅ تم تحديث بيانات اللاعب بنجاح!`);
             loadAllPlayers();
         } catch (e) {
             console.error(e);
@@ -423,6 +458,35 @@
         } catch (e) {
             console.error(e);
             alert("❌ حدث خطأ أثناء العملية.");
+        }
+    };
+
+    // زر التصفير الكامل للحساب
+    window.resetPlayerAccountCompletely = async function(docId, username, password) {
+        if (confirm(`⚠️ تحذير شديد: هل أنت متأكد من تصفير حساب اللاعب (${username}) تماماً؟ سيتم مسح أمواله، جوواهره، أسهم، قروضه، وإرجاعه كأنه حساب جديد تماماً!`)) {
+            try {
+                const playerRef = doc(db, "players_accounts", docId);
+                await setDoc(playerRef, {
+                    username: username,
+                    password: password,
+                    money: 1000,
+                    gems: 20,
+                    loan: 0,
+                    day: 1,
+                    daysPlayedInCycle: 0,
+                    isLocked: false,
+                    bankVault: { balance: 0, level: 1 },
+                    bondsOwned: 0,
+                    stocks: [],
+                    inventory: {},
+                    createdAt: new Date()
+                });
+                alert("🔄 تم تصفير حساب اللاعب وإرجاعه لنقطة الصفر بنجاح!");
+                loadAllPlayers();
+            } catch (e) {
+                console.error(e);
+                alert("❌ فشل في تصفير الحساب.");
+            }
         }
     };
 
