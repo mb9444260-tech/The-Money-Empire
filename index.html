@@ -790,7 +790,7 @@
         </div>
 
         <div class="card">
-            <div class="section-title">🏦 التمويل والسندات البنكية</div>
+            <div class="section-title">🏦 التمويل والسندات البنكية (فائدة القرض تتزايد 20% يومياً)</div>
             <div class="item-row">
                 <div class="item-info"><span class="item-title">قرض استثماري موسع ($30,000)</span></div>
                 <button class="action-btn" onclick="takeLoan()">اقتراض</button>
@@ -806,7 +806,7 @@
         </div>
     </div>
 
-    <!-- تبويب البورصة (الشركات الست الأصلية مع الشارت والأزرار التفاعلية) -->
+    <!-- تبويب البورصة (الشركات الست الأصلية) -->
     <div id="tab-stocks" class="tab-content">
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
@@ -1046,7 +1046,6 @@
     }
     setInterval(updateCountdownsRealtime, 1000);
 
-    // الـ 6 شركات الأصلية للبورصة
     const defaultStocks = [
         { id: 's1', name: 'المصرية للاتصالات', symbol: 'ETEL', price: 45, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 40000, volatility: 0.08, changePct: -2.17, history: [52, 50, 54, 51, 48, 43, 46, 45] },
         { id: 's2', name: 'الشرقية للدخان', symbol: 'EAST', price: 77, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 30000, volatility: 0.06, changePct: 2.67, history: [70, 72, 76, 73, 77, 78, 75, 77] },
@@ -1097,7 +1096,7 @@
 
     const specialItems = [
         { id: 'boost_growth', name: '⚡ جرعة النمو السريع', costGem: 50, desc: 'تقليص أيام نمو المحاصيل إلى النصف.', effect: () => { window.activeBoosts.fastGrowth = true; } },
-        { id: 'boost_shield', name: '🛡️ درع الحماية المالية', costGem: 80, desc: 'إيقاف خصم فوائد القروض لمدة 5 أيام.', effect: () => { window.activeBoosts.financialShield = true; } },
+        { id: 'boost_shield', name: '🛡️ درع الحماية المالية', costGem: 80, desc: 'إيقاف تضاعف وقرض الفوائد لمدة 5 أيام.', effect: () => { window.activeBoosts.financialShield = true; } },
         { id: 'boost_license', name: '🌟 رخصة الإمبراطور الذهبية', costGem: 200, desc: 'زيادة أرباح الأصول والعقارات بنسبة 50%.', effect: () => { window.activeBoosts.emperorLicense = true; window.globalMultiplier *= 1.5; } }
     ];
 
@@ -1421,7 +1420,6 @@
         }
     };
 
-    // دوال التداول والأزرار التفاعلية للبورصة
     window.setStockPercentage = function(stockId, pct) {
         const stock = window.stocks.find(s => s.id === stockId);
         const buyInput = document.getElementById(`buy_input_${stockId}`);
@@ -1516,7 +1514,7 @@
         updateUI();
     };
 
-    window.takeLoan = function() { window.money += 30000; window.loan += 36000; logMessage("اقتراض بنكي بقيمة $30,000"); updateUI(); };
+    window.takeLoan = function() { window.money += 30000; window.loan += 30000; logMessage("اقتراض بنكي بقيمة $30,000"); updateUI(); };
     window.repayLoan = function() { if (window.loan > 0 && window.money >= window.loan) { window.money -= window.loan; window.loan = 0; logMessage("سداد القرض بالكامل."); updateUI(); } };
     window.buyBonds = function() { if (window.money >= 15000) { window.money -= 15000; window.bondsOwned++; logMessage("شراء سندات حكومية."); updateUI(); } };
 
@@ -1657,12 +1655,9 @@
         let taxDeduction = Math.floor(totalNetWealth * taxRate);
         window.money = Math.max(0, window.money - taxDeduction);
 
-        let loanInterestRate = 0.02;
-        let accountantHired = window.employeesPool.find(e => e.position === 'accountant' && e.hiredCount > 0);
-        if (accountantHired) loanInterestRate = accountantHired.isPerfect ? 0.0 : 0.01;
-
+        // تعديل نسبة فائدة القرض ليزيد بنسبة 20% يومياً
         if (window.loan > 0 && !window.activeBoosts.financialShield) {
-            window.money -= Math.floor(window.loan * loanInterestRate);
+            window.loan = Math.floor(window.loan * 1.20);
         }
 
         window.money += finalDailyProfit;
