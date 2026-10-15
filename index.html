@@ -418,6 +418,7 @@
         .stock-change {
             font-size: 0.85rem;
             font-weight: bold;
+            direction: ltr;
         }
 
         .stock-chart-container {
@@ -430,11 +431,13 @@
             align-items: center;
             justify-content: center;
             width: 100%;
+            position: relative;
         }
 
         .sparkline-canvas {
             width: 100%;
             height: 100%;
+            display: block;
         }
 
         .stock-stats-grid {
@@ -1047,9 +1050,9 @@
     setInterval(updateCountdownsRealtime, 1000);
 
     const defaultStocks = [
-        { id: 's1', name: 'المصرية للاتصالات', symbol: 'ETEL', price: 45, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 40000, volatility: 0.08, changePct: -2.17, history: [52, 50, 54, 51, 48, 43, 46, 45] },
-        { id: 's2', name: 'الشرقية للدخان', symbol: 'EAST', price: 77, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 30000, volatility: 0.06, changePct: 2.67, history: [70, 72, 76, 73, 77, 78, 75, 77] },
-        { id: 's3', name: 'البنك التجاري الدولي', symbol: 'COMI', price: 46, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 50000, volatility: 0.07, changePct: 2.22, history: [48, 45, 43, 44, 50, 49, 51, 46] },
+        { id: 's1', name: 'المصرية للاتصالات', symbol: 'ETEL', price: 48, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 40000, volatility: 0.08, changePct: 6.67, history: [40, 42, 41, 43, 45, 44, 46, 48] },
+        { id: 's2', name: 'الشرقية للدخان', symbol: 'EAST', price: 79, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 30000, volatility: 0.06, changePct: 2.60, history: [70, 72, 74, 73, 76, 75, 77, 79] },
+        { id: 's3', name: 'البنك التجاري الدولي', symbol: 'COMI', price: 45, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 50000, volatility: 0.07, changePct: -2.17, history: [52, 50, 49, 51, 48, 47, 46, 45] },
         { id: 's4', name: 'أبو قير للأسمدة', symbol: 'ABUK', price: 62, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 35000, volatility: 0.09, changePct: 1.45, history: [58, 59, 61, 60, 62, 63, 61, 62] },
         { id: 's5', name: 'السويدي اليكتريك', symbol: 'SWDY', price: 34, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 45000, volatility: 0.10, changePct: -1.10, history: [36, 35, 33, 34, 35, 33, 34, 34] },
         { id: 's6', name: 'فوري للخدمات المالية', symbol: 'FWRY', price: 28, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 60000, volatility: 0.12, changePct: 4.50, history: [24, 25, 26, 25, 27, 28, 27, 28] }
@@ -1096,7 +1099,7 @@
 
     const specialItems = [
         { id: 'boost_growth', name: '⚡ جرعة النمو السريع', costGem: 50, desc: 'تقليص أيام نمو المحاصيل إلى النصف.', effect: () => { window.activeBoosts.fastGrowth = true; } },
-        { id: 'boost_shield', name: '🛡️ درع الحماية المالية', costGem: 80, desc: 'إيقاف تضاعف وقرض الفوائد لمدة 5 أيام.', effect: () => { window.activeBoosts.financialShield = true; } },
+        { id: 'boost_shield', name: '🛡️ درع الحماية المالية', costGem: 80, desc: 'إيقاف تضاعف القروض والفوائد لمدة 5 أيام.', effect: () => { window.activeBoosts.financialShield = true; } },
         { id: 'boost_license', name: '🌟 رخصة الإمبراطور الذهبية', costGem: 200, desc: 'زيادة أرباح الأصول والعقارات بنسبة 50%.', effect: () => { window.activeBoosts.emperorLicense = true; window.globalMultiplier *= 1.5; } }
     ];
 
@@ -1147,6 +1150,10 @@
         const targetTab = document.getElementById('tab-' + tabName);
         if (targetTab) targetTab.classList.add('active');
         if (event && event.currentTarget) event.currentTarget.classList.add('active');
+        
+        if (tabName === 'stocks') {
+            setTimeout(renderStocks, 50);
+        }
     }
 
     window.logoutGame = function() {
@@ -1655,7 +1662,6 @@
         let taxDeduction = Math.floor(totalNetWealth * taxRate);
         window.money = Math.max(0, window.money - taxDeduction);
 
-        // تعديل نسبة فائدة القرض ليزيد بنسبة 20% يومياً
         if (window.loan > 0 && !window.activeBoosts.financialShield) {
             window.loan = Math.floor(window.loan * 1.20);
         }
@@ -1918,7 +1924,7 @@
                 <div class="stock-header">
                     <div class="stock-price-box">
                         <div class="stock-price" style="color: ${themeColor};">EGP ${stock.price}</div>
-                        <div class="stock-change" style="color: ${themeColor};">${changeSign}${stock.changePct}%+</div>
+                        <div class="stock-change" style="color: ${themeColor};">${changeSign}${stock.changePct}%</div>
                     </div>
                     <div class="stock-titles">
                         <span class="stock-name">${stock.name}</span>
@@ -1932,34 +1938,34 @@
 
                 <div class="stock-stats-grid">
                     <div class="stat-row">
+                        <span class="stat-label">الأسهم المملوكة:</span>
                         <span class="stat-val">${stock.owned.toLocaleString()} سهم</span>
-                        <span class="stat-label">:الأسهم المملوكة</span>
                     </div>
                     <div class="stat-row">
+                        <span class="stat-label">متوسط سعر الشراء:</span>
                         <span class="stat-val">EGP ${stock.avgBuyPrice}</span>
-                        <span class="stat-label">:متوسط سعر الشراء</span>
                     </div>
                     <div class="stat-row">
+                        <span class="stat-label">رأس المال المستثمر:</span>
                         <span class="stat-val">EGP ${stock.totalInvested.toLocaleString()}</span>
-                        <span class="stat-label">:رأس المال المستثمر</span>
                     </div>
                     <div class="stat-row">
+                        <span class="stat-label">القيمة السوقية الحالية:</span>
                         <span class="stat-val" style="color: var(--gold);">EGP ${currentValuation.toLocaleString()}</span>
-                        <span class="stat-label">:القيمة السوقية الحالية</span>
                     </div>
                     <div class="stat-row">
+                        <span class="stat-label">صافي الكاش عند البيع:</span>
                         <span class="stat-val" style="color: var(--gem);">EGP ${Math.floor(currentValuation * 0.99).toLocaleString()}</span>
-                        <span class="stat-label">:صافي الكاش عند البيع</span>
                     </div>
                     <div class="stat-row">
+                        <span class="stat-label">صافي الربح الفعلي كاش:</span>
                         <span class="stat-val" style="color: ${profitLoss >= 0 ? '#22c55e' : '#ef4444'};">
-                            EGP (${profitLoss >= 0 ? '+' : ''}${pctProfit}%) ${profitLoss >= 0 ? '+' : ''}${profitLoss.toLocaleString()}
+                            EGP ${profitLoss >= 0 ? '+' : ''}${profitLoss.toLocaleString()} (${profitLoss >= 0 ? '+' : ''}${pctProfit}%)
                         </span>
-                        <span class="stat-label">:صافي الربح الفعلي كاش</span>
                     </div>
                     <div class="stat-row" style="margin-top:4px;">
+                        <span class="stat-label">سقف تملك السهم:</span>
                         <span class="stat-val">${stock.maxLimit.toLocaleString()} سهم</span>
-                        <span class="stat-label">:سقف تملك السهم</span>
                     </div>
                 </div>
 
@@ -1998,9 +2004,9 @@
             `;
             container.appendChild(card);
 
-            setTimeout(() => {
+            requestAnimationFrame(() => {
                 drawSparkline(`chart_${stock.id}`, stock.history, themeColor);
-            }, 50);
+            });
         });
     }
 
@@ -2008,8 +2014,9 @@
         const canvas = document.getElementById(canvasId);
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
-        const width = canvas.width = canvas.parentElement.clientWidth;
-        const height = canvas.height = canvas.parentElement.clientHeight;
+        const parent = canvas.parentElement;
+        const width = canvas.width = parent.clientWidth || 300;
+        const height = canvas.height = parent.clientHeight || 90;
 
         ctx.clearRect(0, 0, width, height);
         if (!dataPoints || dataPoints.length < 2) return;
@@ -2025,7 +2032,7 @@
         ctx.lineJoin = 'round';
 
         dataPoints.forEach((val, index) => {
-            const x = (index / (dataPoints.length - 1)) * (width - 12) + 6;
+            const x = (index / (dataPoints.length - 1)) * (width - 16) + 8;
             const y = height - (((val - min) / range) * (height - 20) + 10);
             if (index === 0) ctx.moveTo(x, y);
             else ctx.lineTo(x, y);
