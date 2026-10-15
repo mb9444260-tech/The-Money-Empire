@@ -361,7 +361,7 @@
             margin-bottom: 3px;
         }
 
-        /* ------------------ شبكة البورصة المحدثة بحسب الصورة ------------------ */
+        /* ------------------ شبكة البورصة المحدثة ------------------ */
         .stocks-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -593,7 +593,6 @@
 </head>
 <body>
 
-<!-- شاشة تسجيل الدخول أو إنشاء الحساب -->
 <div id="authScreen">
     <div class="auth-card">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160" width="100%" height="auto" style="margin-bottom: 5px;">
@@ -618,7 +617,7 @@
         </svg>
 
         <h2 style="color: var(--yellow); font-size: 1.1rem;">🔐 تسجيل الدخول للإمبراطورية</h2>
-        <div style="font-size: 0.75rem; color: var(--text-muted);">ادخل اسم الحساب وكلمة المرور الخاصة بك للبدء أو استرجاع حفظك:</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">ادخل اسم الحساب وكلمة المرور الخاصة بك للبدء أو استرجاع حفظك[cite: 11]:</div>
         
         <input type="text" id="authUsername" class="auth-input" placeholder="اسم المستخدم أو البريد الإلكتروني...">
         <input type="password" id="authPassword" class="auth-input" placeholder="كلمة المرور...">
@@ -627,7 +626,6 @@
     </div>
 </div>
 
-<!-- واجهة اللعبة الرئيسية -->
 <div class="container" id="gameContainer" style="display: none;">
     <header>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 150" width="100%" height="auto">
@@ -672,7 +670,7 @@
 
     <div id="renewalPanel" class="card" style="display: none; background: rgba(6, 182, 212, 0.1); border-color: var(--gem); text-align: center; padding: 14px;">
         <div style="font-size: 0.9rem; font-weight: bold; color: var(--gem);">⚠️ انتهت محاولات الأيام الـ 25 المتاحة!</div>
-        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;" id="renewalSubText">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;" id="renewalSubText">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة[cite: 11].</div>
         <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: center;" id="renewalButtonsContainer">
             <button class="action-btn gem-btn" onclick="renewWithGems()">تجديد بـ 100 جوهرة 💎</button>
             <button class="action-btn" style="background-color: var(--orange);" onclick="startWaitTimer()">انتظار 12 ساعة ⏳</button>
@@ -822,11 +820,11 @@
         </div>
     </div>
 
-    <!-- تبويب البورصة المحدث بالكامل المماثل للصورة -->
+    <!-- تبويب البورصة (6 شركات مدرجة) -->
     <div id="tab-stocks" class="tab-content">
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
-                <span>📈 سوق الأسهم والبورصة العالمية</span>
+                <span>📈 سوق الأسهم والبورصة العالمية (6 شركات مدرجة)</span>
                 <span id="stockTimerDisplay" style="font-size:0.75rem; color:var(--gem);">تحديث الأسعار بعد: 32ث</span>
             </div>
             <div class="stocks-grid" id="stocksList"></div>
@@ -1033,11 +1031,14 @@
         }
     };
 
-    // ---------------- بيانات أسهم البورصة المطابقة للصورة ----------------
+    // ---------------- 6 أسهم في البورصة ----------------
     window.stocks = [
         { id: 's1', name: 'المصرية للاتصالات', symbol: 'ETEL', price: 45, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 40000, volatility: 0.08, changePct: -2.17, history: [52, 50, 54, 51, 48, 43, 46, 45] },
         { id: 's2', name: 'الشرقية للدخان', symbol: 'EAST', price: 77, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 30000, volatility: 0.06, changePct: 2.67, history: [70, 72, 76, 73, 77, 78, 75, 77] },
-        { id: 's3', name: 'البنك التجاري الدولي', symbol: 'COMI', price: 46, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 50000, volatility: 0.07, changePct: 2.22, history: [48, 45, 43, 44, 50, 49, 51, 46] }
+        { id: 's3', name: 'البنك التجاري الدولي', symbol: 'COMI', price: 46, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 50000, volatility: 0.07, changePct: 2.22, history: [48, 45, 43, 44, 50, 49, 51, 46] },
+        { id: 's4', name: 'أبو قير للأسمدة', symbol: 'ABUK', price: 62, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 35000, volatility: 0.09, changePct: 1.45, history: [58, 59, 61, 60, 62, 63, 61, 62] },
+        { id: 's5', name: 'السويدي اليكتريك', symbol: 'SWDY', price: 34, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 45000, volatility: 0.10, changePct: -1.10, history: [36, 35, 33, 34, 35, 33, 34, 34] },
+        { id: 's6', name: 'فوري للخدمات المالية', symbol: 'FWRY', price: 28, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 60000, volatility: 0.12, changePct: 4.50, history: [24, 25, 26, 25, 27, 28, 27, 28] }
     ];
 
     window.stockNextUpdateTimestamp = Date.now() + 32000;
@@ -1057,7 +1058,7 @@
                 window.stocks.forEach(stock => {
                     let oldPrice = stock.price;
                     let change = (Math.random() * (stock.volatility * 2)) - stock.volatility;
-                    stock.price = Math.max(10, Math.floor(stock.price * (1 + change)));
+                    stock.price = Math.max(5, Math.floor(stock.price * (1 + change)));
                     stock.changePct = Number(((stock.price - oldPrice) / oldPrice * 100).toFixed(2));
                     
                     if (!stock.history) stock.history = [];
@@ -1360,7 +1361,7 @@
             window.cropFields.currentDaysGrown = 0; window.cropFields.isReady = false;
             logMessage(`🌱 تم بذر المحاصيل بتكلفة $450.`);
             renderAll(); updateUI();
-        } else { alert("لا توجد سيولة كافية לבذر المحاصيل ($450)!"); }
+        } else { alert("لا توجد سيولة كافية لبذر المحاصيل ($450)!"); }
     };
 
     window.harvestCrops = function() {
@@ -1432,7 +1433,7 @@
         if (!qty || qty <= 0) { alert("الرجاء إدخال كمية صحيحة للشراء!"); return; }
 
         if ((stock.owned + qty) > stock.maxLimit) {
-            alert(`❌ تجوزت سقف التملك لهذا السهم (${stock.maxLimit.toLocaleString()} سهم)!`);
+            alert(`❌ تجاوزت سقف التملك لهذا السهم (${stock.maxLimit.toLocaleString()} سهم)!`);
             return;
         }
 
@@ -1886,7 +1887,46 @@
         if (taxRateDisplay) taxRateDisplay.innerText = `النسبة الحالية: ${taxRate}%`;
     }
 
-    // ---------------- رسم وتوليد أسهم البورصة بنفس شكل الصورة تماماً ----------------
+    // ---------------- إضافة 3 أسهم جديدة ليصبح المجموع 6 أسهم مع الرسوم البيانية ----------------
+    window.stocks = [
+        { id: 's1', name: 'المصرية للاتصالات', symbol: 'ETEL', price: 45, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 40000, volatility: 0.08, changePct: -2.17, history: [52, 50, 54, 51, 48, 43, 46, 45] },
+        { id: 's2', name: 'الشرقية للدخان', symbol: 'EAST', price: 77, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 30000, volatility: 0.06, changePct: 2.67, history: [70, 72, 76, 73, 77, 78, 75, 77] },
+        { id: 's3', name: 'البنك التجاري الدولي', symbol: 'COMI', price: 46, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 50000, volatility: 0.07, changePct: 2.22, history: [48, 45, 43, 44, 50, 49, 51, 46] },
+        { id: 's4', name: 'أبو قير للأسمدة', symbol: 'ABUK', price: 62, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 35000, volatility: 0.09, changePct: 1.45, history: [58, 59, 61, 60, 62, 63, 61, 62] },
+        { id: 's5', name: 'السويدي اليكتريك', symbol: 'SWDY', price: 34, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 45000, volatility: 0.10, changePct: -1.10, history: [36, 35, 33, 34, 35, 33, 34, 34] },
+        { id: 's6', name: 'فوري للخدمات المالية', symbol: 'FWRY', price: 28, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 60000, volatility: 0.12, changePct: 4.50, history: [24, 25, 26, 25, 27, 28, 27, 28] }
+    ];
+
+    window.stockNextUpdateTimestamp = Date.now() + 32000;
+    function updateStockMarketRealtime() {
+        let now = Date.now();
+        let diffMs = window.stockNextUpdateTimestamp - now;
+        let secLeft = Math.ceil(diffMs / 1000);
+
+        const stockTimerDisplay = document.getElementById('stockTimerDisplay');
+        if (stockTimerDisplay) {
+            if (secLeft > 0) {
+                stockTimerDisplay.innerText = `تحديث الأسعار بعد: ${secLeft}ث`;
+            } else {
+                stockTimerDisplay.innerText = `جاري التحديث...`;
+                window.stockNextUpdateTimestamp = Date.now() + 32000;
+                
+                window.stocks.forEach(stock => {
+                    let oldPrice = stock.price;
+                    let change = (Math.random() * (stock.volatility * 2)) - stock.volatility;
+                    stock.price = Math.max(5, Math.floor(stock.price * (1 + change)));
+                    stock.changePct = Number(((stock.price - oldPrice) / oldPrice * 100).toFixed(2));
+                    
+                    if (!stock.history) stock.history = [];
+                    stock.history.push(stock.price);
+                    if (stock.history.length > 15) stock.history.shift();
+                });
+                renderStocks();
+            }
+        }
+    }
+    setInterval(updateStockMarketRealtime, 1000);
+
     function renderStocks() {
         const container = document.getElementById('stocksList');
         if (!container) return;
@@ -1972,11 +2012,9 @@
                     <div class="input-row">
                         <div class="input-box">
                             <input type="number" id="buy_input_${stock.id}" class="stock-trade-input" placeholder="الكمية" min="1">
-                            <button class="input-icon-btn">hat{}` + `</button>
                         </div>
                         <div class="input-box">
                             <input type="number" id="sell_input_${stock.id}" class="stock-trade-input" placeholder="الكمية" min="1">
-                            <button class="input-icon-btn">hat{}` + `</button>
                         </div>
                     </div>
 
@@ -1988,7 +2026,6 @@
             `;
             container.appendChild(card);
 
-            // رسم الخط البياني الحي داخل كافاس
             setTimeout(() => {
                 drawSparkline(`chart_${stock.id}`, stock.history, themeColor);
             }, 50);
