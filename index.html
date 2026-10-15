@@ -580,7 +580,6 @@
 <!-- شاشة تسجيل الدخول أو إنشاء الحساب -->
 <div id="authScreen">
     <div class="auth-card">
-        <!-- تم إصلاح خاصية الـ height لتفادي تحذير الكونسول -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160" style="width: 100%; height: auto; margin-bottom: 5px;">
             <defs>
                 <linearGradient id="goldGradAuth" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -780,20 +779,20 @@
         </div>
 
         <div class="card">
-            <div class="section-title">🏛️ نظام الضرائب الحكومية على الثروات</div>
+            <div class="section-title">🏛️ نظام الضرائب الحكومية المتغيرة على الثروة</div>
             <div class="item-row">
                 <div class="item-info">
-                    <span class="item-title">قانون الضرائب التصاعدية اليومية</span>
-                    <span class="item-desc">يتم خصم نسبة ضريبية يومية بسيطة بناءً على إجمالي صافي الثروة والنقد لتطوير الدولة.</span>
+                    <span class="item-title">قانون الضرائب المتغيرة اليومية</span>
+                    <span class="item-desc">كلما ارتفع إجمالي ثروتك ونقدك، زادت نسبة الضريبة المخصومة تلقائياً يومياً.</span>
                 </div>
-                <span id="taxRateDisplay" class="item-meta" style="color: var(--red);">النسبة الحالية: 2%</span>
+                <span id="taxRateDisplay" class="item-meta" style="color: var(--red);">النسبة الحالية: 1.5%</span>
             </div>
         </div>
 
         <div class="card">
-            <div class="section-title">🏦 التمويل والسندات البنكية</div>
+            <div class="section-title">🏦 التمويل والسندات (فائدة القرض المركبة 20% يومياً)</div>
             <div class="item-row">
-                <div class="item-info"><span class="item-title">قرض استثماري موسع ($30,000)</span></div>
+                <div class="item-info"><span class="item-title">قرض استثماري موسع ($30,000)</span><span class="item-desc">تتضاعف فوائده بنسبة 20% يومياً.</span></div>
                 <button class="action-btn" onclick="takeLoan()">اقتراض</button>
             </div>
             <div class="item-row">
@@ -807,7 +806,7 @@
         </div>
     </div>
 
-    <!-- تبويب البورصة (6 شركات مدرجة) -->
+    <!-- تبويب البورصة (6 شركات مدرجة ثابتة) -->
     <div id="tab-stocks" class="tab-content">
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
@@ -1018,11 +1017,9 @@
         }
     };
 
-    // ---------------- تحديث المؤشرات التنازلية للشحنات والمهام حيّاً ----------------
     function updateCountdownsRealtime() {
         let now = Date.now();
 
-        // 1. العد التنازلي لشحنات B2B
         const b2bTimerDisplay = document.getElementById('b2bTimerDisplay');
         if (b2bTimerDisplay) {
             if (!window.b2bNextRefreshTimestamp || window.b2bNextRefreshTimestamp <= now) {
@@ -1035,7 +1032,6 @@
             b2bTimerDisplay.innerText = `تجدد بعد: ${hoursB2B}س و ${minsB2B}د و ${secsB2B}ث`;
         }
 
-        // 2. العد التنازلي للمهام اليومية Quests
         const questTimerDisplay = document.getElementById('questTimerDisplay');
         if (questTimerDisplay) {
             if (!window.questResetTimestamp || window.questResetTimestamp <= now) {
@@ -1425,7 +1421,6 @@
         }
     };
 
-    // ------------------ دوال تداول البورصة والنسب ------------------
     window.setStockPercentage = function(stockId, pct) {
         const stock = window.stocks.find(s => s.id === stockId);
         const buyInput = document.getElementById(`buy_input_${stockId}`);
@@ -1520,8 +1515,24 @@
         updateUI();
     };
 
-    window.takeLoan = function() { window.money += 30000; window.loan += 36000; logMessage("اقتراض بنكي بقيمة $30,000"); updateUI(); };
-    window.repayLoan = function() { if (window.loan > 0 && window.money >= window.loan) { window.money -= window.loan; window.loan = 0; logMessage("سداد القرض بالكامل."); updateUI(); } };
+    // التعديل 1: نظام القروض الجديد (فائدة مركبة 20% يومياً من قيمة القرض الحالي)
+    window.takeLoan = function() { 
+        let addedLoan = 30000;
+        window.money += addedLoan; 
+        window.loan += addedLoan; 
+        logMessage(`🏛️ تم أخذ قرض استثماري بقيمة ${formatMoney(addedLoan)} (تتضاعف فوائده بنسبة 20% يومياً).`); 
+        updateUI(); 
+    };
+    window.repayLoan = function() { 
+        if (window.loan > 0 && window.money >= window.loan) { 
+            window.money -= window.loan; 
+            logMessage(`🏛️ تم سداد القرض بالكامل بقيمة ${formatMoney(window.loan)}.`); 
+            window.loan = 0; 
+            updateUI(); 
+        } else {
+            alert("❌ لا تملك سيولة كافية لسداد الدين بالكامل!");
+        }
+    };
     window.buyBonds = function() { if (window.money >= 15000) { window.money -= 15000; window.bondsOwned++; logMessage("شراء سندات حكومية."); updateUI(); } };
 
     window.renewWithGems = function() {
@@ -1656,17 +1667,23 @@
         let bondsIncome = window.bondsOwned * 250;
         let finalDailyProfit = assetIncome + bondsIncome;
 
+        // التعديل 2: نظام الضرائب المتغيرة اليومية حسب صافي الثروة والنقد (تصاعدية)
         let totalNetWealth = window.money + window.bankVault.balance + (window.bondsOwned * 15000);
-        let taxRate = totalNetWealth > 500000 ? 0.04 : (totalNetWealth > 100000 ? 0.025 : 0.015);
+        let taxRate = 0.01; // 1% أساسية
+        if (totalNetWealth > 5000000) taxRate = 0.08;
+        else if (totalNetWealth > 2000000) taxRate = 0.06;
+        else if (totalNetWealth > 1000000) taxRate = 0.04;
+        else if (totalNetWealth > 500000) taxRate = 0.025;
+        else if (totalNetWealth > 100000) taxRate = 0.015;
+
         let taxDeduction = Math.floor(totalNetWealth * taxRate);
         window.money = Math.max(0, window.money - taxDeduction);
 
-        let loanInterestRate = 0.02;
-        let accountantHired = window.employeesPool.find(e => e.position === 'accountant' && e.hiredCount > 0);
-        if (accountantHired) loanInterestRate = accountantHired.isPerfect ? 0.0 : 0.01;
-
+        // التعديل 1 (تابع): تطبيق فائدة القرض المركبة 20% يومياً
         if (window.loan > 0 && !window.activeBoosts.financialShield) {
-            window.money -= Math.floor(window.loan * loanInterestRate);
+            let loanInterest = Math.floor(window.loan * 0.20);
+            window.loan += loanInterest;
+            logMessage(`🏦 تراكمت فوائد القرض اليومية بنسبة 20% (بمبلغ ${formatMoney(loanInterest)}). إجمالي الدين الحالي: ${formatMoney(window.loan)}.`);
         }
 
         window.money += finalDailyProfit;
@@ -1904,8 +1921,14 @@
         if (vaultLevelDisplay) vaultLevelDisplay.innerText = `المستوى: ${currentLevel} (العائد ${vaultRates[currentLevel]}% يومياً)`;
 
         let totalNetWealth = window.money + window.bankVault.balance + (window.bondsOwned * 15000);
-        let taxRate = totalNetWealth > 500000 ? 4 : (totalNetWealth > 100000 ? 2.5 : 1.5);
-        if (taxRateDisplay) taxRateDisplay.innerText = `النسبة الحالية: ${taxRate}%`;
+        let taxPct = 1.0;
+        if (totalNetWealth > 5000000) taxPct = 8.0;
+        else if (totalNetWealth > 2000000) taxPct = 6.0;
+        else if (totalNetWealth > 1000000) taxPct = 4.0;
+        else if (totalNetWealth > 500000) taxPct = 2.5;
+        else if (totalNetWealth > 100000) taxPct = 1.5;
+
+        if (taxRateDisplay) taxRateDisplay.innerText = `النسبة الحالية: ${taxPct}% (تتغير تلقائياً حسب إجمالي ثروتك)`;
     }
 
     function renderStocks() {
@@ -2175,7 +2198,13 @@
         window.employeesPool.forEach(emp => { if (emp.hiredCount > 0 && !emp.isPerfect) totalDailySalaries += emp.hiredCount * emp.dailySalary; });
 
         let totalNetWealth = window.money + window.bankVault.balance + (window.bondsOwned * 15000);
-        let taxRate = totalNetWealth > 500000 ? 0.04 : (totalNetWealth > 100000 ? 0.025 : 0.015);
+        let taxRate = 0.01;
+        if (totalNetWealth > 5000000) taxRate = 0.08;
+        else if (totalNetWealth > 2000000) taxRate = 0.06;
+        else if (totalNetWealth > 1000000) taxRate = 0.04;
+        else if (totalNetWealth > 500000) taxRate = 0.025;
+        else if (totalNetWealth > 100000) taxRate = 0.015;
+
         let taxDeduction = Math.floor(totalNetWealth * taxRate);
 
         let netDailyProfit = (assetIncome + bondsIncome + vaultDailyProfit) - (totalDailySalaries + taxDeduction);
@@ -2326,7 +2355,7 @@
         } catch (e) {}
     };
 
-    // إصلاح دالة الدمج لتجنب مسح قائمة الأسهم الستة الحالية عند جلب الحساب القديم
+    // إصلاح دالة الدمج وتأمين الحفاظ على الأسهم الستة الحالية بالكامل دون تداخل
     function mergeSavedData(data) {
         window.money = data.money !== undefined ? data.money : window.money;
         window.gems = data.gems !== undefined ? data.gems : window.gems;
@@ -2343,7 +2372,6 @@
             Object.keys(data.inventory).forEach(k => { if (window.inventory[k]) window.inventory[k].count = data.inventory[k].count; });
         }
 
-        // إبقاء قائمة الأسهم الستة بالكامل وتحديث الأسهم المملوكة فقط
         if (data.stocks && Array.isArray(data.stocks)) {
             data.stocks.forEach(savedStk => {
                 let localStk = window.stocks.find(s => s.id === savedStk.id);
