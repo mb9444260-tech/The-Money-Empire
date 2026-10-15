@@ -929,7 +929,6 @@
     window.currentWeather = { name: "عادي ☀️", effect: 1.0 };
     window.currentEvent = { name: "سوق مستقر 📊", type: "none" };
 
-    // تحديث مستويات الخزنة بسعة تتدرج حتى 10,000,000 وربح أقصى يومي 500,000
     window.bankVault = { 
         balance: 0, 
         level: 1, 
@@ -1634,7 +1633,6 @@
         });
         if (totalDailySalaries > 0) window.money -= totalDailySalaries;
 
-        // ربح الخزنة بمعدل ثابت 5% يومياً بحد أقصى للربح 500,000 وبحد أقصى للسعة حسب المستوى
         let currentCap = window.bankVault.capacities[window.bankVault.level] || 10000000;
         let vaultProfit = Math.floor(window.bankVault.balance * 0.05);
         if (vaultProfit > 500000) vaultProfit = 500000;
@@ -1692,15 +1690,17 @@
         let taxDeduction = Math.floor(totalNetWealth * taxRate);
         window.money = Math.max(0, window.money - taxDeduction);
 
-        // نظام القرض وتأخير السداد لمدة 30 يوم لخصم الضعف من الأصول والثروة والفلوس
+        // نظام القرض: تتبع وتجميع أيام التأخير بدقة حتى اليوم 30 ثم خصم الضعف من النقد والأصول
         if (window.loan > 0 && !window.activeBoosts.financialShield) {
-            window.loanDaysDelayed = (window.loanDaysDelayed || 0) + 1;
+            window.loanDaysDelayed = (Number(window.loanDaysDelayed) || 0) + 1;
             if (window.loanDaysDelayed >= 30) {
-                let penaltyAmount = window.loan * 2;
+                let penaltyAmount = window.loan * 2; // خصم الضعف (مثل 150 ألف * 2 = 300 ألف)
                 window.money = Math.max(0, window.money - penaltyAmount);
-                logMessage(`⚠️ تمر 30 يوماً على القرض دون سداد! تم تطبيق عقوبة خصم الضعف بقيمة ${formatMoney(penaltyAmount)}.`);
-                window.loanDaysDelayed = 0;
+                logMessage(`⚠️ تمر 30 يوماً على القرض دون سداد! تم تطبيق عقوبة خصم الضعف بقيمة ${formatMoney(penaltyAmount)} من الأموال والنقد.`);
+                window.loanDaysDelayed = 0; // إعادة ضبط العدّاد للبدء لدورة 30 يوم جديدة إذا ظل القرض غير مُسدّد
             }
+        } else if (window.loan === 0) {
+            window.loanDaysDelayed = 0;
         }
 
         window.money += finalDailyProfit;
