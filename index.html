@@ -40,7 +40,7 @@
 
         .container {
             width: 100%;
-            max-width: 760px;
+            max-width: 1200px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -236,7 +236,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            max-height: 450px;
+            max-height: 600px;
             overflow-y: auto;
             padding-left: 4px;
         }
@@ -298,14 +298,8 @@
             transition: opacity 0.2s, transform 0.1s;
         }
 
-        button.action-btn:hover {
-            opacity: 0.9;
-        }
-
-        button.action-btn:active {
-            transform: scale(0.96);
-        }
-
+        button.action-btn:hover { opacity: 0.9; }
+        button.action-btn:active { transform: scale(0.96); }
         button.action-btn:disabled {
             background-color: var(--border-color);
             color: var(--text-muted);
@@ -315,7 +309,6 @@
 
         button.sell-btn { background-color: var(--red); }
         button.farm-btn { background-color: var(--orange); }
-        button.logistics-btn { background-color: var(--purple); }
 
         .whatsapp-btn {
             background-color: var(--whatsapp) !important;
@@ -340,33 +333,17 @@
             outline: none;
         }
 
-        .gift-input:focus { border-color: var(--blue); }
-
-        .ledger-box {
+        .ledger-box, .chat-box {
             background-color: rgba(0,0,0,0.5);
             border-radius: 8px;
             padding: 10px;
             height: 240px;
             overflow-y: auto;
             font-size: 0.75rem;
-            font-family: monospace;
             color: #cbd5e1;
             display: flex;
             flex-direction: column;
             gap: 6px;
-            border: 1px solid var(--border-color);
-        }
-
-        .chat-box {
-            background-color: rgba(0,0,0,0.5);
-            border-radius: 8px;
-            padding: 10px;
-            height: 240px;
-            overflow-y: auto;
-            font-size: 0.8rem;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
             border: 1px solid var(--border-color);
         }
 
@@ -384,16 +361,22 @@
             margin-bottom: 3px;
         }
 
-        /* تنسيق بطاقة السهم والتصميم الداخلي للمربع الأسود والسهم التفاعلي */
+        /* ------------------ شبكة البورصة المحدثة بحسب الصورة ------------------ */
+        .stocks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
         .stock-card {
-            background-color: #0b1120;
-            border: 1px solid var(--border-color);
+            background-color: #090e1a;
+            border: 1px solid #1a2336;
             border-radius: 14px;
             padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+            gap: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
 
         .stock-header {
@@ -405,6 +388,7 @@
         .stock-titles {
             display: flex;
             flex-direction: column;
+            align-items: flex-end;
             gap: 2px;
         }
 
@@ -415,86 +399,108 @@
         }
 
         .stock-symbol {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            letter-spacing: 1px;
+            font-size: 0.85rem;
+            color: #64748b;
             font-weight: bold;
         }
 
         .stock-price-box {
-            text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .stock-price {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             font-weight: 900;
         }
 
         .stock-change {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: bold;
         }
 
         .stock-chart-container {
-            background: #000000;
-            border: 1px solid var(--border-color);
+            background: #020408;
+            border: 1px solid #161f30;
             border-radius: 10px;
-            padding: 14px;
-            height: 95px;
+            padding: 6px;
+            height: 90px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            width: 100%;
         }
 
-        .interactive-arrow {
-            font-size: 1.8rem;
-            font-weight: bold;
-            transition: transform 0.3s ease;
+        .sparkline-canvas {
+            width: 100%;
+            height: 100%;
         }
 
         .stock-stats-grid {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            background: rgba(255,255,255,0.01);
-            padding: 10px 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.03);
+            gap: 6px;
         }
 
         .stat-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.8rem;
+            font-size: 0.82rem;
         }
 
-        .stat-label {
-            color: var(--text-muted);
+        .stat-label { color: #94a3b8; }
+        .stat-val { font-weight: bold; color: #ffffff; }
+
+        .brokerage-box {
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 8px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: right;
         }
 
-        .stat-val {
+        .brokerage-title {
+            font-size: 0.75rem;
+            color: var(--yellow);
             font-weight: bold;
-            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .percentage-buttons {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+        .brokerage-desc {
+            font-size: 0.68rem;
+            color: #64748b;
+        }
+
+        .stock-actions-grid {
+            display: flex;
+            flex-direction: column;
             gap: 8px;
         }
 
+        .pct-group {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+
         .pct-btn {
-            background: #162032;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 0.8rem;
+            background: #111827;
+            border: 1px solid #1f293d;
+            color: #cbd5e1;
+            padding: 6px 0;
+            border-radius: 6px;
+            font-size: 0.75rem;
             font-weight: bold;
             cursor: pointer;
             transition: 0.2s;
+            text-align: center;
         }
 
         .pct-btn:hover {
@@ -502,16 +508,86 @@
             color: white;
         }
 
-        .trade-inputs-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
+        .sell-all-btn-cell {
+            background: #200d18;
+            border: 1px solid #4c1d24;
+            color: #f87171;
+            padding: 6px 0;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
         }
 
-        .trade-actions-grid {
+        .input-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 6px;
+        }
+
+        .input-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .stock-trade-input {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            padding: 8px 30px 8px 8px;
+            color: white;
+            font-size: 0.8rem;
+            width: 100%;
+            text-align: center;
+            outline: none;
+        }
+
+        .input-icon-btn {
+            position: absolute;
+            right: 6px;
+            background: #1e293b;
+            color: #94a3b8;
+            border: none;
+            border-radius: 4px;
+            width: 20px;
+            height: 20px;
+            font-size: 0.65rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .btn-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .btn-trade {
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-buy {
+            background-color: #10b981;
+            color: #022c22;
+        }
+
+        .btn-sell {
+            background-color: #1a1625;
+            color: #64748b;
+        }
+
+        .btn-sell.active {
+            background-color: #ef4444;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -578,12 +654,9 @@
             </g>
             <text x="300" y="95" font-family="system-ui, sans-serif" font-weight="900" font-size="28" fill="url(#goldGrad)" text-anchor="middle" filter="url(#glow)" letter-spacing="1">الإمبراطورية المالية</text>
             <text x="300" y="128" font-family="system-ui, sans-serif" font-weight="700" font-size="16" fill="#38bdf8" text-anchor="middle" letter-spacing="2">🌾 والتجارة العالمية 💰</text>
-            <path d="M 40 75 Q 90 75 120 75" stroke="url(#goldGrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
-            <path d="M 480 75 Q 510 75 560 75" stroke="url(#goldGrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
         </svg>
     </header>
 
-    <!-- شريط معلومات الطقس والأحداث الاقتصادية -->
     <div class="card" style="padding: 8px 12px; flex-direction: row; justify-content: space-between; align-items: center; background: rgba(59, 130, 246, 0.08);">
         <div style="font-size: 0.78rem; color: var(--gem);" id="weatherDisplay">🌤️ الطقس: عادي</div>
         <div style="font-size: 0.78rem; color: var(--yellow);" id="eventDisplay">📰 السوق: مستقر</div>
@@ -597,7 +670,6 @@
         <button class="btn-next-turn" id="nextTurnBtn" onclick="nextTurn()">إنهاء اليوم ⏭️</button>
     </div>
 
-    <!-- لوحة التجديد -->
     <div id="renewalPanel" class="card" style="display: none; background: rgba(6, 182, 212, 0.1); border-color: var(--gem); text-align: center; padding: 14px;">
         <div style="font-size: 0.9rem; font-weight: bold; color: var(--gem);">⚠️ انتهت محاولات الأيام الـ 25 المتاحة!</div>
         <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;" id="renewalSubText">قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.</div>
@@ -607,7 +679,6 @@
         </div>
     </div>
 
-    <!-- أزرار الحفظ والاسترجاع السحابي وتسجيل الخروج -->
     <div style="display: flex; gap: 8px;">
         <button class="action-btn" style="flex:1; background-color: var(--blue); padding: 10px;" onclick="saveGameOnline()">حفظ سحابي ☁️</button>
         <button class="action-btn" style="flex:1; background-color: var(--green); color:#060911; padding: 10px;" onclick="loadGameOnline()">استرجاع سحابي 🔄</button>
@@ -633,7 +704,6 @@
         </div>
     </div>
 
-    <!-- قائمة التبويبات المنسقة -->
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('farms')">🌾 المزرعة</button>
         <button class="tab-btn" onclick="switchTab('inventory')">📦 المخزن</button>
@@ -752,14 +822,14 @@
         </div>
     </div>
 
-    <!-- تبويب البورصة المحدث بالسهم التفاعلي -->
+    <!-- تبويب البورصة المحدث بالكامل المماثل للصورة -->
     <div id="tab-stocks" class="tab-content">
         <div class="card">
             <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
-                <span>📊 سوق الأسهم والبورصة العالمية</span>
-                <span id="stockTimerDisplay" style="font-size:0.72rem; color:var(--gem);">تحديث الأسعار بعد: 60ث</span>
+                <span>📈 سوق الأسهم والبورصة العالمية</span>
+                <span id="stockTimerDisplay" style="font-size:0.75rem; color:var(--gem);">تحديث الأسعار بعد: 32ث</span>
             </div>
-            <div class="item-list" id="stocksList"></div>
+            <div class="stocks-grid" id="stocksList"></div>
         </div>
     </div>
 
@@ -822,7 +892,7 @@
         <div class="card">
             <div class="section-title">📋 سجل الحسابات والأحداث اليومية</div>
             <div class="ledger-box" id="ledgerBox">
-                <div>[اليوم 1] أهلاً بك في النسخة المحدثة مع خزنة البنك والربح اللوني المطور!</div>
+                <div>[اليوم 1] أهلاً بك في النسخة المحدثة من اللعبة!</div>
             </div>
         </div>
     </div>
@@ -868,11 +938,7 @@
     window.currentWeather = { name: "عادي ☀️", effect: 1.0 };
     window.currentEvent = { name: "سوق مستقر 📊", type: "none" };
 
-    window.bankVault = {
-        balance: 0,
-        level: 1,
-    };
-
+    window.bankVault = { balance: 0, level: 1 };
     window.activeBoosts = { fastGrowth: false, financialShield: false, emperorLicense: false };
 
     window.inventory = {
@@ -884,12 +950,7 @@
         flour: { name: 'دقيق حبوب نقي 🌾', count: 0, price: 320 }
     };
 
-    window.cropFields = {
-        growthDaysNeeded: 4,
-        currentDaysGrown: 0,
-        isReady: false,
-        activePlots: 0
-    };
+    window.cropFields = { growthDaysNeeded: 4, currentDaysGrown: 0, isReady: false, activePlots: 0 };
 
     window.factories = [
         { id: 'fact_cheese', name: 'مصنع الأجبان والألبان', cost: 15000, owned: 0, inputType: 'milk', inputAmt: 10, outputType: 'cheese', outputAmt: 2, desc: 'يحول 10 لتر حليب إلى 2 جبن فاخر.' },
@@ -941,7 +1002,6 @@
     window.employeesPool = [
         { id: 'emp_mgr', name: 'مدير عقود B2B (أحمد)', position: 'manager', dailySalary: 400, costMoney: 5000, costGem: 0, benefit: 'يقلل أيام وصول الشحنات يوماً واحداً', hiredCount: 0 },
         { id: 'emp_mgr_perf', name: 'مدير العقود المثالي الخارق 🌟', position: 'manager', dailySalary: 0, costMoney: 0, costGem: 50, benefit: 'وصول فوري للشحنات + أرباح مضاعفة', hiredCount: 0, isPerfect: true },
-        
         { id: 'emp_acc', name: 'محاسب مالي (سعيد)', position: 'accountant', dailySalary: 250, costMoney: 3000, costGem: 0, benefit: 'يقلل تكاليف الاستيراد 15%', hiredCount: 0 },
         { id: 'emp_acc_perf', name: 'المحاسب المثالي الخارق 🌟', position: 'accountant', dailySalary: 0, costMoney: 0, costGem: 40, benefit: 'صفر تكاليف إضافية وخصومات تامة', hiredCount: 0, isPerfect: true }
     ];
@@ -960,15 +1020,7 @@
     window.generateDailyQuests = function() {
         let shuffled = [...possibleQuestsPool].sort(() => 0.5 - Math.random());
         window.activeQuests = shuffled.slice(0, 3).map((q, idx) => ({
-            index: idx,
-            id: q.id,
-            title: q.title,
-            desc: q.desc,
-            target: q.target,
-            current: 0,
-            rewardGem: q.rewardGem,
-            type: q.type,
-            completed: false
+            index: idx, id: q.id, title: q.title, desc: q.desc, target: q.target, current: 0, rewardGem: q.rewardGem, type: q.type, completed: false
         }));
         window.questResetTimestamp = Date.now() + twentyFourHoursMs;
     };
@@ -981,7 +1033,14 @@
         }
     };
 
-    window.stockNextUpdateTimestamp = Date.now() + 60000;
+    // ---------------- بيانات أسهم البورصة المطابقة للصورة ----------------
+    window.stocks = [
+        { id: 's1', name: 'المصرية للاتصالات', symbol: 'ETEL', price: 45, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 40000, volatility: 0.08, changePct: -2.17, history: [52, 50, 54, 51, 48, 43, 46, 45] },
+        { id: 's2', name: 'الشرقية للدخان', symbol: 'EAST', price: 77, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 30000, volatility: 0.06, changePct: 2.67, history: [70, 72, 76, 73, 77, 78, 75, 77] },
+        { id: 's3', name: 'البنك التجاري الدولي', symbol: 'COMI', price: 46, owned: 0, avgBuyPrice: 0, totalInvested: 0, maxLimit: 50000, volatility: 0.07, changePct: 2.22, history: [48, 45, 43, 44, 50, 49, 51, 46] }
+    ];
+
+    window.stockNextUpdateTimestamp = Date.now() + 32000;
     function updateStockMarketRealtime() {
         let now = Date.now();
         let diffMs = window.stockNextUpdateTimestamp - now;
@@ -993,23 +1052,17 @@
                 stockTimerDisplay.innerText = `تحديث الأسعار بعد: ${secLeft}ث`;
             } else {
                 stockTimerDisplay.innerText = `جاري التحديث...`;
-                window.stockNextUpdateTimestamp = Date.now() + 60000;
+                window.stockNextUpdateTimestamp = Date.now() + 32000;
                 
                 window.stocks.forEach(stock => {
                     let oldPrice = stock.price;
                     let change = (Math.random() * (stock.volatility * 2)) - stock.volatility;
                     stock.price = Math.max(10, Math.floor(stock.price * (1 + change)));
-
-                    let pctChange = Number(((stock.price - oldPrice) / oldPrice * 100).toFixed(2));
-                    stock.changePct = pctChange;
-
-                    let trendSymbol = "➡️";
-                    if (stock.price > oldPrice) trendSymbol = "📈";
-                    else if (stock.price < oldPrice) trendSymbol = "📉";
-
-                    if (!stock.history) stock.history = ['=', '=', '=', '=', '='];
-                    stock.history.push(trendSymbol);
-                    if (stock.history.length > 5) stock.history.shift();
+                    stock.changePct = Number(((stock.price - oldPrice) / oldPrice * 100).toFixed(2));
+                    
+                    if (!stock.history) stock.history = [];
+                    stock.history.push(stock.price);
+                    if (stock.history.length > 15) stock.history.shift();
                 });
                 renderStocks();
             }
@@ -1053,14 +1106,6 @@
         { id: 'anim_chick', barnId: 'barn_chick', name: 'دجاج بياض', cost: 120, productType: 'chickenEggs', prodAmount: 3, maxAge: 20, age: 0, count: 0, desc: 'تنتج 3 بيضات كل يوم.' },
         { id: 'anim_duck', barnId: 'barn_chick', name: 'بط فاخر', cost: 280, productType: 'duckEggs', prodAmount: 5, maxAge: 22, age: 0, count: 0, desc: 'تنتج 5 بيضات كل يوم.' },
         { id: 'anim_cow', barnId: 'barn_cow', name: 'بقرة حلب', cost: 1400, productType: 'milk', prodAmount: 1, maxAge: 30, age: 0, count: 0, desc: 'تنتج 1 لتر حليب كل يوم.' }
-    ];
-
-    window.stocks = [
-        { id: 's1', name: 'المصرية للاتصالات', symbol: 'ETEL', price: 52, owned: 0, avgBuyPrice: 0, totalInvested: 0, volatility: 0.22, changePct: 4.00, history: ['=', '=', '=', '=', '='] },
-        { id: 's2', name: 'طاقة البترول العالمية', symbol: 'OIL', price: 160, owned: 0, avgBuyPrice: 0, totalInvested: 0, volatility: 0.18, changePct: 2.50, history: ['=', '=', '=', '=', '='] },
-        { id: 's3', name: 'صندوق الذهب والمعادن', symbol: 'GLD', price: 240, owned: 0, avgBuyPrice: 0, totalInvested: 0, volatility: 0.12, changePct: -1.20, history: ['=', '=', '=', '=', '='] },
-        { id: 's4', name: 'عقارات المستقبل', symbol: 'RE', price: 350, owned: 0, avgBuyPrice: 0, totalInvested: 0, volatility: 0.15, changePct: 1.80, history: ['=', '=', '=', '=', '='] },
-        { id: 's5', name: 'الطاقة الخضراء', symbol: 'GREEN', price: 110, owned: 0, avgBuyPrice: 0, totalInvested: 0, volatility: 0.28, changePct: -0.50, history: ['=', '=', '=', '=', '='] }
     ];
 
     window.assets = [
@@ -1142,7 +1187,7 @@
 
     window.withdrawVault = function() {
         let amt = parseInt(document.getElementById('vaultAmountInput').value);
-        if (!amt || amt <= 0) { alert("أدخل مبلغاً صالحاً للسحب!"); return; }
+        if (!amt || amt <= 0) { alert("أدخل مبلغاً صالحاً بالسحب!"); return; }
         if (window.bankVault.balance >= amt) {
             window.bankVault.balance -= amt;
             window.money += amt;
@@ -1156,10 +1201,7 @@
 
     window.upgradeVault = function() {
         let lvl = window.bankVault.level;
-        if (lvl >= 11) {
-            alert("⭐ خزنة البنك وصلت للحد الأقصى من التطوير (المستوى 11)!");
-            return;
-        }
+        if (lvl >= 11) { alert("⭐ خزنة البنك وصلت للحد الأقصى من التطوير!"); return; }
 
         let costMoney = lvl === 1 ? 10000 : 0;
         let costGem = lvl > 1 ? (lvl * 15) : 0;
@@ -1170,32 +1212,24 @@
                 window.bankVault.level++;
                 logMessage(`⚡ تم ترقية خزنة البنك إلى المستوى ${window.bankVault.level}!`);
                 renderFinanceTab(); updateUI();
-            } else {
-                alert(`❌ تحتاج إلى ${formatMoney(costMoney)} لترقية الخزنة!`);
-            }
+            } else { alert(`❌ تحتاج إلى ${formatMoney(costMoney)} لترقية الخزنة!`); }
         } else {
             if (window.gems >= costGem) {
                 window.gems -= costGem;
                 window.bankVault.level++;
-                logMessage(`⚡ تم ترقية خزنة البنك إلى المستوى ${window.bankVault.level} مقابل ${costGem} 💎!`);
+                logMessage(`⚡ تم ترقية خزنة البنك إلى المستوى ${window.bankVault.level}!`);
                 renderFinanceTab(); updateUI();
-            } else {
-                alert(`❌ تحتاج إلى ${costGem} جوهرة 💎 لترقية الخزنة!`);
-            }
+            } else { alert(`❌ تحتاج إلى ${costGem} جوهرة 💎 لترقية الخزنة!`); }
         }
     };
 
     window.modifyExportLand = function(id, action) {
         const land = window.exportLands.find(l => l.id === id);
         if (action === 'buy' && window.money >= land.cost) {
-            window.money -= land.cost;
-            land.owned++;
-            land.cost = Math.floor(land.cost * 1.3);
+            window.money -= land.cost; land.owned++; land.cost = Math.floor(land.cost * 1.3);
             logMessage(`🏢 تم شراء أرض شركة استيراد وتصدير: ${land.name}`);
         } else if (action === 'sell' && land.owned > 0) {
-            let refund = Math.floor((land.cost / 1.3) * 0.6);
-            window.money += refund;
-            land.owned--;
+            let refund = Math.floor((land.cost / 1.3) * 0.6); window.money += refund; land.owned--;
             logMessage(`بيع أرض شركة: ${land.name}`);
         }
         renderExportCompanyTab(); updateUI();
@@ -1204,14 +1238,10 @@
     window.modifyWarehouse = function(id, action) {
         const wh = window.warehouses.find(w => w.id === id);
         if (action === 'buy' && window.money >= wh.cost) {
-            window.money -= wh.cost;
-            wh.owned++;
-            wh.cost = Math.floor(wh.cost * 1.3);
+            window.money -= wh.cost; wh.owned++; wh.cost = Math.floor(wh.cost * 1.3);
             logMessage(`📦 تم شراء مستودع شركة جديد: ${wh.name}`);
         } else if (action === 'sell' && wh.owned > 0) {
-            let refund = Math.floor((wh.cost / 1.3) * 0.6);
-            window.money += refund;
-            wh.owned--;
+            let refund = Math.floor((wh.cost / 1.3) * 0.6); window.money += refund; wh.owned--;
             logMessage(`بيع مستودع شركة: ${wh.name}`);
         }
         renderExportCompanyTab(); updateUI();
@@ -1222,10 +1252,7 @@
         let currentStored = Object.values(window.warehouseInventory).reduce((sum, item) => sum + item.count, 0);
         let incomingCount = window.incomingShipments.reduce((sum, inc) => sum + inc.amount, 0);
 
-        if (totalWhCap === 0) {
-            alert("❌ يجب شراء مستودع شركة أولاً لتتمكن من استقبال واستيراد الشحنات!");
-            return;
-        }
+        if (totalWhCap === 0) { alert("❌ يجب شراء مستودع شركة أولاً!"); return; }
 
         let shipment = window.b2bShipments.find(s => s.uniqueId === shipmentUniqueId);
         if (!shipment) return;
@@ -1236,44 +1263,27 @@
 
         if (window.money >= finalCost) {
             if ((currentStored + incomingCount + shipment.amount) > totalWhCap) {
-                alert("❌ سعة المستودعات الحالية غير كافية لاستيعاب هذه الشحنة!");
-                return;
+                alert("❌ سعة المستودعات الحالية غير كافية!"); return;
             }
-
             window.money -= finalCost;
-
             let managerHired = window.employeesPool.find(e => e.position === 'manager' && e.hiredCount > 0);
             let arrivalDays = shipment.daysToArrival;
-            if (managerHired) {
-                arrivalDays = managerHired.isPerfect ? 0 : Math.max(1, arrivalDays - 1);
-            }
+            if (managerHired) arrivalDays = managerHired.isPerfect ? 0 : Math.max(1, arrivalDays - 1);
 
-            window.incomingShipments.push({
-                ...shipment,
-                daysRemaining: arrivalDays
-            });
-
+            window.incomingShipments.push({ ...shipment, daysRemaining: arrivalDays });
             window.b2bShipments = window.b2bShipments.filter(s => s.uniqueId !== shipmentUniqueId);
 
-            logMessage(`🌐 تم التعاقد واستيراد الشحنة (${shipment.name}) بتكلفة ${formatMoney(finalCost)}. تصل خلال ${arrivalDays} يوم.`);
-            renderExportCompanyTab();
-            updateUI();
-        } else {
-            alert("❌ لا توجد سيولة كافية لشراء هذه الشحنة!");
-        }
+            logMessage(`🌐 تم التعاقد واستيراد الشحنة (${shipment.name}) بتكلفة ${formatMoney(finalCost)}.`);
+            renderExportCompanyTab(); updateUI();
+        } else { alert("❌ لا توجد سيولة كافية!"); }
     };
 
     window.exportWarehouseProduct = function(prodKey) {
         let prod = window.warehouseInventory[prodKey];
         if (prod.count > 0) {
-            let revenue = prod.count * prod.sellPrice;
-            window.money += revenue;
+            let revenue = prod.count * prod.sellPrice; window.money += revenue;
             logMessage(`💰 تم تصدير وبيع ${prod.count} وحدة من (${prod.name}) مقابل ${formatMoney(revenue)}!`);
-            prod.count = 0;
-            renderExportCompanyTab();
-            updateUI();
-        } else {
-            alert("لا توجد كميات جاهزة بالمستودع للتصدير!");
+            prod.count = 0; renderExportCompanyTab(); updateUI();
         }
     };
 
@@ -1282,41 +1292,28 @@
         let totalLandCap = window.exportLands.reduce((sum, l) => sum + (l.owned * l.capacity), 0);
         let totalCurrentHired = window.employeesPool.reduce((sum, e) => sum + e.hiredCount, 0);
 
-        if (totalLandCap === 0) {
-            alert("❌ يجب شراء أرض شركة استيراد وتصدير أولاً لتوفير مكاتب وسعة لتعيين الموظفين!");
-            return;
-        }
-        if (totalCurrentHired >= totalLandCap) {
-            alert("❌ مكاتب الشركة ممتلئة بالكامل! قم بشراء أراضي جديدة لزيادة السعة.");
-            return;
-        }
+        if (totalLandCap === 0) { alert("❌ يجب شراء أرض شركة استيراد وتصدير أولاً!"); return; }
+        if (totalCurrentHired >= totalLandCap) { alert("❌ مكاتب الشركة ممتلئة بالكامل!"); return; }
 
         if (emp.isPerfect) {
             if (window.gems >= emp.costGem) {
-                window.gems -= emp.costGem;
-                emp.hiredCount++;
-                logMessage(`🌟 تم تعيين الموظف المثالي الخارق (${emp.name}) مقابل ${emp.costGem} جوهرة!`);
+                window.gems -= emp.costGem; emp.hiredCount++;
+                logMessage(`🌟 تم تعيين الموظف الخارق (${emp.name})!`);
                 renderExportCompanyTab(); updateUI();
-            } else {
-                alert("❌ لا توجد جواهر كافية لتعيين هذا الموظف!");
-            }
+            } else { alert("❌ لا توجد جواهر كافية!"); }
         } else {
             if (window.money >= emp.costMoney) {
-                window.money -= emp.costMoney;
-                emp.hiredCount++;
+                window.money -= emp.costMoney; emp.hiredCount++;
                 logMessage(`👥 تم تعيين الموظف: ${emp.name}`);
                 renderExportCompanyTab(); updateUI();
-            } else {
-                alert("❌ لا توجد سيولة كافية لتعيين هذا الموظف!");
-            }
+            } else { alert("❌ لا توجد سيولة كافية!"); }
         }
     };
 
     window.fireEmployee = function(empId) {
         let emp = window.employeesPool.find(e => e.id === empId);
         if (emp.hiredCount > 0) {
-            emp.hiredCount--;
-            logMessage(`تم الاستغناء عن الموظف: ${emp.name}`);
+            emp.hiredCount--; logMessage(`تم الاستغناء عن الموظف: ${emp.name}`);
             renderExportCompanyTab(); updateUI();
         }
     };
@@ -1324,14 +1321,10 @@
     window.modifyBarn = function(id, action) {
         const barn = window.barns.find(b => b.id === id);
         if (action === 'buy' && window.money >= barn.cost) {
-            window.money -= barn.cost;
-            barn.owned++;
-            barn.cost = Math.floor(barn.cost * 1.25);
+            window.money -= barn.cost; barn.owned++; barn.cost = Math.floor(barn.cost * 1.25);
             logMessage(`بناء حظيرة جديدة: ${barn.name}`);
         } else if (action === 'sell' && barn.owned > 0) {
-            let refund = Math.floor((barn.cost / 1.25) * 0.6);
-            window.money += refund;
-            barn.owned--;
+            let refund = Math.floor((barn.cost / 1.25) * 0.6); window.money += refund; barn.owned--;
             logMessage(`بيع حظيرة: ${barn.name}`);
         }
         renderAll(); updateUI();
@@ -1345,17 +1338,13 @@
 
         if (action === 'buy') {
             if (barn.owned === 0) { alert("يجب بناء حظيرة مناسبة أولاً!"); return; }
-            if (currentAssigned >= maxCapacity) { alert("سعة الحظائر ممتلئة! ابنِ حظيرة جديدة."); return; }
+            if (currentAssigned >= maxCapacity) { alert("سعة الحظائر ممتلئة!"); return; }
             if (window.money >= animal.cost) {
-                window.money -= animal.cost;
-                animal.count++;
-                animal.cost = Math.floor(animal.cost * 1.15);
+                window.money -= animal.cost; animal.count++; animal.cost = Math.floor(animal.cost * 1.15);
                 logMessage(`شراء حيوان جديد: ${animal.name}`);
             }
         } else if (action === 'sell' && animal.count > 0) {
-            let refund = Math.floor((animal.cost / 1.15) * 0.7);
-            window.money += refund;
-            animal.count--;
+            let refund = Math.floor((animal.cost / 1.15) * 0.7); window.money += refund; animal.count--;
             logMessage(`بيع حيوان: ${animal.name}`);
         }
         renderAll(); updateUI();
@@ -1367,15 +1356,11 @@
         if (window.cropFields.activePlots > 0 && !window.cropFields.isReady) { alert("المحاصيل تنمو بالفعل حالياً!"); return; }
         let cost = 450;
         if (window.money >= cost) {
-            window.money -= cost;
-            window.cropFields.activePlots = greenhouse.owned * 10;
-            window.cropFields.currentDaysGrown = 0;
-            window.cropFields.isReady = false;
+            window.money -= cost; window.cropFields.activePlots = greenhouse.owned * 10;
+            window.cropFields.currentDaysGrown = 0; window.cropFields.isReady = false;
             logMessage(`🌱 تم بذر المحاصيل بتكلفة $450.`);
             renderAll(); updateUI();
-        } else {
-            alert("لا توجد سيولة كافية لبذر المحاصيل ($450)!");
-        }
+        } else { alert("لا توجد سيولة كافية לבذر المحاصيل ($450)!"); }
     };
 
     window.harvestCrops = function() {
@@ -1383,19 +1368,15 @@
             let harvestedAmount = window.cropFields.activePlots;
             window.inventory.crops.count += harvestedAmount;
             logMessage(`🌾 تم حصاد ${harvestedAmount} وحدة من المحاصيل!`);
-            window.cropFields.activePlots = 0;
-            window.cropFields.isReady = false;
+            window.cropFields.activePlots = 0; window.cropFields.isReady = false;
             renderAll(); updateUI();
-        } else {
-            alert("المحاصيل لم تنضج بعد!");
-        }
+        } else { alert("المحاصيل لم تنضج بعد!"); }
     };
 
     window.modifyFactory = function(id) {
         const fact = window.factories.find(f => f.id === id);
         if (window.money >= fact.cost) {
-            window.money -= fact.cost; fact.owned++;
-            fact.cost = Math.floor(fact.cost * 1.3);
+            window.money -= fact.cost; fact.owned++; fact.cost = Math.floor(fact.cost * 1.3);
             logMessage(`بناء أو ترقية مصنع: ${fact.name}`);
             renderFactories(); updateUI();
         } else { alert("❌ لا توجد سيولة كافية لبناء المصنع!"); }
@@ -1406,11 +1387,9 @@
         if (fact.owned > 0 && window.inventory[fact.inputType].count >= fact.inputAmt) {
             window.inventory[fact.inputType].count -= fact.inputAmt;
             window.inventory[fact.outputType].count += fact.outputAmt;
-            logMessage(`🏭 تم تشغيل المصنع (${fact.name}) وإنتاج ${fact.outputAmt} من (${window.inventory[fact.outputType].name}).`);
+            logMessage(`🏭 تم تشغيل المصنع (${fact.name}).`);
             renderAll(); updateUI();
-        } else {
-            alert("❌ لا تملك مصنعاً أو ليس لديك مواد خام كافية لتشغيله!");
-        }
+        } else { alert("❌ لا تملك مصنعاً أو ليس لديك مواد خام كافية!"); }
     };
 
     window.sellProduct = function(prodKey) {
@@ -1420,27 +1399,24 @@
             let totalRevenue = Math.floor(prod.count * prod.price * mult);
             window.money += totalRevenue;
             logMessage(`💰 تم بيع ${prod.count} وحدة من (${prod.name}) مقابل ${formatMoney(totalRevenue)}`);
-            prod.count = 0;
-            renderInventory();
-            updateUI();
-        } else {
-            alert("لا توجد كميات للبيع في المخزن!");
+            prod.count = 0; renderInventory(); updateUI();
         }
     };
 
+    // ------------------ دوال تداول البورصة والنسب ------------------
     window.setStockPercentage = function(stockId, pct) {
         const stock = window.stocks.find(s => s.id === stockId);
         const buyInput = document.getElementById(`buy_input_${stockId}`);
         const sellInput = document.getElementById(`sell_input_${stockId}`);
         if (!stock) return;
 
-        if (pct === 100 && buyInput) {
-            let maxAffordable = Math.floor(window.money / stock.price);
-            buyInput.value = maxAffordable;
-        } else if (pct === 25 || pct === 50) {
+        if (pct === 100) {
+            if (buyInput) buyInput.value = Math.floor(window.money / stock.price);
+            if (sellInput && stock.owned > 0) sellInput.value = stock.owned;
+        } else {
             if (buyInput) {
-                let maxAffordable = Math.floor(window.money / stock.price);
-                buyInput.value = Math.max(1, Math.floor(maxAffordable * (pct / 100)));
+                let maxBuy = Math.floor(window.money / stock.price);
+                buyInput.value = Math.max(1, Math.floor(maxBuy * (pct / 100)));
             }
             if (sellInput && stock.owned > 0) {
                 sellInput.value = Math.max(1, Math.floor(stock.owned * (pct / 100)));
@@ -1455,6 +1431,11 @@
         let qty = parseInt(buyInput.value);
         if (!qty || qty <= 0) { alert("الرجاء إدخال كمية صحيحة للشراء!"); return; }
 
+        if ((stock.owned + qty) > stock.maxLimit) {
+            alert(`❌ تجوزت سقف التملك لهذا السهم (${stock.maxLimit.toLocaleString()} سهم)!`);
+            return;
+        }
+
         let cost = qty * stock.price;
         if (window.money >= cost) {
             window.money -= cost;
@@ -1468,7 +1449,7 @@
             renderStocks();
             updateUI();
         } else {
-            alert("❌ لا تملك سيولة نقدية كافية لشراء هذه الكمية!");
+            alert("❌ لا تملك سيولة نقدية كافية للشراء!");
         }
     };
 
@@ -1479,7 +1460,10 @@
         let qty = parseInt(sellInput.value);
         if (!qty || qty <= 0 || qty > stock.owned) { alert("الكمية غير صالحة أو أكبر من الأسهم المملوكة!"); return; }
 
-        let netRevenue = qty * stock.price;
+        let grossRevenue = qty * stock.price;
+        let commission = Math.floor(grossRevenue * 0.01);
+        let netRevenue = grossRevenue - commission;
+
         window.money += netRevenue;
         stock.owned -= qty;
         if (stock.owned === 0) {
@@ -1499,14 +1483,17 @@
         const stock = window.stocks.find(s => s.id === stockId);
         if (!stock || stock.owned <= 0) return;
 
-        let netRevenue = stock.owned * stock.price;
+        let grossRevenue = stock.owned * stock.price;
+        let commission = Math.floor(grossRevenue * 0.01);
+        let netRevenue = grossRevenue - commission;
+
         window.money += netRevenue;
         let soldQty = stock.owned;
         stock.owned = 0;
         stock.avgBuyPrice = 0;
         stock.totalInvested = 0;
 
-        logMessage(`📊 بيع كل الأسهم (${soldQty} سهم) لشركة (${stock.name}) بقيمة صافية ${formatMoney(netRevenue)}.`);
+        logMessage(`📊 بيع كل الأسهم (${soldQty} سهم) لشركة (${stock.name}) بقيمة ${formatMoney(netRevenue)}.`);
         renderStocks();
         updateUI();
     };
@@ -1517,26 +1504,19 @@
 
     window.renewWithGems = function() {
         if (window.gems >= 100) {
-            window.gems -= 100;
-            window.daysPlayedInCycle = 0;
-            window.isLocked = false;
-            window.lockUntilTimestamp = 0;
+            window.gems -= 100; window.daysPlayedInCycle = 0; window.isLocked = false; window.lockUntilTimestamp = 0;
             document.getElementById('renewalPanel').style.display = 'none';
             document.getElementById('nextTurnBtn').disabled = false;
             logMessage("💎 تم تجديد الأيام الـ 25 بنجاح باستخدام 100 جوهرة!");
             updateUI();
-        } else {
-            alert("❌ لا توجد جواهر كافية لتجديد الأيام (تحتاج إلى 100 جوهرة).");
-        }
+        } else { alert("❌ لا توجد جواهر كافية لتجديد الأيام!"); }
     };
 
     window.startWaitTimer = function() {
-        const twelveHoursMs = 12 * 60 * 60 * 1000;
-        window.lockUntilTimestamp = Date.now() + twelveHoursMs;
+        window.lockUntilTimestamp = Date.now() + (12 * 60 * 60 * 1000);
         window.isLocked = true;
         document.getElementById('nextTurnBtn').disabled = true;
-        alert("⏳ تم تفعيل مؤقت الانتظار لمدة 12 ساعة فعلية.");
-        logMessage("⏳ تفعيل مؤقت الانتظار لفتح الدورة بعد 12 ساعة.");
+        alert("⏳ تم تفعيل مؤقت الانتظار لمدة 12 ساعة.");
         updateUI();
     };
 
@@ -1544,33 +1524,27 @@
         if (window.isLocked && window.lockUntilTimestamp > 0) {
             let now = Date.now();
             if (now >= window.lockUntilTimestamp) {
-                window.isLocked = false;
-                window.lockUntilTimestamp = 0;
-                window.daysPlayedInCycle = 0;
+                window.isLocked = false; window.lockUntilTimestamp = 0; window.daysPlayedInCycle = 0;
                 document.getElementById('renewalPanel').style.display = 'none';
                 document.getElementById('nextTurnBtn').disabled = false;
-                logMessage("🔓 انقضت فترة الانتظار 12 ساعة وتم إعادة تعيين الدورة بنجاح!");
+                logMessage("🔓 انقضت فترة الانتظار 12 ساعة!");
                 updateUI();
             } else {
                 let diffMs = window.lockUntilTimestamp - now;
                 let hours = Math.floor(diffMs / (1000 * 60 * 60));
                 let minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
                 let seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-                document.getElementById('renewalSubText').innerText = `⏳ متبقي على انتهاء الانتظار: ${hours} ساعة و ${minutes} دقيقة و ${seconds} ثانية`;
+                document.getElementById('renewalSubText').innerText = `⏳ متبقي على انتهاء الانتظار: ${hours}س و ${minutes}د و ${seconds}ث`;
                 document.getElementById('renewalButtonsContainer').style.display = 'none';
             }
-        } else if (window.isLocked) {
-            document.getElementById('renewalSubText').innerText = "قم بتجديد الأيام باستخدام الجواهر فوراً أو انتظر 12 ساعة.";
-            document.getElementById('renewalButtonsContainer').style.display = 'flex';
         }
     }
-
     setInterval(checkLockTimer, 1000);
 
     function randomizeDayEvents() {
         const weathers = [
             { name: "عادي ☀️", effect: 1.0 },
-            { name: "مطر خير 🌧️ (نمو أسرع للمحاصيل)", effect: 1.5 },
+            { name: "مطر خير 🌧️", effect: 1.5 },
             { name: "موجة حر 🌡️", effect: 0.9 },
             { name: "صقيع بارد ❄️", effect: 0.8 }
         ];
@@ -1578,7 +1552,7 @@
 
         const events = [
             { name: "سوق مستقر 📊", type: "none" },
-            { name: "📈 رواج تجاري! أسعار البيع أعلى 30%", type: "market_boom" },
+            { name: "📈 رواج تجاري!", type: "market_boom" },
             { name: "📉 ركود اقتصادي مؤقت", type: "market_crash" }
         ];
         window.currentEvent = events[Math.floor(Math.random() * events.length)];
@@ -1606,70 +1580,45 @@
 
         let totalDailySalaries = 0;
         window.employeesPool.forEach(emp => {
-            if (emp.hiredCount > 0 && !emp.isPerfect) {
-                totalDailySalaries += emp.hiredCount * emp.dailySalary;
-            }
+            if (emp.hiredCount > 0 && !emp.isPerfect) totalDailySalaries += emp.hiredCount * emp.dailySalary;
         });
-        if (totalDailySalaries > 0) {
-            window.money -= totalDailySalaries;
-            logMessage(`👥 دفع رواتب الموظفين اليومية بإجمالي ${formatMoney(totalDailySalaries)}.`);
-        }
+        if (totalDailySalaries > 0) window.money -= totalDailySalaries;
 
         let vaultInterestRates = [0, 0.03, 0.045, 0.06, 0.08, 0.10, 0.13, 0.16, 0.20, 0.25, 0.32, 0.40];
         let currentRate = vaultInterestRates[window.bankVault.level] || 0.03;
         let vaultProfit = Math.floor(window.bankVault.balance * currentRate);
-        if (vaultProfit > 0) {
-            window.bankVault.balance += vaultProfit;
-            logMessage(`🏦 أرباح الخزنة البنكية (عائد ${Math.round(currentRate*100)}%): أضافت ${formatMoney(vaultProfit)} للرصيد المودع.`);
-        }
+        if (vaultProfit > 0) window.bankVault.balance += vaultProfit;
 
         if (window.incomingShipments && window.incomingShipments.length > 0) {
             window.incomingShipments.forEach(inc => {
                 inc.daysRemaining--;
-                if (inc.daysRemaining <= 0) {
-                    if (window.warehouseInventory[inc.productKey]) {
-                        window.warehouseInventory[inc.productKey].count += inc.amount;
-                        logMessage(`📦 وصلت الشحنة (${inc.name}) المكونة من ${inc.amount} وحدة إلى مستودع الشركة بنجاح!`);
-                    }
+                if (inc.daysRemaining <= 0 && window.warehouseInventory[inc.productKey]) {
+                    window.warehouseInventory[inc.productKey].count += inc.amount;
                 }
             });
             window.incomingShipments = window.incomingShipments.filter(inc => inc.daysRemaining > 0);
         }
 
-        // تشغيل العمال الآليين للحصاد والبذر تلقائياً
         const huts = window.barns.find(b => b.id === 'worker_hut').owned;
         if (huts > 0 && window.money >= 450) {
             if (window.cropFields.activePlots > 0 && window.cropFields.isReady) {
-                let harvestedAmount = window.cropFields.activePlots;
-                window.inventory.crops.count += harvestedAmount;
-                window.cropFields.activePlots = 0;
-                window.cropFields.isReady = false;
-                logMessage(`👷 العمال الآليون قاموا بحصاد ${harvestedAmount} وحدة من المحاصيل وإضافتها للمخزن!`);
+                window.inventory.crops.count += window.cropFields.activePlots;
+                window.cropFields.activePlots = 0; window.cropFields.isReady = false;
             }
-
             if (window.cropFields.activePlots === 0) {
-                window.money -= 450;
-                window.cropFields.activePlots = 10 * huts;
-                window.cropFields.currentDaysGrown = 0;
-                window.cropFields.isReady = false;
-                logMessage(`👷 العمال الآليون قاموا ببذر محاصيل جديدة بتكلفة $450.`);
+                window.money -= 450; window.cropFields.activePlots = 10 * huts;
+                window.cropFields.currentDaysGrown = 0; window.cropFields.isReady = false;
             }
         }
 
         window.animals.forEach(animal => {
             if (animal.count > 0) {
                 animal.age = (Number(animal.age) || 0) + 1;
-
                 if (animal.productType && window.inventory[animal.productType]) {
-                    let totalProduced = Math.floor(animal.count * animal.prodAmount * window.currentWeather.effect);
-                    window.inventory[animal.productType].count += totalProduced;
-                    logMessage(`🥚 إنتاج دوري: أنتجت (${animal.name}) عدد ${totalProduced} من (${window.inventory[animal.productType].name}).`);
+                    window.inventory[animal.productType].count += Math.floor(animal.count * animal.prodAmount * window.currentWeather.effect);
                 }
-
                 if (animal.age >= animal.maxAge) {
-                    animal.count = Math.max(0, animal.count - 1);
-                    animal.age = 0;
-                    logMessage(`⚠️ تنبيه: توفي حيوان (${animal.name}) لبلوغه الحد الأقصى للعمر (${animal.maxAge} يوم).`);
+                    animal.count = Math.max(0, animal.count - 1); animal.age = 0;
                 }
             }
         });
@@ -1678,10 +1627,7 @@
             let reqDays = window.activeBoosts.fastGrowth ? Math.ceil(window.cropFields.growthDaysNeeded / 2) : window.cropFields.growthDaysNeeded;
             if (window.currentWeather.effect === 1.5) reqDays = Math.max(1, reqDays - 1);
             window.cropFields.currentDaysGrown++;
-            if (window.cropFields.currentDaysGrown >= reqDays) {
-                window.cropFields.isReady = true;
-                logMessage(`🌾 تنبيه: المحاصيل نضجت وجاهزة للحصاد!`);
-            }
+            if (window.cropFields.currentDaysGrown >= reqDays) window.cropFields.isReady = true;
         }
 
         let assetIncome = window.assets.reduce((sum, ast) => sum + (Math.floor(ast.income * window.globalMultiplier) * ast.count), 0);
@@ -1692,53 +1638,31 @@
         let taxRate = totalNetWealth > 500000 ? 0.04 : (totalNetWealth > 100000 ? 0.025 : 0.015);
         let taxDeduction = Math.floor(totalNetWealth * taxRate);
         window.money = Math.max(0, window.money - taxDeduction);
-        logMessage(`🏛️ خصم ضريبة الثروة اليومية بنسبة ${Math.round(taxRate*100)}% بإجمالي ${formatMoney(taxDeduction)}.`);
 
         let loanInterestRate = 0.02;
         let accountantHired = window.employeesPool.find(e => e.position === 'accountant' && e.hiredCount > 0);
         if (accountantHired) loanInterestRate = accountantHired.isPerfect ? 0.0 : 0.01;
 
-        let dailyInterest = 0;
         if (window.loan > 0 && !window.activeBoosts.financialShield) {
-            dailyInterest = Math.floor(window.loan * loanInterestRate);
-            window.money -= dailyInterest;
+            window.money -= Math.floor(window.loan * loanInterestRate);
         }
 
         window.money += finalDailyProfit;
 
-        window.activeQuests.forEach(q => {
-            if (!q.completed) {
-                if (q.type === 'stocks') {
-                    q.current = window.stocks.reduce((sum, s) => sum + s.owned, 0);
-                } else if (window.inventory[q.type]) {
-                    q.current = window.inventory[q.type].count;
-                }
-                if (q.current >= q.target) {
-                    q.completed = true;
-                    window.gems += q.rewardGem;
-                    logMessage(`🎯 تم إنجاز المهمة المتجددة (${q.title}) وحصلت على ${q.rewardGem} 💎`);
-                }
-            }
-        });
-
-        logMessage(`نتائج اليوم ${window.day}: الأرباح الصافية بلغت ${formatMoney(finalDailyProfit)}.`);
         renderAll(); updateUI();
         if (window.saveGameOnline) window.saveGameOnline();
     };
 
     function renderBarns() {
         const container = document.getElementById('barnsList');
-        if (!container) return;
-        container.innerHTML = '';
+        if (!container) return; container.innerHTML = '';
         window.barns.forEach(barn => {
             let currentAssigned = window.animals.filter(a => a.barnId === barn.id).reduce((sum, a) => sum + a.count, 0);
             let totalCap = barn.owned * barn.capacity;
-
             let extraHtml = '';
             if (barn.id === 'greenhouse') {
                 let statusText = window.cropFields.activePlots === 0 ? "فارغة (اضغط لبزر بـ $450)" : 
                                  (window.cropFields.isReady ? "✨ ناضجة وجاهزة للحصاد!" : `تنمو (${window.cropFields.currentDaysGrown}/${window.cropFields.growthDaysNeeded} أيام)`);
-                
                 extraHtml = `
                     <div style="margin-top: 8px; display: flex; gap: 6px;">
                         <button class="action-btn farm-btn" onclick="plantCrops()" ${barn.owned === 0 ? 'disabled' : ''}>بزر محاصيل 🌿</button>
@@ -1747,11 +1671,8 @@
                     <div class="item-meta" style="margin-top: 4px;">حالة الصوبة: ${statusText}</div>
                 `;
             }
-
             const row = document.createElement('div');
-            row.className = 'item-row';
-            row.style.flexDirection = 'column';
-            row.style.alignItems = 'flex-start';
+            row.className = 'item-row'; row.style.flexDirection = 'column'; row.style.alignItems = 'flex-start';
             row.innerHTML = `
                 <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
                     <div class="item-info">
@@ -1772,8 +1693,7 @@
 
     function renderAnimals() {
         const container = document.getElementById('animalsList');
-        if (!container) return;
-        container.innerHTML = '';
+        if (!container) return; container.innerHTML = '';
         window.animals.forEach(animal => {
             const row = document.createElement('div');
             row.className = 'item-row';
@@ -1794,9 +1714,7 @@
 
     function renderInventory() {
         const container = document.getElementById('inventoryList');
-        if (!container) return;
-        container.innerHTML = '';
-        
+        if (!container) return; container.innerHTML = '';
         Object.keys(window.inventory).forEach(key => {
             const prod = window.inventory[key];
             const row = document.createElement('div');
@@ -1814,8 +1732,7 @@
 
     function renderFactories() {
         const container = document.getElementById('factoriesList');
-        if (!container) return;
-        container.innerHTML = '';
+        if (!container) return; container.innerHTML = '';
         window.factories.forEach(fact => {
             container.innerHTML += `
                 <div class="item-row">
@@ -1883,14 +1800,10 @@
         const b2bContainer = document.getElementById('b2bShipmentsList');
         if (b2bContainer) {
             b2bContainer.innerHTML = '';
-            if (!window.b2bShipments || window.b2bShipments.length === 0) {
-                window.checkB2BRefresh();
-            }
             window.b2bShipments.forEach(ship => {
                 let accountantHired = window.employeesPool.find(e => e.position === 'accountant' && e.hiredCount > 0);
                 let discount = accountantHired ? (accountantHired.isPerfect ? 0.3 : 0.15) : 0;
                 let finalCost = Math.floor(ship.cost * (1 - discount));
-
                 let managerHired = window.employeesPool.find(e => e.position === 'manager' && e.hiredCount > 0);
                 let arrivalDays = ship.daysToArrival;
                 if (managerHired) arrivalDays = managerHired.isPerfect ? 0 : Math.max(1, arrivalDays - 1);
@@ -1906,39 +1819,21 @@
                     </div>
                 `;
             });
-
-            let now = Date.now();
-            let diffMs = window.b2bNextRefreshTimestamp - now;
-            let b2bTimerDisplay = document.getElementById('b2bTimerDisplay');
-            if (b2bTimerDisplay) {
-                if (diffMs > 0) {
-                    let hours = Math.floor(diffMs / (1000 * 60 * 60));
-                    let minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                    b2bTimerDisplay.innerText = `تجدد بعد: ${hours}س و ${minutes}د`;
-                } else {
-                    b2bTimerDisplay.innerText = `جاري التجديد...`;
-                    window.checkB2BRefresh();
-                }
-            }
         }
 
         const whInvContainer = document.getElementById('warehouseInventoryList');
         if (whInvContainer) {
             whInvContainer.innerHTML = '';
-            
-            if (window.incomingShipments && window.incomingShipments.length > 0) {
-                window.incomingShipments.forEach(inc => {
-                    whInvContainer.innerHTML += `
-                        <div class="item-row" style="background: rgba(59, 130, 246, 0.05);">
-                            <div class="item-info">
-                                <span class="item-title" style="color: var(--blue);">⏳ شحنة في الطريق: ${inc.name}</span>
-                                <span class="item-desc">الكمية: ${inc.amount} وحدة | متبقي لتصل وتدخل مستودعك: ${inc.daysRemaining} أيام</span>
-                            </div>
+            window.incomingShipments.forEach(inc => {
+                whInvContainer.innerHTML += `
+                    <div class="item-row" style="background: rgba(59, 130, 246, 0.05);">
+                        <div class="item-info">
+                            <span class="item-title" style="color: var(--blue);">⏳ شحنة في الطريق: ${inc.name}</span>
+                            <span class="item-desc">الكمية: ${inc.amount} وحدة | متبقي لتصل: ${inc.daysRemaining} أيام</span>
                         </div>
-                    `;
-                });
-            }
-
+                    </div>
+                `;
+            });
             Object.keys(window.warehouseInventory).forEach(key => {
                 let prod = window.warehouseInventory[key];
                 whInvContainer.innerHTML += `
@@ -1956,13 +1851,8 @@
         const empContainer = document.getElementById('employeesList');
         if (empContainer) {
             empContainer.innerHTML = '';
-            let totalLandCap = window.exportLands.reduce((sum, l) => sum + (l.owned * l.capacity), 0);
-            let totalCurrentHired = window.employeesPool.reduce((sum, e) => sum + e.hiredCount, 0);
-
-            empContainer.innerHTML += `<div style="font-size:0.75rem; color:var(--gem); margin-bottom:6px;">مكاتب الشركة المشغولة: ${totalCurrentHired} / ${totalLandCap} موظف</div>`;
-
             window.employeesPool.forEach(emp => {
-                let salaryStr = emp.isPerfect ? 'بدون راتب (مجاني)' : `${formatMoney(emp.dailySalary)} يومياً`;
+                let salaryStr = emp.isPerfect ? 'بدون راتب' : `${formatMoney(emp.dailySalary)} يومياً`;
                 let costStr = emp.isPerfect ? `${emp.costGem} 💎` : formatMoney(emp.costMoney);
                 empContainer.innerHTML += `
                     <div class="item-row">
@@ -1984,31 +1874,19 @@
     function renderFinanceTab() {
         const vaultBalanceDisplay = document.getElementById('vaultBalanceDisplay');
         const vaultLevelDisplay = document.getElementById('vaultLevelDisplay');
-        const vaultUpgradeTitle = document.getElementById('vaultUpgradeTitle');
-        const vaultUpgradeDesc = document.getElementById('vaultUpgradeDesc');
         const taxRateDisplay = document.getElementById('taxRateDisplay');
 
         if (vaultBalanceDisplay) vaultBalanceDisplay.innerText = formatMoney(window.bankVault.balance);
-
         let vaultRates = [0, 3, 4.5, 6, 8, 10, 13, 16, 20, 25, 32, 40];
         let currentLevel = window.bankVault.level;
         if (vaultLevelDisplay) vaultLevelDisplay.innerText = `المستوى: ${currentLevel} (العائد ${vaultRates[currentLevel]}% يومياً)`;
-
-        if (currentLevel >= 11) {
-            if (vaultUpgradeTitle) vaultUpgradeTitle.innerText = "الخزنة في الحد الأقصى للمستوى (11)";
-            if (vaultUpgradeDesc) vaultUpgradeDesc.innerText = "تم بلوغ أعلى عائد استثماري بنجاح.";
-        } else {
-            let upgradeCostStr = currentLevel === 1 ? "$10,000" : `${(currentLevel * 15)} 💎`;
-            if (vaultUpgradeTitle) vaultUpgradeTitle.innerText = `ترقية الخزنة إلى المستوى ${currentLevel + 1}`;
-            if (vaultUpgradeDesc) vaultUpgradeDesc.innerText = `تكلفة الترقية: ${upgradeCostStr} (ترفع العائد اليومي)`;
-        }
 
         let totalNetWealth = window.money + window.bankVault.balance + (window.bondsOwned * 15000);
         let taxRate = totalNetWealth > 500000 ? 4 : (totalNetWealth > 100000 ? 2.5 : 1.5);
         if (taxRateDisplay) taxRateDisplay.innerText = `النسبة الحالية: ${taxRate}%`;
     }
 
-    // عرض البورصة مع السهم التفاعلي داخل المربع الأسود وبدون صندوق العمولة الأصفر
+    // ---------------- رسم وتوليد أسهم البورصة بنفس شكل الصورة تماماً ----------------
     function renderStocks() {
         const container = document.getElementById('stocksList');
         if (!container) return;
@@ -2018,100 +1896,138 @@
             let currentValuation = stock.owned * stock.price;
             let profitLoss = currentValuation - stock.totalInvested;
             let pctProfit = stock.totalInvested > 0 ? ((profitLoss / stock.totalInvested) * 100).toFixed(2) : 0.0;
-            let changeSign = stock.changePct >= 0 ? '+' : '';
-            let profitSign = profitLoss >= 0 ? '+' : '';
-
-            // السهم التفاعلي بناءً على التغير (أعلى/أخضر أو أسفل/أحمر)
             let isUp = stock.changePct >= 0;
-            let arrowSymbol = isUp ? '↗' : '↘';
-            let arrowColor = isUp ? 'var(--green)' : 'var(--red)';
+            let themeColor = isUp ? '#22c55e' : '#ef4444';
+            let changeSign = isUp ? '+' : '';
 
             const card = document.createElement('div');
             card.className = 'stock-card';
             card.innerHTML = `
                 <div class="stock-header">
+                    <div class="stock-price-box">
+                        <div class="stock-price" style="color: ${themeColor};">EGP ${stock.price}</div>
+                        <div class="stock-change" style="color: ${themeColor};">${changeSign}${stock.changePct}%+</div>
+                    </div>
                     <div class="stock-titles">
                         <span class="stock-name">${stock.name}</span>
                         <span class="stock-symbol">${stock.symbol}</span>
                     </div>
-                    <div class="stock-price-box">
-                        <div class="stock-price" style="color: ${arrowColor};">EGP ${stock.price}</div>
-                        <div class="stock-change" style="color: ${arrowColor};">${changeSign}${stock.changePct}%+</div>
-                    </div>
                 </div>
 
                 <div class="stock-chart-container">
-                    <span style="font-size: 1.2rem; color: var(--text-muted);">📊</span>
-                    <div class="interactive-arrow" style="color: ${arrowColor}; transform: ${isUp ? 'translateY(-4px)' : 'translateY(4px)'};">
-                        ${arrowSymbol}
-                    </div>
-                    <span style="font-size: 1.1rem; color: var(--text-muted); letter-spacing: 2px;">📈 〰️ 📈</span>
+                    <canvas id="chart_${stock.id}" class="sparkline-canvas"></canvas>
                 </div>
 
                 <div class="stock-stats-grid">
                     <div class="stat-row">
-                        <span class="stat-label">الأسهم المملوكة:</span>
                         <span class="stat-val">${stock.owned.toLocaleString()} سهم</span>
+                        <span class="stat-label">:الأسهم المملوكة</span>
                     </div>
                     <div class="stat-row">
-                        <span class="stat-label">متوسط سعر الشراء:</span>
                         <span class="stat-val">EGP ${stock.avgBuyPrice}</span>
+                        <span class="stat-label">:متوسط سعر الشراء</span>
                     </div>
                     <div class="stat-row">
-                        <span class="stat-label">رأس المال المستثمر:</span>
                         <span class="stat-val">EGP ${stock.totalInvested.toLocaleString()}</span>
+                        <span class="stat-label">:رأس المال المستثمر</span>
                     </div>
                     <div class="stat-row">
-                        <span class="stat-label">القيمة السوقية الحالية:</span>
                         <span class="stat-val" style="color: var(--gold);">EGP ${currentValuation.toLocaleString()}</span>
+                        <span class="stat-label">:القيمة السوقية الحالية</span>
                     </div>
                     <div class="stat-row">
-                        <span class="stat-label">صافي الكاش عند البيع:</span>
-                        <span class="stat-val" style="color: var(--gem);">EGP ${currentValuation.toLocaleString()}</span>
+                        <span class="stat-val" style="color: var(--gem);">EGP ${Math.floor(currentValuation * 0.99).toLocaleString()}</span>
+                        <span class="stat-label">:صافي الكاش عند البيع</span>
                     </div>
                     <div class="stat-row">
-                        <span class="stat-label">صافي الربح الفعلي كاش:</span>
-                        <span class="stat-val" style="color: ${profitLoss >= 0 ? 'var(--green)' : 'var(--red)'};">
-                            EGP (${profitSign}${pctProfit}%) ${profitSign}${profitLoss.toLocaleString()}
+                        <span class="stat-val" style="color: ${profitLoss >= 0 ? '#22c55e' : '#ef4444'};">
+                            EGP (${profitLoss >= 0 ? '+' : ''}${pctProfit}%) ${profitLoss >= 0 ? '+' : ''}${profitLoss.toLocaleString()}
                         </span>
+                        <span class="stat-label">:صافي الربح الفعلي كاش</span>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">سقف تملك السهم:</span>
-                        <span class="stat-val">40,000 سهم</span>
+                    <div class="stat-row" style="margin-top:4px;">
+                        <span class="stat-val">${stock.maxLimit.toLocaleString()} سهم</span>
+                        <span class="stat-label">:سقف تملك السهم</span>
                     </div>
                 </div>
 
-                <div class="percentage-buttons">
-                    <button class="pct-btn" onclick="setStockPercentage('${stock.id}', 25)">25%</button>
-                    <button class="pct-btn" onclick="setStockPercentage('${stock.id}', 50)">50%</button>
-                    <button class="pct-btn" onclick="setStockPercentage('${stock.id}', 100)">100%</button>
+                <div class="brokerage-box">
+                    <div class="brokerage-title">
+                        <span>⚖️ عمولة سمسرة 1%</span>
+                        <span style="color:#64748b; font-weight:normal; font-size:0.68rem;">(حظر بيع 45ث 🕒)</span>
+                    </div>
+                    <div class="brokerage-desc">
+                        القيمة السوقية = رأس المال + الأرباح | الكاش عند البيع يخصم عمولة 1%
+                    </div>
                 </div>
 
-                <div class="trade-inputs-grid">
-                    <input type="number" id="sell_input_${stock.id}" class="auth-input" placeholder="الكمية للبيع..." min="1">
-                    <input type="number" id="buy_input_${stock.id}" class="auth-input" placeholder="الكمية للشراء..." min="1">
-                </div>
+                <div class="stock-actions-grid">
+                    <div class="pct-group">
+                        <button class="pct-btn" onclick="setStockPercentage('${stock.id}', 25)">25%</button>
+                        <button class="pct-btn" onclick="setStockPercentage('${stock.id}', 50)">50%</button>
+                        <button class="pct-btn" onclick="setStockPercentage('${stock.id}', 100)">100%</button>
+                        <button class="sell-all-btn-cell" onclick="sellAllStock('${stock.id}')">بيع كل الأسهم</button>
+                    </div>
 
-                <div class="trade-actions-grid">
-                    <button class="action-btn sell-btn" style="padding: 10px;" onclick="sellStockCustom('${stock.id}')">بيع الأسهم</button>
-                    <button class="action-btn" style="background-color: var(--green); color: #060911; padding: 10px;" onclick="buyStockCustom('${stock.id}')">شراء الأسهم</button>
-                </div>
+                    <div class="input-row">
+                        <div class="input-box">
+                            <input type="number" id="buy_input_${stock.id}" class="stock-trade-input" placeholder="الكمية" min="1">
+                            <button class="input-icon-btn">hat{}` + `</button>
+                        </div>
+                        <div class="input-box">
+                            <input type="number" id="sell_input_${stock.id}" class="stock-trade-input" placeholder="الكمية" min="1">
+                            <button class="input-icon-btn">hat{}` + `</button>
+                        </div>
+                    </div>
 
-                <div style="text-align: center; margin-top: -2px;">
-                    <button class="action-btn sell-btn" style="background-color: #450a0a; width: 100%; border: 1px solid var(--red); padding: 8px;" onclick="sellAllStock('${stock.id}')" ${stock.owned === 0 ? 'disabled' : ''}>بيع كل الأسهم</button>
+                    <div class="btn-row">
+                        <button class="btn-trade btn-buy" onclick="buyStockCustom('${stock.id}')">شراء الأسهم</button>
+                        <button class="btn-trade btn-sell ${stock.owned > 0 ? 'active' : ''}" onclick="sellStockCustom('${stock.id}')">بيع الأسهم</button>
+                    </div>
                 </div>
             `;
             container.appendChild(card);
+
+            // رسم الخط البياني الحي داخل كافاس
+            setTimeout(() => {
+                drawSparkline(`chart_${stock.id}`, stock.history, themeColor);
+            }, 50);
         });
+    }
+
+    function drawSparkline(canvasId, dataPoints, color) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width = canvas.parentElement.clientWidth;
+        const height = canvas.height = canvas.parentElement.clientHeight;
+
+        ctx.clearRect(0, 0, width, height);
+        if (!dataPoints || dataPoints.length < 2) return;
+
+        const min = Math.min(...dataPoints);
+        const max = Math.max(...dataPoints);
+        const range = (max - min) || 1;
+
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        dataPoints.forEach((val, index) => {
+            const x = (index / (dataPoints.length - 1)) * (width - 12) + 6;
+            const y = height - (((val - min) / range) * (height - 20) + 10);
+            if (index === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        });
+
+        ctx.stroke();
     }
 
     function renderQuests() {
         const container = document.getElementById('questsList');
-        if (!container) return;
-        container.innerHTML = '';
-        if (!window.activeQuests || window.activeQuests.length === 0) {
-            window.checkRealtimeQuestReset();
-        }
+        if (!container) return; container.innerHTML = '';
         window.activeQuests.forEach(q => {
             container.innerHTML += `
                 <div class="item-row">
@@ -2127,8 +2043,7 @@
 
     async function renderLeaderboard() {
         const container = document.getElementById('leaderboardList');
-        if (!container) return;
-        container.innerHTML = '<div style="text-align:center; color:var(--text-muted);">جاري التحميل...</div>';
+        if (!container) return; container.innerHTML = '<div style="text-align:center; color:var(--text-muted);">جاري التحميل...</div>';
         try {
             const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
             const db = window.firebaseDB;
@@ -2153,9 +2068,7 @@
                     </div>
                 `;
             });
-        } catch (e) {
-            container.innerHTML = '<div style="text-align:center; color:var(--red);">تعذر جلب لوحة المتصدرين.</div>';
-        }
+        } catch (e) { container.innerHTML = '<div style="text-align:center; color:var(--red);">تعذر جلب البيانات.</div>'; }
     }
 
     function renderStore() {
@@ -2181,15 +2094,13 @@
             container.innerHTML = '';
             gemPackages.forEach(pkg => {
                 let message = encodeURIComponent(`مرحباً، أريد شراء باقة الجواهر "${pkg.name}" بسعر ${pkg.price}.\nحسابي هو: ${window.currentUsername}`);
-                let whatsappLink = `https://wa.me/${myWhatsAppNumber}?text=${message}`;
-
                 container.innerHTML += `
                     <div class="item-row">
                         <div class="item-info">
                             <span class="item-title" style="color: var(--gem);">${pkg.name}</span>
                             <span class="item-desc">السعر: ${pkg.price}</span>
                         </div>
-                        <a href="${whatsappLink}" target="_blank" class="action-btn whatsapp-btn">واتساب 💎</a>
+                        <a href="https://wa.me/${myWhatsAppNumber}?text=${message}" target="_blank" class="action-btn whatsapp-btn">واتساب 💎</a>
                     </div>
                 `;
             });
@@ -2199,16 +2110,14 @@
         if (moneyContainer) {
             moneyContainer.innerHTML = '';
             moneyPackages.forEach(pkg => {
-                let message = encodeURIComponent(`مرحباً، أريد شراء باقة المال "${pkg.name}" (بقيمة ${pkg.amount.toLocaleString()} $) بسعر ${pkg.price}.\nحسابي هو: ${window.currentUsername}`);
-                let whatsappLink = `https://wa.me/${myWhatsAppNumber}?text=${message}`;
-
+                let message = encodeURIComponent(`مرحباً، أريد شراء باقة المال "${pkg.name}" بسعر ${pkg.price}.\nحسابي هو: ${window.currentUsername}`);
                 moneyContainer.innerHTML += `
                     <div class="item-row">
                         <div class="item-info">
                             <span class="item-title" style="color: var(--green);">${pkg.name}</span>
                             <span class="item-desc">السعر: ${pkg.price}</span>
                         </div>
-                        <a href="${whatsappLink}" target="_blank" class="action-btn whatsapp-btn">واتساب 💰</a>
+                        <a href="https://wa.me/${myWhatsAppNumber}?text=${message}" target="_blank" class="action-btn whatsapp-btn">واتساب 💰</a>
                     </div>
                 `;
             });
@@ -2236,20 +2145,6 @@
         if (turnTitle) turnTitle.innerText = `اليوم التكتيكي: ${window.day} (دورة الـ 25: ${window.daysPlayedInCycle}/25)`;
         if (turnSub) turnSub.innerText = window.isLocked ? "انتهت محاولات الدورة الحالية!" : `متبقي ${25 - window.daysPlayedInCycle} يوماً في هذه الدورة`;
 
-        let now = Date.now();
-        let diffMs = window.questResetTimestamp - now;
-        const questTimerDisplay = document.getElementById('questTimerDisplay');
-        if (questTimerDisplay) {
-            if (diffMs > 0) {
-                let hours = Math.floor(diffMs / (1000 * 60 * 60));
-                let minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                questTimerDisplay.innerText = `تجدد بعد: ${hours} س و ${minutes} د`;
-            } else {
-                questTimerDisplay.innerText = `جاري التجديد...`;
-                window.checkRealtimeQuestReset();
-            }
-        }
-
         let animalsVal = window.animals.reduce((sum, a) => sum + (Math.floor(a.cost / 1.15) * a.count), 0);
         let stocksVal = window.stocks.reduce((sum, s) => sum + (s.price * s.owned), 0);
         let netWorth = window.money + window.bankVault.balance + animalsVal + stocksVal + (window.bondsOwned * 15000) - window.loan;
@@ -2258,24 +2153,14 @@
         let bondsIncome = window.bondsOwned * 250;
         let vaultRates = [0, 0.03, 0.045, 0.06, 0.08, 0.10, 0.13, 0.16, 0.20, 0.25, 0.32, 0.40];
         let vaultDailyProfit = Math.floor(window.bankVault.balance * (vaultRates[window.bankVault.level] || 0.03));
-        
         let totalDailySalaries = 0;
-        window.employeesPool.forEach(emp => {
-            if (emp.hiredCount > 0 && !emp.isPerfect) totalDailySalaries += emp.hiredCount * emp.dailySalary;
-        });
+        window.employeesPool.forEach(emp => { if (emp.hiredCount > 0 && !emp.isPerfect) totalDailySalaries += emp.hiredCount * emp.dailySalary; });
 
         let totalNetWealth = window.money + window.bankVault.balance + (window.bondsOwned * 15000);
         let taxRate = totalNetWealth > 500000 ? 0.04 : (totalNetWealth > 100000 ? 0.025 : 0.015);
         let taxDeduction = Math.floor(totalNetWealth * taxRate);
 
-        let loanInterestRate = 0.02;
-        let accountantHired = window.employeesPool.find(e => e.position === 'accountant' && e.hiredCount > 0);
-        if (accountantHired) loanInterestRate = accountantHired.isPerfect ? 0.0 : 0.01;
-        let dailyInterest = (window.loan > 0 && !window.activeBoosts.financialShield) ? Math.floor(window.loan * loanInterestRate) : 0;
-
-        let totalIncomes = assetIncome + bondsIncome + vaultDailyProfit;
-        let totalExpenses = totalDailySalaries + taxDeduction + dailyInterest;
-        let netDailyProfit = totalIncomes - totalExpenses;
+        let netDailyProfit = (assetIncome + bondsIncome + vaultDailyProfit) - (totalDailySalaries + taxDeduction);
 
         if (document.getElementById('moneyDisplay')) document.getElementById('moneyDisplay').innerText = formatMoney(window.money);
         if (document.getElementById('gemsDisplay')) document.getElementById('gemsDisplay').innerText = window.gems;
@@ -2283,13 +2168,8 @@
         
         const dailyProfitDisplay = document.getElementById('dailyProfitDisplay');
         if (dailyProfitDisplay) {
-            if (netDailyProfit >= 0) {
-                dailyProfitDisplay.style.color = 'var(--green)';
-                dailyProfitDisplay.innerText = formatMoney(netDailyProfit);
-            } else {
-                dailyProfitDisplay.style.color = 'var(--red)';
-                dailyProfitDisplay.innerText = '-EGP ' + Math.abs(netDailyProfit).toLocaleString();
-            }
+            dailyProfitDisplay.style.color = netDailyProfit >= 0 ? 'var(--green)' : 'var(--red)';
+            dailyProfitDisplay.innerText = formatMoney(netDailyProfit);
         }
 
         if (document.getElementById('loanStatusDisplay')) document.getElementById('loanStatusDisplay').innerText = `الدين المستحق: ${formatMoney(window.loan)}`;
@@ -2333,36 +2213,18 @@
         const amount = parseInt(document.getElementById('marketAmountInput').value);
         const totalPrice = parseInt(document.getElementById('marketPriceInput').value);
 
-        if (!amount || amount <= 0 || !totalPrice || totalPrice <= 0) {
-            alert("❌ الرجاء إدخال كمية وسعر صالحين!");
-            return;
-        }
-
-        if (window.inventory[prodKey].count < amount) {
-            alert("❌ لا تملك هذه الكمية في المخزن!");
-            return;
-        }
+        if (!amount || amount <= 0 || !totalPrice || totalPrice <= 0) { alert("❌ بيانات غير صالحة!"); return; }
+        if (window.inventory[prodKey].count < amount) { alert("❌ لا تملك هذه الكمية!"); return; }
 
         window.inventory[prodKey].count -= amount;
-
         try {
             await addDoc(collection(db, "marketplace"), {
-                seller: window.currentUsername,
-                productKey: prodKey,
-                productName: window.inventory[prodKey].name,
-                amount: amount,
-                totalPrice: totalPrice,
-                timestamp: Date.now()
+                seller: window.currentUsername, productKey: prodKey, productName: window.inventory[prodKey].name,
+                amount: amount, totalPrice: totalPrice, timestamp: Date.now()
             });
-            alert("🛒 تم عرض المنتج في السوق بنجاح!");
-            document.getElementById('marketAmountInput').value = '';
-            document.getElementById('marketPriceInput').value = '';
-            renderInventory();
-            window.loadMarketList();
-        } catch (e) {
-            console.error(e);
-            alert("❌ فشل عرض المنتج بالسوق.");
-        }
+            alert("🛒 تم عرض المنتج بالسوق!");
+            renderInventory(); window.loadMarketList();
+        } catch (e) { alert("❌ فشل العرض بالسوق."); }
     };
 
     window.loadMarketList = async function() {
@@ -2372,14 +2234,13 @@
             const querySnapshot = await getDocs(collection(db, "marketplace"));
             container.innerHTML = '';
             if (querySnapshot.empty) {
-                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.75rem;">لا توجد منتجات معروضة حالياً بالسوق.</div>';
+                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.75rem;">لا توجد منتجات حالياً.</div>';
                 return;
             }
             querySnapshot.forEach((docSnap) => {
                 let item = docSnap.data();
                 let docId = docSnap.id;
                 let isOwn = item.seller === window.currentUsername;
-
                 container.innerHTML += `
                     <div class="item-row">
                         <div class="item-info">
@@ -2393,43 +2254,26 @@
                     </div>
                 `;
             });
-        } catch (e) {
-            container.innerHTML = '<div style="text-align:center; color:var(--red);">تعذر جلب بيانات السوق.</div>';
-        }
+        } catch (e) {}
     };
 
     window.buyMarketListing = async function(docId, productKey, amount, totalPrice, seller) {
-        if (window.money < totalPrice) {
-            alert("❌ لا توجد سيولة كافية لشراء هذا المنتج!");
-            return;
-        }
+        if (window.money < totalPrice) { alert("❌ لا توجد سيولة كافية!"); return; }
         try {
-            window.money -= totalPrice;
-            window.inventory[productKey].count += amount;
-
+            window.money -= totalPrice; window.inventory[productKey].count += amount;
             await deleteDoc(doc(db, "marketplace", docId));
-            alert(`✅ تم شراء المنتجات بنجاح وتم إضافتها لمخزونك!`);
-            logMessage(`شراء ${amount} من السوق مقابل ${formatMoney(totalPrice)} من البائع ${seller}`);
-            renderInventory();
-            updateUI();
-            window.loadMarketList();
-        } catch (e) {
-            console.error(e);
-            alert("❌ حدث خطأ أثناء إتمام عملية الشراء.");
-        }
+            alert(`✅ تم شراء المنتج!`);
+            renderInventory(); updateUI(); window.loadMarketList();
+        } catch (e) {}
     };
 
     window.cancelMarketListing = async function(docId, productKey, amount) {
         try {
             window.inventory[productKey].count += amount;
             await deleteDoc(doc(db, "marketplace", docId));
-            alert("🔄 تم إلغاء العرض وإرجاع المنتجات لمخزونك.");
-            renderInventory();
-            window.loadMarketList();
-        } catch (e) {
-            console.error(e);
-            alert("❌ فشل إلغاء العرض.");
-        }
+            alert("🔄 تم إلغاء العرض.");
+            renderInventory(); window.loadMarketList();
+        } catch (e) {}
     };
 
     window.sendChatMessage = async function() {
@@ -2437,19 +2281,10 @@
         if (!input) return;
         const msg = input.value.trim();
         if (!msg) return;
-
         try {
-            await addDoc(collection(db, "global_chat"), {
-                username: window.currentUsername,
-                message: msg,
-                timestamp: Date.now()
-            });
-            input.value = '';
-            window.loadChatMessages();
-        } catch (e) {
-            console.error(e);
-            alert("❌ فشل إرسال الرسالة.");
-        }
+            await addDoc(collection(db, "global_chat"), { username: window.currentUsername, message: msg, timestamp: Date.now() });
+            input.value = ''; window.loadChatMessages();
+        } catch (e) {}
     };
 
     window.loadChatMessages = async function() {
@@ -2458,16 +2293,9 @@
         try {
             const querySnapshot = await getDocs(collection(db, "global_chat"));
             let messages = [];
-            querySnapshot.forEach((docSnap) => {
-                messages.push(docSnap.data());
-            });
+            querySnapshot.forEach((docSnap) => { messages.push(docSnap.data()); });
             messages.sort((a, b) => a.timestamp - b.timestamp);
-
             chatBox.innerHTML = '';
-            if (messages.length === 0) {
-                chatBox.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.75rem;">لا توجد رسائل سابقة.</div>';
-                return;
-            }
             messages.forEach(m => {
                 chatBox.innerHTML += `
                     <div class="chat-msg">
@@ -2480,12 +2308,6 @@
         } catch (e) {}
     };
 
-    setInterval(() => {
-        if (window.currentUsername) {
-            window.loadChatMessages();
-        }
-    }, 10000);
-
     function mergeSavedData(data) {
         window.money = data.money !== undefined ? data.money : window.money;
         window.gems = data.gems !== undefined ? data.gems : window.gems;
@@ -2496,48 +2318,8 @@
         window.lockUntilTimestamp = data.lockUntilTimestamp !== undefined ? data.lockUntilTimestamp : 0;
 
         if (data.bankVault) window.bankVault = data.bankVault;
-        if (data.questResetTimestamp) window.questResetTimestamp = data.questResetTimestamp;
-        if (data.activeQuests && Array.isArray(data.activeQuests)) window.activeQuests = data.activeQuests;
-        if (data.b2bNextRefreshTimestamp) window.b2bNextRefreshTimestamp = data.b2bNextRefreshTimestamp;
-        if (data.b2bShipments && Array.isArray(data.b2bShipments)) window.b2bShipments = data.b2bShipments;
-        if (data.incomingShipments && Array.isArray(data.incomingShipments)) window.incomingShipments = data.incomingShipments;
-
-        window.checkRealtimeQuestReset();
-        window.checkB2BRefresh();
-
         if (data.inventory) {
-            Object.keys(data.inventory).forEach(k => {
-                if (window.inventory[k]) window.inventory[k].count = data.inventory[k].count;
-            });
-        }
-        if (data.warehouseInventory) {
-            Object.keys(data.warehouseInventory).forEach(k => {
-                if (window.warehouseInventory[k]) window.warehouseInventory[k].count = data.warehouseInventory[k].count;
-            });
-        }
-        if (data.exportLands && Array.isArray(data.exportLands)) {
-            data.exportLands.forEach(savedLand => {
-                let localLand = window.exportLands.find(l => l.id === savedLand.id);
-                if (localLand) {
-                    localLand.owned = savedLand.owned !== undefined ? savedLand.owned : localLand.owned;
-                    if (savedLand.cost) localLand.cost = savedLand.cost;
-                }
-            });
-        }
-        if (data.warehouses && Array.isArray(data.warehouses)) {
-            data.warehouses.forEach(savedWh => {
-                let localWh = window.warehouses.find(w => w.id === savedWh.id);
-                if (localWh) {
-                    localWh.owned = savedWh.owned !== undefined ? savedWh.owned : localWh.owned;
-                    if (savedWh.cost) localWh.cost = savedWh.cost;
-                }
-            });
-        }
-        if (data.employeesPool && Array.isArray(data.employeesPool)) {
-            data.employeesPool.forEach(savedEmp => {
-                let localEmp = window.employeesPool.find(e => e.id === savedEmp.id);
-                if (localEmp) localEmp.hiredCount = savedEmp.hiredCount !== undefined ? savedEmp.hiredCount : localEmp.hiredCount;
-            });
+            Object.keys(data.inventory).forEach(k => { if (window.inventory[k]) window.inventory[k].count = data.inventory[k].count; });
         }
         if (data.stocks && Array.isArray(data.stocks)) {
             data.stocks.forEach(savedStk => {
@@ -2555,11 +2337,7 @@
     window.handleLoginRegister = async function() {
         const uInput = document.getElementById('authUsername').value.trim();
         const pInput = document.getElementById('authPassword').value.trim();
-
-        if (!uInput || !pInput) {
-            alert("❌ الرجاء إدخال اسم المستخدم وكلمة المرور!");
-            return;
-        }
+        if (!uInput || !pInput) { alert("❌ أدخل الاسم وكلمة المرور!"); return; }
 
         const userKey = sanitizeKey(uInput);
         window.currentUsername = uInput;
@@ -2570,55 +2348,23 @@
 
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                if (data.password !== pInput) {
-                    alert("❌ كلمة المرور غير صحيحة!");
-                    return;
-                }
+                if (data.password !== pInput) { alert("❌ كلمة المرور غير صحيحة!"); return; }
                 mergeSavedData(data);
                 alert(`✅ أهلاً بك مجدداً يا ${uInput}!`);
             } else {
-                window.generateDailyQuests();
-                window.generateB2BShipments();
+                window.generateDailyQuests(); window.generateB2BShipments();
                 await setDoc(docRef, {
-                    username: uInput,
-                    password: pInput,
-                    money: window.money,
-                    gems: window.gems,
-                    loan: window.loan,
-                    day: window.day,
-                    daysPlayedInCycle: window.daysPlayedInCycle,
-                    isLocked: window.isLocked,
-                    lockUntilTimestamp: window.lockUntilTimestamp,
-                    bankVault: window.bankVault,
-                    activeQuests: window.activeQuests,
-                    questResetTimestamp: window.questResetTimestamp,
-                    b2bNextRefreshTimestamp: window.b2bNextRefreshTimestamp,
-                    b2bShipments: window.b2bShipments,
-                    incomingShipments: window.incomingShipments,
-                    inventory: window.inventory,
-                    warehouseInventory: window.warehouseInventory,
-                    exportLands: window.exportLands,
-                    warehouses: window.warehouses,
-                    employeesPool: window.employeesPool,
-                    animals: window.animals,
-                    barns: window.barns,
-                    stocks: window.stocks,
-                    cropFields: window.cropFields,
-                    factories: window.factories,
-                    createdAt: new Date()
+                    username: uInput, password: pInput, money: window.money, gems: window.gems, loan: window.loan,
+                    day: window.day, daysPlayedInCycle: window.daysPlayedInCycle, isLocked: window.isLocked,
+                    bankVault: window.bankVault, inventory: window.inventory, stocks: window.stocks, createdAt: new Date()
                 });
-                alert(`🎉 تم إنشاء حساب جديد باسم "${uInput}" بنجاح!`);
+                alert(`🎉 تم إنشاء حساب جديد باسم "${uInput}"!`);
             }
 
             document.getElementById('authScreen').style.display = 'none';
             document.getElementById('gameContainer').style.display = 'flex';
-            renderAll();
-            updateUI();
-
-        } catch (e) {
-            console.error(e);
-            alert("❌ حدث خطأ أثناء الاتصال بقاعدة البيانات.");
-        }
+            renderAll(); updateUI();
+        } catch (e) { alert("❌ حدث خطأ بالاتصال."); }
     };
 
     window.saveGameOnline = async function() {
@@ -2626,37 +2372,12 @@
         const userKey = sanitizeKey(window.currentUsername);
         try {
             await setDoc(doc(db, "players_accounts", userKey), {
-                username: window.currentUsername,
-                money: window.money,
-                gems: window.gems,
-                loan: window.loan,
-                day: window.day,
-                daysPlayedInCycle: window.daysPlayedInCycle,
-                isLocked: window.isLocked,
-                lockUntilTimestamp: window.lockUntilTimestamp,
-                bankVault: window.bankVault,
-                activeQuests: window.activeQuests,
-                questResetTimestamp: window.questResetTimestamp,
-                b2bNextRefreshTimestamp: window.b2bNextRefreshTimestamp,
-                b2bShipments: window.b2bShipments,
-                incomingShipments: window.incomingShipments,
-                inventory: window.inventory,
-                warehouseInventory: window.warehouseInventory,
-                exportLands: window.exportLands,
-                warehouses: window.warehouses,
-                employeesPool: window.employeesPool,
-                animals: window.animals,
-                barns: window.barns,
-                stocks: window.stocks,
-                cropFields: window.cropFields,
-                factories: window.factories,
-                lastUpdated: new Date()
+                username: window.currentUsername, money: window.money, gems: window.gems, loan: window.loan,
+                day: window.day, daysPlayedInCycle: window.daysPlayedInCycle, isLocked: window.isLocked,
+                bankVault: window.bankVault, inventory: window.inventory, stocks: window.stocks, lastUpdated: new Date()
             }, { merge: true });
             alert("☁️ تم الحفظ السحابي بنجاح!");
-        } catch (e) {
-            console.error(e);
-            alert("❌ فشل الحفظ السحابي.");
-        }
+        } catch (e) { alert("❌ فشل الحفظ."); }
     };
 
     window.loadGameOnline = async function() {
@@ -2666,16 +2387,10 @@
             const accountDocSnap = await getDoc(doc(db, "players_accounts", userKey));
             if (accountDocSnap.exists()) {
                 mergeSavedData(accountDocSnap.data());
-                renderAll();
-                updateUI();
+                renderAll(); updateUI();
                 alert("🔄 تم استرجاع البيانات بنجاح!");
-            } else {
-                alert("⚠️ لا توجد بيانات سحابية محفوظة لهذا الحساب.");
             }
-        } catch (e) {
-            console.error(e);
-            alert("❌ فشل الاسترجاع السحابي.");
-        }
+        } catch (e) {}
     };
 </script>
 
